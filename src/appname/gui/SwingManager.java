@@ -1,4 +1,4 @@
-package appname;
+package appname.gui;
 
 import appname.gui.ClockPanel;
 
@@ -17,7 +17,9 @@ public class SwingManager implements Runnable{
 
 
     ScheduledExecutorService ExecService;
-    JPanel windowpane;
+    JPanel windowPane;
+    ClockPanel clockPane;
+    JFrame window;
 
     public SwingManager(){
         SwingUtilities.invokeLater(new Runnable() {
@@ -25,23 +27,27 @@ public class SwingManager implements Runnable{
             public void run() {
 
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                JFrame window = new JFrame("Nevermind");
-                windowpane = new ClockPanel();
-                windowpane.setLayout(null);
-                window.setContentPane(windowpane);
-                //windowpane.setBackground(Color.black);
-                //Pushingwindowpane.add(new appname.gui.ClockPanel());
+                window = new JFrame("Nevermind");
+                clockPane = new ClockPanel();
+                windowPane = clockPane;
+                //windowPane = new JPanel();
+
+                windowPane.setLayout(null);
+                window.setContentPane(windowPane);
+                //windowPane.setBackground(Color.black);
+
+                //windowPane.add(clockPane);
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                windowpane.setVisible(true);
+                windowPane.setVisible(true);
                 window.setSize(640, 480);
-                windowpane.setSize(640, 480);
+                //windowPane.setSize(400, 400);
                 window.setVisible(true);
 
             }
         });
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        setExecFreq(50);
+        setExecFreq(10);
 
     }
 
@@ -53,7 +59,8 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                windowpane.repaint();
+                clockPane.setSize(Math.min(window.getHeight()/2-17,window.getWidth()/2-5));
+                clockPane.repaint();
 
             }
         });

@@ -1,4 +1,4 @@
-import appname.SwingManager;
+import appname.gui.SwingManager;
 
 public class Launcher {
 
