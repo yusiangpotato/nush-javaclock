@@ -4,10 +4,10 @@ import java.util.GregorianCalendar;
  * Created by yusiang on 2/14/14.
  */
 public class Auxiliary {//
-    static double PolarToCartesianX(double theta,double length){
-       return length *Math.cos(theta);
+    static double PolarToCartesianX(double theta,double length){ //Theta=0 means Straight up.
+        return length *Math.cos(theta);
     }
-    static double PolarToCartesianY(double theta,double length){
+    static double PolarToCartesianY(double theta,double length){//Theta=pi/2 means straight out right.
         return -1* length *Math.sin(theta);
     }
     static double map(double x, double in_min, double in_max, double out_min, double out_max)
@@ -38,6 +38,14 @@ public class Auxiliary {//
     }
     static int getHour24(GregorianCalendar g){
         return g.get(GregorianCalendar.HOUR_OF_DAY);
+    }
+
+    public static int safeLongToInt(long l) {
+        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException
+                    (l + " cannot be cast to int without changing its value.");
+        }
+        return (int) l;
     }
 //    static int getHour(int i){
 //

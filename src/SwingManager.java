@@ -25,7 +25,8 @@ public class SwingManager implements Runnable{
                 JPanel windowpane = new JPanel();
                 windowpane.setLayout(null);
                 window.setContentPane(windowpane);
-                windowpane.setBackground(Color.black);
+                //windowpane.setBackground(Color.black);
+                windowpane.add(new ClockPanel());
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
