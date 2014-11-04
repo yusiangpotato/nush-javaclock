@@ -12,8 +12,8 @@ public class ClockPanel extends JPanel {
     //double size=Math.min(this.getHeight(),this.getWidth())/2;
     double size=250;
     static final double secondHandLength =7/8f;
-    static double minuteHandLength =3/4f;
-    static double hourHandLength   =1/2f;
+    static double minuteHandLength =5/8f;
+    static double hourHandLength   =3/8f;
     @Override
     public void paintComponent(Graphics g){//Repaint every second.
         Graphics2D g2 = (Graphics2D) g;
@@ -34,24 +34,36 @@ public class ClockPanel extends JPanel {
                     int posY = Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, 0.75*size) +  4 + size));
                     String s= ""+(i==0?12+"":(i/5<10?" "+i/5:i/5)) ;
                     g2.drawString(s,posX ,posY );
-                    
+
                 }
             }
-            //Second hand
-
-            double secondAngle = Util.map(Util.getSecond(), 0, 60, 2 * Math.PI, 0);
-            double secondX = size+ Util.PolarToCartesianX(secondAngle, size*secondHandLength);
-            double secondY = size+ Util.PolarToCartesianY(secondAngle, size * secondHandLength);
-            g2.setStroke(new BasicStroke(3));
-            //System.out.println(secondAngle+","+Util.getSecond());
-            g2.draw(new Line2D.Double(size, size, secondX, secondY));
-            //Minute hand
-            double minuteAngle = Util.map(60*Util.getMinute()+Util.getSecond(), 0, 60*59+60, 2 * Math.PI, 0);
-            double minuteX = size+ Util.PolarToCartesianX(minuteAngle, size*minuteHandLength);
-            double minuteY = size+ Util.PolarToCartesianY(minuteAngle, size*minuteHandLength);
-            g2.setStroke(new BasicStroke(4));
-            //System.out.println(secondAngle+","+Util.getSecond());
-            g2.draw(new Line2D.Double(size, size, minuteX, minuteY));
+            {
+                //Second hand
+                double secondAngle = Util.map(Util.getSecond(), 0, 60, 2 * Math.PI, 0);
+                double secondX = size+ Util.PolarToCartesianX(secondAngle, size*secondHandLength);
+                double secondY = size+ Util.PolarToCartesianY(secondAngle, size * secondHandLength);
+                g2.setStroke(new BasicStroke(3));
+                //System.out.println(secondAngle+","+Util.getSecond());
+                g2.draw(new Line2D.Double(size, size, secondX, secondY));
+            }
+            {
+                //Minute hand
+                double minuteAngle = Util.map(60*Util.getMinute()+Util.getSecond(), 0, 60*60, 2 * Math.PI, 0);
+                double minuteX = size+ Util.PolarToCartesianX(minuteAngle, size*minuteHandLength);
+                double minuteY = size+ Util.PolarToCartesianY(minuteAngle, size*minuteHandLength);
+                g2.setStroke(new BasicStroke(4));
+                //System.out.println(secondAngle+","+Util.getSecond());
+                g2.draw(new Line2D.Double(size, size, minuteX, minuteY));
+            }
+            {
+                //Hour hand
+                double hourAngle = Util.map(60*60*Util.getHour()+60*Util.getMinute()+Util.getSecond(), 0, 12*60*60, 2 * Math.PI, 0);
+                double hourX = size+ Util.PolarToCartesianX(hourAngle, size*hourHandLength);
+                double hourY = size+ Util.PolarToCartesianY(hourAngle, size*hourHandLength);
+                g2.setStroke(new BasicStroke(4));
+                //System.out.println(secondAngle+","+Util.getSecond());
+                g2.draw(new Line2D.Double(size, size, hourX, hourY));
+            }
         }
     }
 
