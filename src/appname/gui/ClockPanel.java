@@ -9,7 +9,7 @@ import appname.Util;
  */
 public class ClockPanel extends JPanel {
     //double size=Math.min(this.getHeight(),this.getWidth())/2;
-    double size=200;
+    double size=250;
     @Override
     public void paintComponent(Graphics g){//Repaint every second.
         //super.paintComponent(g);
