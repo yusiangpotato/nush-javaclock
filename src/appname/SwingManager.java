@@ -1,5 +1,8 @@
+package appname;
+
+import appname.gui.ClockPanel;
+
 import javax.swing.*;
-import java.awt.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +30,7 @@ public class SwingManager implements Runnable{
                 windowpane.setLayout(null);
                 window.setContentPane(windowpane);
                 //windowpane.setBackground(Color.black);
-                //Pushingwindowpane.add(new ClockPanel());
+                //Pushingwindowpane.add(new appname.gui.ClockPanel());
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 windowpane.setVisible(true);

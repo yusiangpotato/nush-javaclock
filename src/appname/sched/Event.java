@@ -1,3 +1,5 @@
+package appname.sched;
+
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.UUID;

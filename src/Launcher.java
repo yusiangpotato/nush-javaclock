@@ -1,7 +1,6 @@
-import javax.swing.*;
-import java.awt.*;
+import appname.SwingManager;
 
-public class Main {
+public class Launcher {
 
     public static void main(String[] args) {
         // TODO code application logic here
