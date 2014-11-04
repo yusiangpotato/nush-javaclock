@@ -27,12 +27,12 @@ public class SwingManager implements Runnable{
                 windowpane.setLayout(null);
                 window.setContentPane(windowpane);
                 //windowpane.setBackground(Color.black);
-                //Pushingwindowpane.add(new ClockPanel());
+                //windowpane.add(new ClockPanel());
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 windowpane.setVisible(true);
                 window.setSize(640, 480);
-                windowpane.setSize(640, 480);
+                windowpane.setSize(400, 400);
                 window.setVisible(true);
 
             }
