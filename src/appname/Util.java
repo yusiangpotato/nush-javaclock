@@ -7,10 +7,10 @@ import java.util.GregorianCalendar;
  */
 public class Util {//
     public static double PolarToCartesianX(double theta,double length){ //Theta=0 means Straight up.
-        return length *Math.cos(theta);
+        return -1* length *Math.sin(theta);
     }
     public static double PolarToCartesianY(double theta,double length){//Theta=pi/2 means straight out right.
-        return -1* length *Math.sin(theta);
+        return -1* length *Math.cos(theta);
     }
     public static double map(double x, double in_min, double in_max, double out_min, double out_max)
     {
