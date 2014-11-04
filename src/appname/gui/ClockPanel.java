@@ -89,7 +89,7 @@ public class ClockPanel extends JPanel {
 
     }
 
-    void setSize(double sz){
-        size=sz;
+    void setSize(float sz){
+        size = sz;
     }
 }
