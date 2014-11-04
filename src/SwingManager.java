@@ -14,6 +14,7 @@ public class SwingManager implements Runnable{
 
 
     ScheduledExecutorService ExecService;
+    JPanel windowpane;
 
     public SwingManager(){
         SwingUtilities.invokeLater(new Runnable() {
@@ -22,15 +23,16 @@ public class SwingManager implements Runnable{
 
                 JFrame.setDefaultLookAndFeelDecorated(true);
                 JFrame window = new JFrame("Nevermind");
-                JPanel windowpane = new JPanel();
+                windowpane = new ClockPanel();
                 windowpane.setLayout(null);
                 window.setContentPane(windowpane);
                 //windowpane.setBackground(Color.black);
-                windowpane.add(new ClockPanel());
+                //Pushingwindowpane.add(new ClockPanel());
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
+                windowpane.setVisible(true);
                 window.setSize(640, 480);
+                windowpane.setSize(640, 480);
                 window.setVisible(true);
 
             }
@@ -43,7 +45,15 @@ public class SwingManager implements Runnable{
     @Override
     public void run() {
         cnt[0]++;
+
         //TODO stub
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                windowpane.repaint();
+
+            }
+        });
     }
 
     public void setExecFreq(double freq) throws IllegalArgumentException {

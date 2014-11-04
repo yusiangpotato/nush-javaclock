@@ -7,10 +7,11 @@ import java.util.ArrayList;
  */
 public class ClockPanel extends JPanel {
     //double size=Math.min(this.getHeight(),this.getWidth());
-    double size=300;
+    double size=200;
     @Override
     public void paintComponent(Graphics g){//Repaint every second.
-        super.paintComponent(g);
+        //super.paintComponent(g);
+        this.setSize(Auxiliary.safeLongToInt(Math.round(2*size)),Auxiliary.safeLongToInt(Math.round(2*size)));
         {//Setup the clock face markings
             for(int i=0; i<60;i++){
                 double theta = Auxiliary.map(i, 0, 60, 2 * Math.PI, 0);
