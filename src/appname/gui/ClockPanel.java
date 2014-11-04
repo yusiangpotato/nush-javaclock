@@ -10,13 +10,13 @@ import appname.Util;
  */
 public class ClockPanel extends JPanel {
     //double size=Math.min(this.getHeight(),this.getWidth())/2;
-    double size=250;
-    static final double secondHandLength =7/8f;
-    static final double minuteHandLength =5/8f;
-    static final double hourHandLength   =3/8f;
+    float size=250f;
+    static final float secondHandLength =7/8f;
+    static final float minuteHandLength =5/8f;
+    static final float hourHandLength   =3/8f;
 
 	public ClockPanel(){
-		setBackground(Color.WHITE);
+		setBackground(Color.BLACK);
 	}
 
     @Override
@@ -25,22 +25,24 @@ public class ClockPanel extends JPanel {
 	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
-	    g2.setColor(Color.WHITE);
         //this.setSize(Util.safeLongToInt(Math.round(2*size)),Util.safeLongToInt(Math.round(2*size)));
         {//Setup the clock face markings
+	        g2.setStroke(new BasicStroke(2));
+	        float margin = 0.01f, minorDivision = 0.95f, majorDivison = 0.93f, divisionMargin = 0.98f, textPosition = 0.82f;
+	        g2.drawOval((int)(size*margin), (int)(size*margin), (int)(size*(2-margin)), (int)(size*(2-margin)));
             for(int i=0; i<60;i++){
                 double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
-                g2.setPaint(i % 5 == 0?Color.DARK_GRAY:Color.LIGHT_GRAY);
-                int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? 0.8 * size : 0.9 * size)+size));
-                int startY=Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, i % 5 == 0 ? 0.8 * size : 0.9 * size)+size));
-                int endX  =Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, size)+size));
-                int endY  =Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, size)+size));
+                g2.setPaint(i % 5 == 0?Color.LIGHT_GRAY:Color.DARK_GRAY);
+                int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size));
+                int startY=Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size));
+                int endX  =Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, divisionMargin * size) + size));
+                int endY  =Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, divisionMargin * size) + size));
                 g2.drawLine(startX,startY,endX,endY);
 
-                g2.setPaint(Color.BLACK);
+                g2.setPaint(Color.WHITE);
                 if(i%5==0){
-                    int posX = Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, 0.75*size) + -size/17 + size));
-                    int posY = Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, 0.75*size) +  size/30 + size));
+                    int posX = Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, textPosition * size) + -size/17 + size));
+                    int posY = Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, textPosition * size) +  size/30 + size));
                     String s= ""+(i==0?12+"":(i/5<10?" "+i/5:i/5)) ;
                     g2.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,Math.max(Math.min(Util.safeLongToInt(Math.round(size / 10)), 75/*MAX*/), 8/*MIN*/)  ));
                     g2.drawString(s,posX ,posY );
@@ -82,7 +84,7 @@ public class ClockPanel extends JPanel {
 
     }
 
-    void setSize(double sz){
+    void setSize(float sz){
         size=sz;
     }
 }
