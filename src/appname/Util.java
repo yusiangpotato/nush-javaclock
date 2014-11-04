@@ -5,7 +5,9 @@ import java.util.GregorianCalendar;
 /**
  * Created by yusiang on 2/14/14.
  */
-public class Util {//
+public class Util {// Static class dear.
+    private Util(){;}//This supposedly prevents instantiation? Whatever.
+
     public static double PolarToCartesianX(double theta,double length){ //Theta=0 means Straight up.
         return -1* length *Math.sin(theta);
     }
