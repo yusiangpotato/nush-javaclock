@@ -1,0 +1,75 @@
+import javafx.scene.control.ComboBox;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+/**
+ * Created by yusiang on 2/14/14.
+ */
+public class Auxiliary {//
+    static double PolarToCartesianX(double theta,double length){
+       return length *Math.cos(theta);
+    }
+    static double PolarToCartesianY(double theta,double length){
+        return -1* length *Math.sin(theta);
+    }
+    static double map(double x, double in_min, double in_max, double out_min, double out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+    static int getHour(){
+        return new GregorianCalendar().get(GregorianCalendar.HOUR);
+    }
+    static int getMinute(){
+        return new GregorianCalendar().get(GregorianCalendar.MINUTE);
+    }
+    static int getSecond(){
+        return new GregorianCalendar().get(GregorianCalendar.SECOND);
+    }
+    static int getHour24(){
+        return new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY);
+    }
+
+    static int getHour(GregorianCalendar g){
+        return g.get(GregorianCalendar.HOUR);
+    }
+    static int getMinute(GregorianCalendar g){
+        return g.get(GregorianCalendar.MINUTE);
+    }
+    static int getSecond(GregorianCalendar g){
+        return g.get(GregorianCalendar.SECOND);
+    }
+    static int getHour24(GregorianCalendar g){
+        return g.get(GregorianCalendar.HOUR_OF_DAY);
+    }
+//    static int getHour(int i){
+//
+//        return new GregorianCalendar().get(GregorianCalendar.HOUR);
+//    }
+//    static int getMinute(int i){
+//        return new GregorianCalendar().get(GregorianCalendar.MINUTE);
+//    }
+//    static int getSecond(int i){
+//        return new GregorianCalendar().get(GregorianCalendar.SECOND);
+//    }
+//    static int getHour24(int i){
+//        return new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY);
+//    }
+//
+//    @Deprecated
+//    static boolean processTimeCombobox(String s, ComboBox hr, ComboBox min){
+//        //if(s.length()<5) return false;
+//
+//        SimpleDateFormat fmt = new SimpleDateFormat("H:m");
+//        Date d =new Date();
+//        try{
+//            d= fmt.parse(s);
+//        }catch (Exception ex){
+//           return false;
+//        }
+//        hr.setValue(d.getHours());
+//        min.setValue(d.getMinutes());
+//        return false;
+//    }
+}
