@@ -22,9 +22,10 @@ public class ClockPanel extends JPanel {
                 g.drawLine(startX,startY,endX,endY);
 
                 if(i%5==0){
-                    int posX = Auxiliary.safeLongToInt(Math.round(Auxiliary.PolarToCartesianX(theta, 0.75*size)+size));
-                    int posY = Auxiliary.safeLongToInt(Math.round(Auxiliary.PolarToCartesianY(theta, 0.75*size)+size));
-                    g.drawString((i==0?12+"":(i/5<10?" "+i/5:i/5))+"",posX ,posY );
+                    int posX = Auxiliary.safeLongToInt(Math.round(Auxiliary.PolarToCartesianX(theta, 0.75*size) + 0.96*size));
+                    int posY = Auxiliary.safeLongToInt(Math.round(Auxiliary.PolarToCartesianY(theta, 0.75*size) + 1.02*size));
+                    String s= ""+(i==0?12+"":(i/5<10?" "+i/5:i/5)) ;
+                    g.drawString(s,posX ,posY );
                     
                 }
             }
