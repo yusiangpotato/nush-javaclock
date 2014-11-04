@@ -9,22 +9,24 @@ import appname.Util;
  * Created by yusiang on 11/4/14.
  */
 public class ClockPanel extends JPanel {
-    //double size=Math.min(this.getHeight(),this.getWidth())/2;
-    double size=250;
-    static final double secondHandLength =7/8f;
-    static double minuteHandLength =5/8f;
-    static double hourHandLength   =3/8f;
+
+	public ClockPanel(){
+		setBackground(Color.BLACK);
+	}
+
     @Override
     public void paintComponent(Graphics g){//Repaint every second.
         Graphics2D g2 = (Graphics2D) g;
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
+	    g2.setColor(Color.WHITE);
         //this.setSize(Util.safeLongToInt(Math.round(2*size)),Util.safeLongToInt(Math.round(2*size)));
         {//Setup the clock face markings
             for(int i=0; i<60;i++){
                 double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
-                int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? 0.8 * size : 0.9 * size)+size));
-                int startY=Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, i % 5 == 0 ? 0.8 * size : 0.9 * size)+size));
+                int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? 0.95f * size : 0.98f * size)+size));
+                int startY=Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, i % 5 == 0 ? 0.95f * size : 0.98f * size)+size));
                 int endX  =Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, size)+size));
                 int endY  =Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, size)+size));
                 g2.drawLine(startX,startY,endX,endY);
@@ -65,9 +67,17 @@ public class ClockPanel extends JPanel {
                 g2.draw(new Line2D.Double(size, size, hourX, hourY));
             }
         }
+
+
     }
 
     void setSize(double sz){
         size=sz;
     }
+
+	//double size=Math.min(this.getHeight(),this.getWidth())/2;
+	double size=250;
+	static final double secondHandLength =7/8f;
+	static double minuteHandLength =5/8f;
+	static double hourHandLength   =3/8f;
 }
