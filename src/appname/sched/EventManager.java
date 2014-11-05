@@ -40,7 +40,7 @@ public class EventManager{
             nBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evx) {
-                    JFrame jf = new JFrame();
+                    final JFrame jf = new JFrame();
                     final boolean[] modeEnd = {false};
                     final boolean[] modeStart = {true};
 
@@ -84,7 +84,6 @@ public class EventManager{
                                 startHour.setEnabled(true);
                                 startMinutes.setEnabled(true);
                                 startDateButton.setEnabled(true);
-
                             }
                         }
                     });
@@ -153,8 +152,21 @@ public class EventManager{
                     //OK/Cancel
                     JButton okButton = new JButton("OK");
                     pane.add(okButton,"skip 2, span 3, grow 1");
+	                okButton.addActionListener(new ActionListener() {
+		                @Override
+		                public void actionPerformed(ActionEvent actionEvent) {
+			                //TODO: parse/validate
+			                jf.dispose();
+		                }
+	                });
                     JButton cancelButton = new JButton("Cancel");
                     pane.add(cancelButton,"skip 1, span 2, grow 1");
+	                cancelButton.addActionListener(new ActionListener() {
+		                @Override
+		                public void actionPerformed(ActionEvent actionEvent) {
+			                jf.dispose();
+		                }
+	                });
 
                     jf.setVisible(true);
                     //TODO parse/validate

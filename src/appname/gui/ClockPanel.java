@@ -3,6 +3,8 @@ package appname.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import appname.util.Pair;
 import appname.util.Quadruple;
@@ -19,8 +21,11 @@ public class ClockPanel extends JPanel {
     static final int   handsAlpha       =192;
 	boolean nightMode = true;
 	boolean drawDigital = true;
+	boolean animate = true;
     Quadruple<Integer,Integer,Integer,Integer> divPos[] = new Quadruple[60];
     Pair<Integer,Integer> numPos[] = new Pair[12];
+	private static float[] animateValues = {-1.0f, -0.95f, -0.85f, -0.7f, -0.5f, -0.3f, -0.1f, 0.05f, 0.10f, 0.05f, 0};
+	int prevSecond = -1, animateDuration = animateValues.length - 1, animateTick = animateDuration;
 
 	public ClockPanel(){
         /*
@@ -76,7 +81,12 @@ public class ClockPanel extends JPanel {
             }
             {
                 //Second hand
-                double secondAngle = Util.map(Util.getSecond(), 0, 60, 2 * Math.PI, 0);
+	            if (animate && Util.getSecond() != prevSecond) {
+		            animateTick = -1;
+		            prevSecond = Util.getSecond();
+	            }
+	            double second = animate?(Util.getSecond() + animateValues[animateTick=Math.min(animateTick + 1, animateDuration)]):Util.getSecond();
+	            double secondAngle = Util.map(second, 0, 60, 2 * Math.PI, 0);
                 double secondX = size+ Util.PolarToCartesianX(secondAngle, size*secondHandLength);
                 double secondY = size+ Util.PolarToCartesianY(secondAngle, size * secondHandLength);
                 g2.setStroke(new BasicStroke(3));

@@ -63,7 +63,7 @@ public class SwingManager implements Runnable{
             }
         });
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        setExecFreq(10);
+        setExecFreq(30);
 
     }
 
