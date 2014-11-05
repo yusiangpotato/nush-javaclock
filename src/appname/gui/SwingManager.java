@@ -4,6 +4,10 @@ import appname.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +19,7 @@ public class SwingManager implements Runnable{
     int every = 1;
     String execs = "";
     final int cnt[] = {1};
-
+    BufferedReader stdin;
 
     ScheduledExecutorService ExecService;
     JPanel windowPane;
@@ -23,6 +27,8 @@ public class SwingManager implements Runnable{
     JFrame window;
 
     public SwingManager(){
+
+        stdin = new BufferedReader(new InputStreamReader(System.in));
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -68,10 +74,21 @@ public class SwingManager implements Runnable{
     public void run() {
         cnt[0]++;
 
-        //TODO stub
+        final String[] s={""};
+
+        try {
+            if(stdin.ready()){
+                s[0]+=stdin.readLine();
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
+                if(!s[0].equals(""))
+                    System.out.println(execCmd(s[0])?"ACK":"NACK");
                 windowPane.setPreferredSize(new Dimension(Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5)),
                         Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5))));
                 windowPane.repaint();
@@ -99,6 +116,7 @@ public class SwingManager implements Runnable{
 
     public boolean execCmd(String cmd) {
         try {
+            if(cmd.equals("")) return false;
             cmd = cmd.toUpperCase();
             String[] x = cmd.split(" ");
 

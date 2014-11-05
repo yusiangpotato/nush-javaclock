@@ -34,6 +34,7 @@ public class ClockPanel extends JPanel {
     public void paintComponent(Graphics g){//Repaint every second.
         //If size changed, recalculate positions
         if(prevSize!=size){
+            System.out.println("New size: "+size+"; Recalculating...");
             calculateDivisions();
             calculateNumbers();
             prevSize=size;
