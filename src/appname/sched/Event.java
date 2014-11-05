@@ -1,5 +1,6 @@
 package appname.sched;
 
+import javax.swing.*;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -12,7 +13,10 @@ public class Event implements Comparable<Event>,Comparator<Event>{
     final UUID uuid;
     String name;
     Event nextEvent=null;
-    Event(GregorianCalendar s, GregorianCalendar e,String n){
+    public Event(JFrame jf){
+        uuid=UUID.randomUUID();
+    }
+    public Event(GregorianCalendar s, GregorianCalendar e,String n){
         if(s==null|e==null) throw new NullPointerException();
         start=s; end=e;
         uuid=UUID.randomUUID();
@@ -49,5 +53,10 @@ public class Event implements Comparable<Event>,Comparator<Event>{
         if(o1==null) return -1;
         if(o2==null) return  1;
         return o1.getEnd().compareTo(o2.getEnd());
+    }
+
+    public JPanel toPanel(){
+        //TODO
+        return null;
     }
 }

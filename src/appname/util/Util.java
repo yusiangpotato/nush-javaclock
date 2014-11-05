@@ -46,8 +46,8 @@ public class Util {// Static class dear.
 
     public static String getTimeString(){return getTimeString(new GregorianCalendar());}
     public static String getTimeString(GregorianCalendar g){
-        return  (Util.getHour24(g)<10?"0":"")+Util.getHour24(g)+":"+
-                (Util.getMinute(g)<10?"0":"")+Util.getMinute(g)+":"+
+        return  (Util.getHour24(g)<10?"0":"")+Util.getHour24(g)+":"/*(getSecond()%2==0?":":" ")*/+
+                (Util.getMinute(g)<10?"0":"")+Util.getMinute(g)+":"/*(getSecond()%2==0?":":" ")*/+
                 (Util.getSecond(g)<10?"0":"")+Util.getSecond(g);
     }
 

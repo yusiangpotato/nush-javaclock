@@ -17,15 +17,18 @@ public class ClockPanel extends JPanel {
     static final double minuteHandLength =0.75;
     static final double hourHandLength   =0.55;
     static final int   handsAlpha       =192;
-	boolean nightMode = false;
+	boolean nightMode = true;
 	boolean drawDigital = true;
     Quadruple<Integer,Integer,Integer,Integer> divPos[] = new Quadruple[60];
     Pair<Integer,Integer> numPos[] = new Pair[12];
 
 	public ClockPanel(){
+        /*
 		setBackground(nightMode?
                 new Color(32, 32, 32):
                 new Color(223, 223, 223));
+        */
+        if(nightMode) setBackground(new Color(32, 32, 32));
         //calculateDivisions();
         //calculateNumbers();
 	}
@@ -118,8 +121,14 @@ public class ClockPanel extends JPanel {
 
     }
 
-    public void setSize(float sz){
+    public void setSize(double sz){
         size = sz;
+        setPreferredSize(new Dimension(Util.doubleToInt(size*2),Util.doubleToInt(size*2)));
+        //setMinimumSize(new Dimension(Util.doubleToInt(size*2),Util.doubleToInt(size*2)));
+    }
+    public void reCalc(){
+        calculateNumbers();
+        calculateDivisions();
     }
     private void calculateDivisions(){
         final float margin = 0.01f, minorDivision = 0.95f, majorDivison = 0.93f, divisionMargin = 0.98f;

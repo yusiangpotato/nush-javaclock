@@ -1,6 +1,8 @@
 package appname.gui;
 
+import appname.sched.EventManager;
 import appname.util.Util;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +27,7 @@ public class SwingManager implements Runnable{
     JPanel windowPane;
     ClockPanel clockPane;
     JFrame window;
+    EventManager eManager;
 
     public SwingManager(){
 
@@ -32,34 +35,28 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-
-
-                try {
-                    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                        if ("Nimbus".equals(info.getName())) {
-                            UIManager.setLookAndFeel(info.getClassName());
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    // If Nimbus is not available, you can set the GUI to another look and feel.
-                    JFrame.setDefaultLookAndFeelDecorated(true);
-                }
-                window = new JFrame("Nevermind");
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                window = new JFrame("Go on, pull it!");
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
-                windowPane = new JPanel(new BorderLayout());
+                windowPane = new JPanel(new MigLayout("","[pref!][push,fill]","[100%]"));
 
 
                 window.setContentPane(windowPane);
                 //windowPane.setBackground(Color.black);
 
-                windowPane.add(clockPane,BorderLayout.CENTER);
+                windowPane.add(clockPane,"grow 0");
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                windowPane.setVisible(true);
-                window.setSize(640, 480);
+                eManager = new EventManager();
+                windowPane.add(eManager.getPane(),"push, grow 1");
+
+
+                //windowPane.setVisible(true);
+                window.setSize(800, 600);
+                window.setMinimumSize(new Dimension(480,320));
+
                 //windowPane.setSize(400, 400);
                 window.setVisible(true);
 
@@ -89,10 +86,10 @@ public class SwingManager implements Runnable{
             public void run() {
                 if(!s[0].equals(""))
                     System.out.println(execCmd(s[0])?"ACK":"NACK");
-                windowPane.setPreferredSize(new Dimension(Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5)),
-                        Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5))));
+
+                windowPane.revalidate();
                 windowPane.repaint();
-                clockPane.setSize(Math.min(window.getHeight()/2-15,window.getWidth()/2-3));
+                clockPane.setSize(Math.min(window.getHeight()/2-25,window.getWidth()/2-105));
                 clockPane.repaint();
 
             }
@@ -148,6 +145,9 @@ public class SwingManager implements Runnable{
                 case "FF":
                     for (int i = 0; i < Integer.parseInt(x[1]); i++)
                         run();
+                    return true;
+                case "RECALC":
+                    clockPane.reCalc();
                     return true;
                 /*
                 case "XSZ":
