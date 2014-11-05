@@ -1,8 +1,9 @@
 package appname.gui;
 
-import appname.gui.ClockPanel;
+import appname.util.Util;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,17 +27,29 @@ public class SwingManager implements Runnable{
 
             public void run() {
 
-                JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("Nevermind");
-                clockPane = new ClockPanel();
-                windowPane = clockPane;
-                //windowPane = new JPanel();
 
-                windowPane.setLayout(null);
+                try {
+                    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                        if ("Nimbus".equals(info.getName())) {
+                            UIManager.setLookAndFeel(info.getClassName());
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    // If Nimbus is not available, you can set the GUI to another look and feel.
+                    JFrame.setDefaultLookAndFeelDecorated(true);
+                }
+                window = new JFrame("Nevermind");
+
+                clockPane = new ClockPanel();
+                //windowPane = clockPane;
+                windowPane = new JPanel(new BorderLayout());
+
+
                 window.setContentPane(windowPane);
                 //windowPane.setBackground(Color.black);
 
-                //windowPane.add(clockPane);
+                windowPane.add(clockPane,BorderLayout.CENTER);
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 windowPane.setVisible(true);
@@ -59,7 +72,10 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                clockPane.setSize(Math.min(window.getHeight()/2-17,window.getWidth()/2-5));
+                windowPane.setPreferredSize(new Dimension(Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5)),
+                        Util.doubleToInt(Math.min(window.getHeight()/2-17,window.getWidth()/2-5))));
+                windowPane.repaint();
+                clockPane.setSize(Math.min(window.getHeight()/2-15,window.getWidth()/2-3));
                 clockPane.repaint();
 
             }

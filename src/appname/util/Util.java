@@ -1,4 +1,4 @@
-package appname;
+package appname.util;
 
 import java.util.GregorianCalendar;
 
@@ -44,6 +44,13 @@ public class Util {// Static class dear.
         return g.get(GregorianCalendar.HOUR_OF_DAY);
     }
 
+    public static String getTimeString(){return getTimeString(new GregorianCalendar());}
+    public static String getTimeString(GregorianCalendar g){
+        return  (Util.getHour24(g)<10?"0":"")+Util.getHour24(g)+":"+
+                (Util.getMinute(g)<10?"0":"")+Util.getMinute(g)+":"+
+                (Util.getSecond(g)<10?"0":"")+Util.getSecond(g);
+    }
+
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
             throw new IllegalArgumentException
@@ -51,6 +58,11 @@ public class Util {// Static class dear.
         }
         return (int) l;
     }
+    public static int doubleToInt(double d){
+        return safeLongToInt(Math.round(d));
+    }
+
+
 //    public static int getHour(int i){
 //
 //        return new GregorianCalendar().get(GregorianCalendar.HOUR);
