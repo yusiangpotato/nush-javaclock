@@ -1,6 +1,11 @@
 package appname.sched;
 
+import net.miginfocom.swing.MigLayout;
+import sun.jdbc.odbc.JdbcOdbcBoundArrayOfParams;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -13,9 +18,6 @@ public class Event implements Comparable<Event>,Comparator<Event>{
     final UUID uuid;
     String name;
     Event nextEvent=null;
-    public Event(JFrame jf){
-        uuid=UUID.randomUUID();
-    }
     public Event(GregorianCalendar s, GregorianCalendar e,String n){
         if(s==null|e==null) throw new NullPointerException();
         start=s; end=e;
@@ -58,5 +60,7 @@ public class Event implements Comparable<Event>,Comparator<Event>{
     public JPanel toPanel(){
         //TODO
         return null;
+
     }
+
 }
