@@ -39,12 +39,12 @@ public class Event implements Comparable<Event>,Comparator<Event>{
         this.end = end;
     }
 
-    @Override
+    @Override //Comparable
     public int compareTo(Event o) {
-        return 0;
+        return compare(this,o);
     }
 
-    @Override
+    @Override //Comparator
     public int compare(Event o1, Event o2) {
         if(o1==null) return -1;
         if(o2==null) return  1;
