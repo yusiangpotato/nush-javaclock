@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.PriorityQueue;
 import java.util.UUID;
 
 import appname.util.priorityArrayList;
@@ -14,7 +15,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class EventManager{
     private JPanel pane;
-    private priorityArrayList<Event> eList = new priorityArrayList<>();
+    private PriorityQueue<Event> eList = new PriorityQueue<>();
     public EventManager(){
         pane = new JPanel(new MigLayout("fill","[100%]","[pref!][push]"));
 
