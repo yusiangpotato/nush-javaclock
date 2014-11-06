@@ -1,5 +1,7 @@
 package appname.util;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.GregorianCalendar;
 
 /**
@@ -60,6 +62,29 @@ public class Util {// Static class dear.
     }
     public static int doubleToInt(double d){
         return safeLongToInt(Math.round(d));
+    }
+    public static String getDeltaT(GregorianCalendar g1, GregorianCalendar g2, boolean useFuzzyMode){
+        return useFuzzyMode?fuzzyDeltaT(g1,g2):exactDeltaT(g1,g2);
+    }
+    private static String exactDeltaT(GregorianCalendar g1, GregorianCalendar g2){
+        long deltaTSecs = (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
+        return deltaTSecs/3600 + " h "+deltaTSecs%3600/60 + " min "+ deltaTSecs%60+ "sec";
+    }
+    private static String fuzzyDeltaT(GregorianCalendar g1, GregorianCalendar g2){
+        long deltaTSecs = (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
+        if(deltaTSecs>3600){ //1h+
+            return toSf(deltaTSecs/3600.0, 2)+" h";
+        } else if (deltaTSecs > 60){
+            return toSf(deltaTSecs/60.0,2)+" min";
+        } else {
+            return deltaTSecs + " s";
+        }
+        //return "";
+    }
+    public static double toSf(double d, int sf){
+        BigDecimal bd = new BigDecimal(d); //BigDecimal is NOT only a decimal library!
+        bd = bd.round(new MathContext(sf));
+        return bd.doubleValue();
     }
 
 

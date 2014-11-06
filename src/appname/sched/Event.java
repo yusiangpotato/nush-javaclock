@@ -15,7 +15,7 @@ public class Event implements Comparable<Event>,Comparator<Event>{
     String name;
     Event nextEvent=null;
     public Event(GregorianCalendar s, GregorianCalendar e,String n){
-        if(s==null|e==null) throw new NullPointerException();
+        //if(s==null|e==null) throw new NullPointerException();
         start=s; end=e;
         uuid=UUID.randomUUID();
         name=n;
@@ -47,9 +47,11 @@ public class Event implements Comparable<Event>,Comparator<Event>{
     }
 
     @Override //Comparator
-    public int compare(Event o1, Event o2) {
-        if(o1==null) return -1;
-        if(o2==null) return  1;
+    public int compare(Event o1, Event o2) {// Bigger means ends later
+        if(o1.getEnd()==null && o2.getEnd()!=null) return -1;//o1 bigger --> Havent started yet!
+        if(o1.getEnd()!=null && o2.getEnd()==null) return  1;//o2 bigger
+        if(o1.getEnd()==null && o2.getEnd()==null) return  0;//Neither
+
         return o1.getEnd().compareTo(o2.getEnd());
     }
 
@@ -57,6 +59,10 @@ public class Event implements Comparable<Event>,Comparator<Event>{
         //TODO
         return null;
 
+    }
+    @Override
+    public String toString(){
+        return super.toString();
     }
 
 }
