@@ -141,15 +141,15 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         String s = "Event: " + name + '\n';
         if (start == null) s += "Manual Start";
         else
-            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart()) + 1) + "-" + Util.getDate(getStart()) + " @ " +
+            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart())) + "-" + Util.getDate(getStart()) + " @ " +
                     Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
         s += '\n';
 
         if(getEnd()!=null)
-            s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd()) + 1) + "-" + Util.getDate(getEnd()) + " @ " +
+            s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd())) + "-" + Util.getDate(getEnd()) + " @ " +
                 Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "\n";
 
-        s += "Duration: " + getDuration() + " sec";
+        s += "Duration: " + Util.secsToExactHMS(getDuration());
 
         return s;
     }
@@ -158,13 +158,13 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         String s = "<html>Event: " + name + "<br>";
         if (start == null) s += "Manual Start";
         else
-            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart()) + 1) + "-" + Util.getDate(getStart()) + " @ " +
+            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart())) + "-" + Util.getDate(getStart()) + " @ " +
                     Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
         s += "<br>";
         if(getEnd()!=null)
-        s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd()) + 1) + "-" + Util.getDate(getEnd()) + " @ " +
+        s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd())) + "-" + Util.getDate(getEnd()) + " @ " +
                 Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "<br>";
-        s += "Duration: " + getDuration() + " sec";
+        s += "Duration: " + Util.secsToExactHMS(getDuration());
 
         s += "<br></html>";
         return s;

@@ -111,16 +111,15 @@ public class Util {// Static class dear.
     }
 
     public static String getDeltaT(GregCalPlus g1, GregCalPlus g2, boolean useFuzzyMode) {
-        return useFuzzyMode ? fuzzyDeltaT(g1, g2) : exactDeltaT(g1, g2);
+        return useFuzzyMode ? secsToFuzzyHMS(getDeltaT(g1,g2)) : secsToExactHMS(getDeltaT(g1, g2));
     }
 
-    private static String exactDeltaT(GregCalPlus g1, GregCalPlus g2) {
-        long deltaTSecs = (g2.getTimeInMillis() - g1.getTimeInMillis()) / 1000;
+    public static String secsToExactHMS(long deltaTSecs) { 
         return deltaTSecs / 3600 + " h " + deltaTSecs % 3600 / 60 + " min " + deltaTSecs % 60 + "sec";
     }
 
-    private static String fuzzyDeltaT(GregCalPlus g1, GregCalPlus g2) {
-        long deltaTSecs = (g2.getTimeInMillis() - g1.getTimeInMillis()) / 1000;
+    public static String secsToFuzzyHMS(long deltaTSecs) {
+
         if (deltaTSecs > 3600) { //1h+
             return toSf(deltaTSecs / 3600.0, 2) + " h";
         } else if (deltaTSecs > 60) {

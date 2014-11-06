@@ -169,4 +169,9 @@ public class EventManager {
         for (Event e : eList)
             e.setStart(new GregCalPlus());
     }
+
+    public void edit(int index){
+        Event[] ev = {eList.get(index)};
+        EventDialog.makeDialog(eList,ev);
+    }
 }

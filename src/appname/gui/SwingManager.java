@@ -160,6 +160,9 @@ public class SwingManager implements Runnable {
                     return true;
                 case "ATE":
                     return eManager.addTestEvent(Integer.parseInt(x[1]));
+                case "EDIT":
+                    eManager.edit(Integer.parseInt(x[1]));
+                    return true;
                 /*
                 case "XSZ":
                     sl.setXsz(Integer.parseUInt(x[1]));
