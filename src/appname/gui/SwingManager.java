@@ -35,8 +35,8 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                JFrame.setDefaultLookAndFeelDecorated(false);
-                window = new JFrame("Go on, pull it!");
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                window = new JFrame("A washed kettle never boils.");
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;

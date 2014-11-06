@@ -2,6 +2,8 @@ package appname.util;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 /**
@@ -121,6 +123,20 @@ public class Util {// Static class dear.
             return Double.parseDouble(s.trim());
         }catch(Exception e){
             throw new Exception(errorMsg);
+        }
+    }
+
+
+    public static boolean isDateValid(String date)
+    {
+        try {
+            final String DATE_FORMAT = "dd-MM-yyyy";
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(date);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

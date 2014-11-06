@@ -4,6 +4,7 @@ import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.GregorianCalendar;
@@ -13,29 +14,29 @@ import java.util.PriorityQueue;
  * Created by yusiang on 11/6/14.
  */
 public class EventDialog {
-    static void makeDialog(final PriorityQueue<Event> pq, Event ev){
-        final JFrame jf = new JFrame();
+    static void makeDialog(final PriorityQueue<Event> pq, final Event[] ev){
+        final JFrame jf = new JFrame("Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
         final boolean[] endIsDuration = {false};
         final int[] startYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
         final int[]   endYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
         if(ev!=null){
-            if(ev.getStart()!=null){
-                startYMDHMS[0]=Util.getYear  (ev.getStart());
-                startYMDHMS[1]=Util.getMonth (ev.getStart());
-                startYMDHMS[2]=Util.getDate  (ev.getStart());
-                startYMDHMS[3]=Util.getHour24(ev.getStart());
-                startYMDHMS[4]=Util.getMinute(ev.getStart());
-                startYMDHMS[5]=Util.getSecond(ev.getStart());
+            if(ev[0].getStart()!=null){
+                startYMDHMS[0]=Util.getYear  (ev[0].getStart());
+                startYMDHMS[1]=Util.getMonth (ev[0].getStart());
+                startYMDHMS[2]=Util.getDate  (ev[0].getStart());
+                startYMDHMS[3]=Util.getHour24(ev[0].getStart());
+                startYMDHMS[4]=Util.getMinute(ev[0].getStart());
+                startYMDHMS[5]=Util.getSecond(ev[0].getStart());
             }
-            if(ev.getEnd()!=null){
-                endYMDHMS[0]=Util.getYear  (ev.getEnd());
-                endYMDHMS[1]=Util.getMonth (ev.getEnd());
-                endYMDHMS[2]=Util.getDate  (ev.getEnd());
-                endYMDHMS[3]=Util.getHour24(ev.getEnd());
-                endYMDHMS[4]=Util.getMinute(ev.getEnd());
-                endYMDHMS[5]=Util.getSecond(ev.getEnd());
+            if(ev[0].getEnd()!=null){
+                endYMDHMS[0]=Util.getYear  (ev[0].getEnd());
+                endYMDHMS[1]=Util.getMonth (ev[0].getEnd());
+                endYMDHMS[2]=Util.getDate  (ev[0].getEnd());
+                endYMDHMS[3]=Util.getHour24(ev[0].getEnd());
+                endYMDHMS[4]=Util.getMinute(ev[0].getEnd());
+                endYMDHMS[5]=Util.getSecond(ev[0].getEnd());
             }
         }
         String[] hours = new String[24];
@@ -51,7 +52,7 @@ public class EventDialog {
         //Name
         JLabel nameLabel = new JLabel("Name:");
         pane.add(nameLabel, "grow 1");
-        final JTextField nameField = new JTextField(ev==null?"":ev.name);
+        final JTextField nameField = new JTextField(ev==null?"":ev[0].name);
 
         pane.add(nameField,"span 7, grow 1");
         //Start
@@ -84,7 +85,12 @@ public class EventDialog {
             }
         });
         //TODO Date
-
+        startDateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeDateDialog(startYMDHMS,"Change start date",jf);
+            }
+        });
         //End
         final JButton endButton = new JButton("End:");
         pane.add(endButton,"span 2, grow 1");
@@ -97,7 +103,12 @@ public class EventDialog {
         final JButton endDateButton = new JButton("Date...");
         pane.add(endDateButton,"span 2, grow 1");
         //TODO Date
-
+        endDateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeDateDialog(endYMDHMS,"Change end date",jf);
+            }
+        });
         //Duration ** Only one of either end or duration is visible, clicking the button swaps.
         //Default is duration.
         final JButton durationButton = new JButton("Duration:");
@@ -152,9 +163,9 @@ public class EventDialog {
             }
         });
         if(ev!=null){
-            if(ev.getStart()==null)
+            if(ev[0].getStart()==null)
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
-            if(ev.endIsDuration)
+            if(ev[0].endIsDuration)
                 endButton.getActionListeners()[0].actionPerformed(null); //Use duration
             else
                 durationButton.getActionListeners()[0].actionPerformed(null); //Use absolute end
@@ -170,7 +181,7 @@ public class EventDialog {
         JButton okButton = new JButton("OK");
         pane.add(okButton,"skip 2, span 3, grow 1");
 
-        final Event[] event = {null};
+
 
         okButton.addActionListener(new ActionListener() {
             @Override
@@ -215,10 +226,34 @@ public class EventDialog {
                     }
                     if(gS!=null&&gE.compareTo(gS)<=0) throw new Exception("End time equal/before start!");
                     jf.dispose();
-                    event[0] = new Event(gS,gE,nameField.getText(),endIsDuration[0]);
-                    pq.add(event[0]);
+                    if( ev[0]==null){
+                        ev[0] = new Event(gS,gE,nameField.getText(),endIsDuration[0]);
+                        pq.add(ev[0]);
+                    }else{
+                        ev[0].setStart(gS);
+                        ev[0].setEnd(gE);
+                        ev[0].name = nameField.getText();
+                        ev[0].endIsDuration = endIsDuration[0];
+                    }
                 }catch(Exception e){
                     errorLabel.setText(e.getMessage());
+                    //TODO Figure that out
+                    /*
+                    final int[] errorAnimCounter = {255};
+                    ActionListener errorAnimAction = null;
+                    final Timer errorAnim = new Timer(1,errorAnimAction);
+                    errorAnimAction= new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            errorAnimCounter[0]--;
+                            errorLabel.setForeground(new Color(errorAnimCounter[0],0,0));
+                            if(errorAnimCounter[0]==0) errorAnim.stop();
+                        }
+                    };
+                    errorAnim.setRepeats(true);
+                    errorAnim.start();
+                    errorAnim.setLogTimers(true);
+                    */
                 }
 
             }
@@ -234,5 +269,50 @@ public class EventDialog {
         jf.setVisible(true);
 
 
+    }
+    private static void makeDateDialog(final int[] YMDHMS, String title, final JFrame resetVisible){
+        resetVisible.setVisible(false);
+        final JFrame jf = new JFrame(title);
+        jf.setSize(400,120);
+        JPanel pane = new JPanel(new MigLayout("fill, wrap","[40%][20%][20%][20%]"));
+        pane.add(new JLabel(title),"grow 1");
+        final JTextField y = new JTextField(""+YMDHMS[0]),
+                         m = new JTextField(""+YMDHMS[1]),
+                         d = new JTextField(""+YMDHMS[2]);
+        pane.add(y,"grow 1");
+        pane.add(m,"grow 1");
+        pane.add(d,"grow 1");
+        final JLabel dbg = new JLabel("~");
+        pane.add(dbg,"span 4");
+        JButton ok = new JButton("OK");
+        JButton cc = new JButton("Cancel");
+        pane.add(ok,"skip 1, grow 1");
+        pane.add(cc,"skip 1, grow 1");
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    YMDHMS[0] = Util.parseUInt(y.getText(), "Error parsing year!");
+                    //if(YMDHMS[0]>2100) throw new Exception("Year too large!");
+                    YMDHMS[1] = Util.parseUInt(m.getText(), "Error parsing month! (Use numbers?)");
+                    YMDHMS[2] = Util.parseUInt(d.getText(), "Error parsing date!");
+                    if (!Util.isDateValid(YMDHMS[2] + "-" + YMDHMS[1] + "-" + YMDHMS[0]))
+                        throw new Exception("Date does not exist!");
+                    resetVisible.setVisible(true);
+                    jf.dispose();
+                } catch (Exception ex) {
+                    dbg.setText(ex.getMessage());
+                }
+            }
+        });
+        cc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetVisible.setVisible(true);
+                jf.dispose();
+            }
+        });
+        jf.setContentPane(pane);
+        jf.setVisible(true);
     }
 }
