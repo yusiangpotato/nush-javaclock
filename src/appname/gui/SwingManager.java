@@ -34,7 +34,7 @@ public class SwingManager implements Runnable {
 
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("A washed kettle never boils.");
+                window = new JFrame("A washed pot never boils.");
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;

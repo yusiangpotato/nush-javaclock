@@ -32,7 +32,8 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public int getDuration() {
         if (useDuration) return duration;
-        else return Util.safeLongToInt(Util.getDeltaT(start, end));
+        else if (start!=null) return Util.safeLongToInt(Util.getDeltaT(start, end));
+        else return 0;
     }
 
     public void setDuration(int duration) {
@@ -61,7 +62,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public void setStart(GregCalPlus start) {
         //Convert to duration, then setDuration().
-        if (!useDuration) setDuration(Util.safeLongToInt(Util.getDeltaT(getEnd(), getStart())));
+        if (!useDuration) setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), getEnd())));
         this.start = start;
     }
 
@@ -116,6 +117,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
         if (this.hasEnded()) pane.setBackground(new Color(94, 0, 13));
         else if (this.hasStarted()) pane.setBackground(new Color(12, 75, 0));
+        else pane.setBackground(new Color(4, 17, 94));
     }
 
     public boolean hasStarted() {
@@ -139,13 +141,13 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         String s = "Event: " + name + '\n';
         if (start == null) s += "Manual Start";
         else
-            s += "Autostart: " + Util.getYear(start) + "-" + (Util.getMonth(start) + 1) + "-" + Util.getDate(start) + " @ " +
-                    Util.getHour24(start) + ":" + Util.getMinute(start) + ":" + Util.getSecond(start);
+            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart()) + 1) + "-" + Util.getDate(getStart()) + " @ " +
+                    Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
         s += '\n';
 
-
-        s += "End:       " + Util.getYear(end) + "-" + (Util.getMonth(end) + 1) + "-" + Util.getDate(end) + " @ " +
-                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end) + "\n";
+        if(getEnd()!=null)
+            s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd()) + 1) + "-" + Util.getDate(getEnd()) + " @ " +
+                Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "\n";
 
         s += "Duration: " + getDuration() + " sec";
 
@@ -156,11 +158,12 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         String s = "<html>Event: " + name + "<br>";
         if (start == null) s += "Manual Start";
         else
-            s += "Autostart: " + Util.getYear(start) + "-" + (Util.getMonth(start) + 1) + "-" + Util.getDate(start) + " @ " +
-                    Util.getHour24(start) + ":" + Util.getMinute(start) + ":" + Util.getSecond(start);
+            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart()) + 1) + "-" + Util.getDate(getStart()) + " @ " +
+                    Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
         s += "<br>";
-        s += "End:       " + Util.getYear(end) + "-" + (Util.getMonth(end) + 1) + "-" + Util.getDate(end) + " @ " +
-                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end) + "<br>";
+        if(getEnd()!=null)
+        s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd()) + 1) + "-" + Util.getDate(getEnd()) + " @ " +
+                Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "<br>";
         s += "Duration: " + getDuration() + " sec";
 
         s += "<br></html>";
