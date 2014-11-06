@@ -1,31 +1,31 @@
 package appname.sched;
 
+import appname.util.GregCalPlus;
+import appname.util.PriorityArrayList;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
-import java.util.PriorityQueue;
-
-import appname.util.GregCalPlus;
-import appname.util.PriorityArrayList;
-import net.miginfocom.swing.MigLayout;
 
 /**
  * Created by yusiang on 11/4/14.
  */
-public class EventManager{
+public class EventManager {
     private final JPanel pane;
     private final JPanel eventsPane;
     private final PriorityArrayList<Event> eList = new PriorityArrayList<>();
     PriorityArrayList<Event> eListOld = (PriorityArrayList<Event>) eList.clone();
-    public EventManager(){
-        pane = new JPanel(new MigLayout("fill","[100%]","[pref!][push]"));
+
+    public EventManager() {
+        pane = new JPanel(new MigLayout("fill", "[100%]", "[pref!][push]"));
 
         {
 
             //pane.add();
-            pane.setMinimumSize(new Dimension(100,1));
+            pane.setMinimumSize(new Dimension(100, 1));
             pane.setPreferredSize(null);
             pane.setMaximumSize(null);
             pane.setBackground(new Color(62, 62, 62));
@@ -36,7 +36,7 @@ public class EventManager{
                     rBtn = new JButton("[RE]START ALL"),
                     cBtn = new JButton("CLEAR");
 
-            JPanel p = new JPanel(new MigLayout("fill","[50%][50%]"));
+            JPanel p = new JPanel(new MigLayout("fill", "[50%][50%]"));
 
             /*
             nBtn.setMinimumSize(new Dimension(100,25));
@@ -48,7 +48,7 @@ public class EventManager{
                 @Override
                 public void actionPerformed(ActionEvent evx) {
                     Event[] ev = {null};
-                    EventDialog.makeDialog(eList,ev); //Add
+                    EventDialog.makeDialog(eList, ev); //Add
 
 
                 }
@@ -66,12 +66,12 @@ public class EventManager{
                     clear();
                 }
             });
-            p.add(nBtn,"grow 1");
-            p.add(dBtn,"grow 1, wrap");
-            p.add(rBtn,"grow 1");
-            p.add(cBtn,"grow 1");
+            p.add(nBtn, "grow 1");
+            p.add(dBtn, "grow 1, wrap");
+            p.add(rBtn, "grow 1");
+            p.add(cBtn, "grow 1");
 
-            pane.add(p,"north, wrap");
+            pane.add(p, "north, wrap");
         }
 
         //pane.add(new JPanel(),"push");
@@ -80,47 +80,46 @@ public class EventManager{
         pane.add(eventsPane, "grow 1");
 
     }
-    public void refresh(){
 
-        for(int i=0;i<eList.size();i++)
+    public void refresh() {
+
+        for (int i = 0; i < eList.size(); i++)
             eList.get(i).refresh();
-        for(int i=0;i<pane.getComponentCount();i++){
+        for (int i = 0; i < pane.getComponentCount(); i++) {
             pane.getComponent(i).revalidate();
             pane.getComponent(i).repaint();
         }
         pane.revalidate();
         pane.repaint();
     }
-    public void revalidate(){//Check components. Add/delete/reorder as neccessary.
-        //TODO
+
+    public void revalidate() {//Check components. Add/delete/reorder as neccessary.
         //First go through each item and if necc delete.
-        for(int i=0;i<eList.size();){
-            if(eList.get(i).canRemove()) eList.remove(i);
+        for (int i = 0; i < eList.size(); ) {
+            if (eList.get(i).canRemove()) eList.remove(i);
             else i++;
         }
         //If we sort it and != before sort then need to update display
         Collections.sort(eList);
-        if(!eList.equals(eListOld))
-        {//So just clear disp and re-add all.
+        if (!eList.equals(eListOld)) {//So just clear disp and re-add all.
             updatePane();
             eListOld = (PriorityArrayList<Event>) eList.clone();
         }
         refresh();
     }
 
-    public void updatePane(){
+    public void updatePane() {
         eventsPane.removeAll();
-        for(Event e:eList){
+        for (Event e : eList) {
             e.refresh();
-            eventsPane.add(e.toPanel(),"grow 1");
+            eventsPane.add(e.toPanel(), "grow 1");
         }
     }
 
-    public void lsEvents(){
-        for(Event e:eList)
+    public void lsEvents() {
+        for (Event e : eList)
             System.out.println(e.toString());
     }
-
 
 
     public JPanel getPane() {
@@ -128,43 +127,46 @@ public class EventManager{
 
         return pane;
     }
+
     @Deprecated
-    public boolean addTestEvent(int type){
-        switch (type){
+    public boolean addTestEvent(int type) {
+        switch (type) {
             case 1:
-                eList.add(new Event(null,5,"TEST1"));
+                eList.add(new Event(null, 5, "TEST1"));
                 return true;
             case 2:
-                eList.add(new Event(new GregCalPlus(),5,"TEST2"));
+                eList.add(new Event(new GregCalPlus(), 5, "TEST2"));
                 return true;
-            case 3:{
+            case 3: {
                 GregCalPlus g = new GregCalPlus();
-                g.add(GregCalPlus.SECOND,5);
-                eList.add(new Event(g,5,"TEST3"));
+                g.add(GregCalPlus.SECOND, 5);
+                eList.add(new Event(g, 5, "TEST3"));
                 return true;
             }
-            case 4:{
+            case 4: {
                 GregCalPlus g = new GregCalPlus();
-                g.add(GregCalPlus.SECOND,5);
-                eList.add(new Event(new GregCalPlus(),g,"TEST4"));
+                g.add(GregCalPlus.SECOND, 5);
+                eList.add(new Event(new GregCalPlus(), g, "TEST4"));
                 return true;
             }
-            case 5:{
+            case 5: {
                 GregCalPlus g1 = new GregCalPlus();
-                g1.add(GregCalPlus.SECOND,5);
+                g1.add(GregCalPlus.SECOND, 5);
                 GregCalPlus g2 = new GregCalPlus();
-                g2.add(GregCalPlus.SECOND,10);
-                eList.add(new Event(g1,g2,"TEST5"));
+                g2.add(GregCalPlus.SECOND, 10);
+                eList.add(new Event(g1, g2, "TEST5"));
                 return true;
             }
         }
         return false;
     }
-    public void clear(){
+
+    public void clear() {
         eList.clear();
     }
-    public void restartAll(){
-        for(Event e:eList)
+
+    public void restartAll() {
+        for (Event e : eList)
             e.setStart(new GregCalPlus());
     }
 }

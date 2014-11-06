@@ -18,7 +18,7 @@ public class Launcher {
 		    logger.log(Level.WARNING, "Unable to load System L&F: ", e);
 	    }
 
-	    // TODO code application logic here
+
         new SwingManager();
 
 	    logger.log(Level.INFO, "Launch complete");

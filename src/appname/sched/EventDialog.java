@@ -9,76 +9,74 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.PriorityQueue;
-
 /**
  * Created by yusiang on 11/6/14.
  */
 public class EventDialog {
-    static void makeDialog(final PriorityArrayList<Event> pq, final Event[] ev){
+    static void makeDialog(final PriorityArrayList<Event> pq, final Event[] ev) {
         final JFrame jf = new JFrame("Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
         final boolean[] useDuration = {false};
         final int[] duration = {0};
-        final int[] startYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
-        final int[]   endYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
-        if(ev[0]!=null){
-            if(ev[0].getStart()!=null){
-                startYMDHMS[0]=Util.getYear  (ev[0].getStart());
-                startYMDHMS[1]=Util.getMonth (ev[0].getStart());
-                startYMDHMS[2]=Util.getDate  (ev[0].getStart());
-                startYMDHMS[3]=Util.getHour24(ev[0].getStart());
-                startYMDHMS[4]=Util.getMinute(ev[0].getStart());
-                startYMDHMS[5]=Util.getSecond(ev[0].getStart());
+        final int[] startYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
+        final int[] endYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
+        if (ev[0] != null) {
+            if (ev[0].getStart() != null) {
+                startYMDHMS[0] = Util.getYear(ev[0].getStart());
+                startYMDHMS[1] = Util.getMonth(ev[0].getStart());
+                startYMDHMS[2] = Util.getDate(ev[0].getStart());
+                startYMDHMS[3] = Util.getHour24(ev[0].getStart());
+                startYMDHMS[4] = Util.getMinute(ev[0].getStart());
+                startYMDHMS[5] = Util.getSecond(ev[0].getStart());
             }
-            if(ev[0].getEnd()!=null){
-                endYMDHMS[0]=Util.getYear  (ev[0].getEnd());
-                endYMDHMS[1]=Util.getMonth (ev[0].getEnd());
-                endYMDHMS[2]=Util.getDate  (ev[0].getEnd());
-                endYMDHMS[3]=Util.getHour24(ev[0].getEnd());
-                endYMDHMS[4]=Util.getMinute(ev[0].getEnd());
-                endYMDHMS[5]=Util.getSecond(ev[0].getEnd());
+            if (ev[0].getEnd() != null) {
+                endYMDHMS[0] = Util.getYear(ev[0].getEnd());
+                endYMDHMS[1] = Util.getMonth(ev[0].getEnd());
+                endYMDHMS[2] = Util.getDate(ev[0].getEnd());
+                endYMDHMS[3] = Util.getHour24(ev[0].getEnd());
+                endYMDHMS[4] = Util.getMinute(ev[0].getEnd());
+                endYMDHMS[5] = Util.getSecond(ev[0].getEnd());
             }
         }
         String[] hours = new String[24];
         String[] minutes = new String[60];
 
-        for(int i=0;i<24;i++)
-            hours[i] = ""+(i<10?"0"+i:i);
-        for(int i=0;i<60;i++)
-            minutes[i] = ""+(i<10?"0"+i:i);
-        jf.setSize(400,220);
-        final JPanel pane = new JPanel(new MigLayout("fill, wrap","[15%][25%][15%][5%][15%][5%][15%][5%]",""));
+        for (int i = 0; i < 24; i++)
+            hours[i] = "" + (i < 10 ? "0" + i : i);
+        for (int i = 0; i < 60; i++)
+            minutes[i] = "" + (i < 10 ? "0" + i : i);
+        jf.setSize(400, 220);
+        final JPanel pane = new JPanel(new MigLayout("fill, wrap", "[15%][25%][15%][5%][15%][5%][15%][5%]", ""));
         jf.setContentPane(pane);
         //Name
         JLabel nameLabel = new JLabel("Name:");
         pane.add(nameLabel, "grow 1");
-        final JTextField nameField = new JTextField(ev[0]==null?"":ev[0].name);
+        final JTextField nameField = new JTextField(ev[0] == null ? "" : ev[0].name);
 
-        pane.add(nameField,"span 7, grow 1");
+        pane.add(nameField, "span 7, grow 1");
         //Start
         final JButton startButton = new JButton("Autostart at:");
-        pane.add(startButton,"span 2, grow 1");
+        pane.add(startButton, "span 2, grow 1");
         final JComboBox<String> startHour = new JComboBox<>(hours);
         startHour.setSelectedIndex(startYMDHMS[3]);
-        pane.add(startHour,"span 2, grow 1");
+        pane.add(startHour, "span 2, grow 1");
         final JComboBox<String> startMinutes = new JComboBox<>(minutes);
         startMinutes.setSelectedIndex(startYMDHMS[4]);
-        pane.add(startMinutes,"span 2, grow 1");
+        pane.add(startMinutes, "span 2, grow 1");
         final JButton startDateButton = new JButton("Date...");
-        pane.add(startDateButton,"span 2, grow 1");
+        pane.add(startDateButton, "span 2, grow 1");
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(autoStart[0]){
-                    autoStart[0]=false;
+                if (autoStart[0]) {
+                    autoStart[0] = false;
                     startButton.setText("Manual Start");
                     startHour.setEnabled(false);
                     startMinutes.setEnabled(false);
                     startDateButton.setEnabled(false);
-                }else{
-                    autoStart[0]=true;
+                } else {
+                    autoStart[0] = true;
                     startButton.setText("Autostart at:");
                     startHour.setEnabled(true);
                     startMinutes.setEnabled(true);
@@ -89,43 +87,42 @@ public class EventDialog {
         startDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeDateDialog(startYMDHMS,"Change start date",jf);
+                makeDateDialog(startYMDHMS, "Change start date", jf);
             }
         });
         //End
         final JButton endButton = new JButton("End:");
-        pane.add(endButton,"span 2, grow 1");
+        pane.add(endButton, "span 2, grow 1");
         final JComboBox<String> endHour = new JComboBox<>(hours);
         endHour.setSelectedIndex(endYMDHMS[3]);
-        pane.add(endHour,"span 2, grow 1");
+        pane.add(endHour, "span 2, grow 1");
         final JComboBox<String> endMinutes = new JComboBox<>(minutes);
         endMinutes.setSelectedIndex(endYMDHMS[4]);
-        pane.add(endMinutes,"span 2, grow 1");
+        pane.add(endMinutes, "span 2, grow 1");
         final JButton endDateButton = new JButton("Date...");
-        pane.add(endDateButton,"span 2, grow 1");
+        pane.add(endDateButton, "span 2, grow 1");
         endDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeDateDialog(endYMDHMS,"Change end date",jf);
+                makeDateDialog(endYMDHMS, "Change end date", jf);
             }
         });
         //Duration ** Only one of either end or duration is visible, clicking the button swaps.
         //Default is duration.
         final JButton durationButton = new JButton("Duration:");
-        pane.add(durationButton,"span 2, grow 1");
-        final JTextField durationHours = new JTextField(endYMDHMS[3]==0?"":""+endYMDHMS[3]);
-        pane.add(durationHours,"grow 1");
+        pane.add(durationButton, "span 2, grow 1");
+        final JTextField durationHours = new JTextField(endYMDHMS[3] == 0 ? "" : "" + endYMDHMS[3]);
+        pane.add(durationHours, "grow 1");
         final JLabel durationHoursLabel = new JLabel("h");
         pane.add(durationHoursLabel, "");
-        final JTextField durationMinutes = new JTextField(endYMDHMS[4]==0?"":""+endYMDHMS[4]);
-        pane.add(durationMinutes,"grow 1");
+        final JTextField durationMinutes = new JTextField(endYMDHMS[4] == 0 ? "" : "" + endYMDHMS[4]);
+        pane.add(durationMinutes, "grow 1");
         final JLabel durationMinutesLabel = new JLabel("m");
-        pane.add(durationMinutesLabel,"");
-        final JTextField durationSeconds = new JTextField(endYMDHMS[5]==0?"":""+endYMDHMS[5]);
-        pane.add(durationSeconds,"grow 1");
+        pane.add(durationMinutesLabel, "");
+        final JTextField durationSeconds = new JTextField(endYMDHMS[5] == 0 ? "" : "" + endYMDHMS[5]);
+        pane.add(durationSeconds, "grow 1");
         final JLabel durationSecondsLabel = new JLabel("s");
-        pane.add(durationSecondsLabel,"");
-
+        pane.add(durationSecondsLabel, "");
 
 
         endButton.addActionListener(new ActionListener() {
@@ -162,56 +159,56 @@ public class EventDialog {
                 modeEnd[0] = true;
             }
         });
-        if(ev[0]!=null){
-            if(ev[0].getStart()==null)
+        if (ev[0] != null) {
+            if (ev[0].getStart() == null)
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
-            if(ev[0].useDuration)
+            if (ev[0].useDuration)
                 endButton.getActionListeners()[0].actionPerformed(null); //Use duration
             else
                 durationButton.getActionListeners()[0].actionPerformed(null); //Use absolute end
 
-        }else{
+        } else {
             endButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
         }
         //JLabel ErrorMsg
         final JLabel errorLabel = new JLabel("~");
-        pane.add(errorLabel,"span 8, grow 1, wrap");
+        pane.add(errorLabel, "span 8, grow 1, wrap");
 
         //OK/Cancel
         JButton okButton = new JButton("OK");
-        pane.add(okButton,"skip 2, span 3, grow 1");
-
+        pane.add(okButton, "skip 2, span 3, grow 1");
 
 
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                GregCalPlus gS = null,gE = null;
-                try{
-                    if(nameField.getText().trim().equals("")) nameField.setText("Unnamed");//TODO Think of something witty to put here
-                    if(autoStart[0]){
+                GregCalPlus gS = null, gE = null;
+                try {
+                    if (nameField.getText().trim().equals(""))
+                        nameField.setText("Unnamed");//TODO Think of something witty to put here
+                    if (autoStart[0]) {
                         startYMDHMS[3] = Util.parseUInt((String) startHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         startYMDHMS[4] = Util.parseUInt((String) startMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
-                        gS = new GregCalPlus(startYMDHMS[0],startYMDHMS[1],startYMDHMS[2],startYMDHMS[3],startYMDHMS[4],startYMDHMS[5]);
+                        gS = new GregCalPlus(startYMDHMS[0], startYMDHMS[1], startYMDHMS[2], startYMDHMS[3], startYMDHMS[4], startYMDHMS[5]);
                     }
-                    if(modeEnd[0]){//Set absolute end cal
+                    if (modeEnd[0]) {//Set absolute end cal
                         endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
-                        gE = new GregCalPlus(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
+                        gE = new GregCalPlus(endYMDHMS[0], endYMDHMS[1], endYMDHMS[2], endYMDHMS[3], endYMDHMS[4], endYMDHMS[5]);
 
-                    }else{//Using duration (relative end cal)
+                    } else {//Using duration (relative end cal)
                         //
-                        if(durationHours  .getText().trim().equals("")) durationHours  .setText("0");
-                        if(durationMinutes.getText().trim().equals("")) durationMinutes.setText("0");
-                        if(durationSeconds.getText().trim().equals("")) durationSeconds.setText("0");
-                        useDuration[0]=true;
-                        duration[0]=  Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!")+
-                                60  * Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!")+
-                                3600* Util.parseUInt(durationHours  .getText(), "Invalid duration hours!"  );
-                        if(duration[0]<=0) throw new Exception("Duration too short (or negative) !");
+                        if (durationHours.getText().trim().equals("")) durationHours.setText("0");
+                        if (durationMinutes.getText().trim().equals("")) durationMinutes.setText("0");
+                        if (durationSeconds.getText().trim().equals("")) durationSeconds.setText("0");
+                        useDuration[0] = true;
+                        duration[0] = Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!") +
+                                60 * Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!") +
+                                3600 * Util.parseUInt(durationHours.getText(), "Invalid duration hours!");
+                        if (duration[0] <= 0) throw new Exception("Duration too short (or negative) !");
 //                  //NOT USING THIS BAD SYSTEM
 //                        if(autoStart[0]){//Add to end
 //                            gE = (GregCalPlus) gS.clone();
@@ -228,25 +225,26 @@ public class EventDialog {
 //                            gE = new GregCalPlus(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
 //                        }
                     }
-                    if(gS!=null&&gE!=null&&gE.compareTo(gS)<=0) throw new Exception("End time equal/before start!");
+                    if (gS != null && gE != null && gE.compareTo(gS) <= 0)
+                        throw new Exception("End time equal/before start!");
 
-                    if( ev[0]==null){
-                        if(!useDuration[0])
-                            ev[0] = new Event(gS,gE,nameField.getText());
-                        else{
-                            ev[0] = new Event(gS,duration[0],nameField.getText());
+                    if (ev[0] == null) {
+                        if (!useDuration[0])
+                            ev[0] = new Event(gS, gE, nameField.getText());
+                        else {
+                            ev[0] = new Event(gS, duration[0], nameField.getText());
                         }
                         pq.add(ev[0]);
-                    }else{
+                    } else {
                         ev[0].setStart(gS);
-                        if(!useDuration[0]) ev[0].setEnd(gE);
+                        if (!useDuration[0]) ev[0].setEnd(gE);
                         ev[0].name = nameField.getText();
-                        if(useDuration[0]) ev[0].setDuration(duration[0]);
+                        if (useDuration[0]) ev[0].setDuration(duration[0]);
                     }
                     jf.dispose();
-                }catch(Exception e){
+                } catch (Exception e) {
                     //e.printStackTrace();
-                    if(e.getMessage().trim().equals(""))
+                    if (e.getMessage().trim().equals(""))
                         errorLabel.setText("Critical Unknown Error! Please report bug.");
                     else
                         errorLabel.setText(e.getMessage());
@@ -272,7 +270,7 @@ public class EventDialog {
             }
         });
         JButton cancelButton = new JButton("Cancel");
-        pane.add(cancelButton,"skip 1, span 2, grow 1");
+        pane.add(cancelButton, "skip 1, span 2, grow 1");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -283,24 +281,25 @@ public class EventDialog {
 
 
     }
-    private static void makeDateDialog(final int[] YMDHMS, String title, final JFrame resetVisible){
+
+    private static void makeDateDialog(final int[] YMDHMS, String title, final JFrame resetVisible) {
         resetVisible.setVisible(false);
         final JFrame jf = new JFrame(title);
-        jf.setSize(400,120);
-        JPanel pane = new JPanel(new MigLayout("fill, wrap","[40%][20%][20%][20%]"));
-        pane.add(new JLabel(title),"grow 1");
-        final JTextField y = new JTextField(""+YMDHMS[0]),
-                         m = new JTextField(""+YMDHMS[1]),
-                         d = new JTextField(""+YMDHMS[2]);
-        pane.add(y,"grow 1");
-        pane.add(m,"grow 1");
-        pane.add(d,"grow 1");
+        jf.setSize(400, 120);
+        JPanel pane = new JPanel(new MigLayout("fill, wrap", "[40%][20%][20%][20%]"));
+        pane.add(new JLabel(title), "grow 1");
+        final JTextField y = new JTextField("" + YMDHMS[0]),
+                m = new JTextField("" + YMDHMS[1]),
+                d = new JTextField("" + YMDHMS[2]);
+        pane.add(y, "grow 1");
+        pane.add(m, "grow 1");
+        pane.add(d, "grow 1");
         final JLabel dbg = new JLabel("~");
-        pane.add(dbg,"span 4");
+        pane.add(dbg, "span 4");
         JButton ok = new JButton("OK");
         JButton cc = new JButton("Cancel");
-        pane.add(ok,"skip 1, grow 1");
-        pane.add(cc,"skip 1, grow 1");
+        pane.add(ok, "skip 1, grow 1");
+        pane.add(cc, "skip 1, grow 1");
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {

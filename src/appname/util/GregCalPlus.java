@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 public class GregCalPlus extends GregorianCalendar {
     public GregCalPlus() {
         super();
+        //TODO NTP like if using network sync?
     }
 
     public GregCalPlus(int year, int month, int dayOfMonth) {

@@ -86,7 +86,7 @@ public class Util {// Static class dear.
         return safeLongToInt(Math.round(d));
     }
     public static long getDeltaT(GregCalPlus g1, GregCalPlus g2){
-        return (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
+        return Math.round((g2.getTimeInMillis()-g1.getTimeInMillis())/1000f);
     }
     public static String getDeltaT(GregCalPlus g1, GregCalPlus g2, boolean useFuzzyMode){
         return useFuzzyMode?fuzzyDeltaT(g1,g2):exactDeltaT(g1,g2);
