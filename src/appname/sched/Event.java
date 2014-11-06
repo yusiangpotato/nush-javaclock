@@ -9,26 +9,44 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.UUID;
 
 /**
  * Created by yusiang on 11/4/14.
  */
 public class Event implements Comparable<Event>, Comparator<Event> {
-    private GregCalPlus start, end;
-    //public final UUID uuid;
+    public final UUID uuid;
     public String name;
     public boolean useDuration;
+    JLabel tmp = new JLabel();
+    JPanel pane = null;
+    private GregCalPlus start, end;
     private int duration = 0;
 
     public Event(GregCalPlus s, GregCalPlus e, String n) {
         if (e == null) throw new NullPointerException();
         start = s;
         end = e;
-        //uuid=UUID.randomUUID();
+        uuid=UUID.randomUUID();
         name = n;
         useDuration = false;
         System.out.println("Created: " + this.toString());
     }
+
+    public Event(GregCalPlus s, int durationSeconds, String n) {
+        start = s;
+        end = null;
+        duration = durationSeconds;
+        name = n;
+        uuid=UUID.randomUUID();
+        useDuration = true;
+        System.out.println("Created: " + this.toString());
+
+    }
+
+//    public UUID getUuid() {
+//        return uuid;
+//    }
 
     public int getDuration() {
         if (useDuration) return duration;
@@ -41,20 +59,6 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         end = null;
         this.duration = duration;
     }
-
-    public Event(GregCalPlus s, int durationSeconds, String n) {
-        start = s;
-        end = null;
-        duration = durationSeconds;
-        name = n;
-        useDuration = true;
-        System.out.println("Created: " + this.toString());
-
-    }
-
-//    public UUID getUuid() {
-//        return uuid;
-//    }
 
     public GregCalPlus getStart() {
         return start;
@@ -95,9 +99,6 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
         return o1.getEnd().compareTo(o2.getEnd());
     }
-
-    JLabel tmp = new JLabel();
-    JPanel pane = null;
 
     public JPanel toPanel() {
         //TODO

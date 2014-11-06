@@ -117,8 +117,8 @@ public class EventManager {
     }
 
     public void lsEvents() {
-        for (Event e : eList)
-            System.out.println(e.toString());
+        for (int i=0;i<eList.size();i++)
+            System.out.println(i+": "+eList.get(i).toString());
     }
 
 

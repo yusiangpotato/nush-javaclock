@@ -8,17 +8,15 @@ import java.text.SimpleDateFormat;
 /**
  * Created by yusiang on 2/14/14.
  */
-public class Util {// Static class dear.
+public class Util {// Static class plz.
 
-    private Util() {
-        ;
-    }//This supposedly prevents instantiation? Whatever.
+    private Util() {}//This supposedly prevents instantiation? Whatever.
 
     public static double PolarToCartesianX(double theta, double length) { //Theta=0 means Straight up.
         return -1 * length * Math.sin(theta);
     }
 
-    public static double PolarToCartesianY(double theta, double length) {//Theta=pi/2 means straight out right.
+    public static double PolarToCartesianY(double theta, double length) {//Theta=pi/2 means right.
         return -1 * length * Math.cos(theta);
     }
 

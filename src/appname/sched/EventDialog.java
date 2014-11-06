@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * Created by yusiang on 11/6/14.
  */
 public class EventDialog {
-    static void makeDialog(final PriorityArrayList<Event> pq, final Event[] ev) {
+    static void makeDialog(final PriorityArrayList<Event> prioList, final Event[] ev) {
         final JFrame jf = new JFrame("Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
@@ -234,13 +234,19 @@ public class EventDialog {
                         else {
                             ev[0] = new Event(gS, duration[0], nameField.getText());
                         }
-                        pq.add(ev[0]);
+                        if(ev[0].getDuration()<0) throw new Exception("End is before start!");
+                        else if(ev[0].hasEnded()) throw new Exception("Event has already ended!");
+
                     } else {
                         ev[0].setStart(gS);
                         if (!useDuration[0]) ev[0].setEnd(gE);
                         ev[0].name = nameField.getText();
                         if (useDuration[0]) ev[0].setDuration(duration[0]);
+                        if(ev[0].getDuration()<0) throw new Exception("End is before start!");
+                        else if(ev[0].hasEnded()) throw new Exception("Event has already ended!");
+
                     }
+                    if(!prioList.contains(ev[0])) prioList.add(ev[0]);
                     jf.dispose();
                 } catch (Exception e) {
                     //e.printStackTrace();
