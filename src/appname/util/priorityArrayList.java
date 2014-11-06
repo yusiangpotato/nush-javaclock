@@ -1,7 +1,6 @@
 package appname.util;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Created by yusiang on 11/5/14.

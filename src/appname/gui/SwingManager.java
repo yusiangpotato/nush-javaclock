@@ -1,15 +1,12 @@
 package appname.gui;
 
 import appname.sched.EventManager;
-import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +44,7 @@ public class SwingManager implements Runnable{
                 //windowPane.setBackground(Color.black);
 
                 windowPane.add(clockPane,"grow 0");
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
                 eManager = new EventManager();
                 windowPane.add(eManager.getPane(),"push, grow 1");

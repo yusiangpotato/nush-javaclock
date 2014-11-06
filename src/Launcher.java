@@ -19,7 +19,7 @@ public class Launcher {
 	    }
 
 	    // TODO code application logic here
-        SwingManager sm=new SwingManager();
+        new SwingManager();
 
 	    logger.log(Level.INFO, "Launch complete");
 

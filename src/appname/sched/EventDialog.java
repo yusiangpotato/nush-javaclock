@@ -4,7 +4,6 @@ import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.GregorianCalendar;
@@ -187,7 +186,7 @@ public class EventDialog {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                GregorianCalendar gS = null,gE=null;
+                GregorianCalendar gS = null,gE;
                 try{
                     if(nameField.getText().trim().equals("")) nameField.setText("Unnamed");//TODO Think of something witty to put here
                     if(autoStart[0]){

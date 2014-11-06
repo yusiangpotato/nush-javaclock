@@ -3,8 +3,6 @@ package appname.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import appname.util.Pair;
 import appname.util.Quadruple;
@@ -60,7 +58,7 @@ public class ClockPanel extends JPanel {
 	        g2.drawOval((int)(size*margin), (int)(size*margin), (int)(size*(2-margin)), (int)(size*(2-margin)));
 
             for(int i=0; i<60;i++){
-                double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
+                //double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
 
                 //Divisions
 	            if(nightMode)
@@ -141,7 +139,7 @@ public class ClockPanel extends JPanel {
         calculateDivisions();
     }
     private void calculateDivisions(){
-        final float margin = 0.01f, minorDivision = 0.95f, majorDivison = 0.93f, divisionMargin = 0.98f;
+        final float minorDivision = 0.95f, majorDivison = 0.93f, divisionMargin = 0.98f;
         for(int i=0;i<60;i++){
             double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
             int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size));
