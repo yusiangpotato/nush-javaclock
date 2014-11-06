@@ -32,7 +32,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public int getDuration() {
         if (useDuration) return duration;
-        else return Util.safeLongToInt(Util.getDeltaT(start,end));
+        else return Util.safeLongToInt(Util.getDeltaT(start, end));
     }
 
     public void setDuration(int duration) {
@@ -143,10 +143,11 @@ public class Event implements Comparable<Event>, Comparator<Event> {
                     Util.getHour24(start) + ":" + Util.getMinute(start) + ":" + Util.getSecond(start);
         s += '\n';
 
-        s += "Duration: " + getDuration() + " sec" + '\n';
 
         s += "End:       " + Util.getYear(end) + "-" + (Util.getMonth(end) + 1) + "-" + Util.getDate(end) + " @ " +
-                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end);
+                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end) + "\n";
+
+        s += "Duration: " + getDuration() + " sec";
 
         return s;
     }
@@ -158,11 +159,10 @@ public class Event implements Comparable<Event>, Comparator<Event> {
             s += "Autostart: " + Util.getYear(start) + "-" + (Util.getMonth(start) + 1) + "-" + Util.getDate(start) + " @ " +
                     Util.getHour24(start) + ":" + Util.getMinute(start) + ":" + Util.getSecond(start);
         s += "<br>";
-
-        s += "Duration: " + getDuration() + " sec<br>";
-
         s += "End:       " + Util.getYear(end) + "-" + (Util.getMonth(end) + 1) + "-" + Util.getDate(end) + " @ " +
-                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end);
+                Util.getHour24(end) + ":" + Util.getMinute(end) + ":" + Util.getSecond(end) + "<br>";
+        s += "Duration: " + getDuration() + " sec";
+
         s += "<br></html>";
         return s;
     }

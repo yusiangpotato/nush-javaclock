@@ -11,10 +11,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 //
+
 /**
  * Created by yusiang on 11/4/14.
  */
-public class SwingManager implements Runnable{
+public class SwingManager implements Runnable {
     int every = 1;
     String execs = "";
     final int cnt[] = {1};
@@ -26,7 +27,7 @@ public class SwingManager implements Runnable{
     JFrame window;
     EventManager eManager;
 
-    public SwingManager(){
+    public SwingManager() {
 
         stdin = new BufferedReader(new InputStreamReader(System.in));
         SwingUtilities.invokeLater(new Runnable() {
@@ -37,22 +38,22 @@ public class SwingManager implements Runnable{
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
-                windowPane = new JPanel(new MigLayout("","[pref!][push,fill]","[100%]"));
+                windowPane = new JPanel(new MigLayout("", "[pref!][push,fill]", "[100%]"));
 
 
                 window.setContentPane(windowPane);
                 //windowPane.setBackground(Color.black);
 
-                windowPane.add(clockPane,"grow 0");
+                windowPane.add(clockPane, "grow 0");
                 window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
                 eManager = new EventManager();
-                windowPane.add(eManager.getPane(),"push, grow 1");
+                windowPane.add(eManager.getPane(), "push, grow 1");
 
 
                 //windowPane.setVisible(true);
-                window.setSize(790,550);
-                window.setMinimumSize(new Dimension(600,400));
+                window.setSize(790, 550);
+                window.setMinimumSize(new Dimension(600, 400));
 
                 //windowPane.setSize(400, 400);
                 window.setVisible(true);
@@ -68,11 +69,11 @@ public class SwingManager implements Runnable{
     public void run() {
         cnt[0]++;
 
-        final String[] s={""};
+        final String[] s = {""};
 
         try {
-            if(stdin.ready()){
-                s[0]+=stdin.readLine();
+            if (stdin.ready()) {
+                s[0] += stdin.readLine();
             }
         } catch (Exception e) {
             //e.printStackTrace();
@@ -81,12 +82,12 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                if(!s[0].equals(""))
-                    System.out.println(execCmd(s[0])?"ACK":"NACK");
+                if (!s[0].equals(""))
+                    System.out.println(execCmd(s[0]) ? "ACK" : "NACK");
 
                 windowPane.revalidate();
                 windowPane.repaint();
-                clockPane.setSize(Math.min(window.getHeight()/2-25,window.getWidth()/2-140));
+                clockPane.setSize(Math.min(window.getHeight() / 2 - 25, window.getWidth() / 2 - 140));
                 clockPane.repaint();
                 eManager.revalidate();
                 //eManager.refresh(); Reval does refresh
@@ -112,7 +113,7 @@ public class SwingManager implements Runnable{
 
     public boolean execCmd(String cmd) {
         try {
-            if(cmd.equals("")) return false;
+            if (cmd.equals("")) return false;
             cmd = cmd.toUpperCase();
             String[] x = cmd.split(" ");
 

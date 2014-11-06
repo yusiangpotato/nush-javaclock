@@ -9,19 +9,19 @@ public class PriorityArrayList<T extends Comparable> extends ArrayList<T> {
 
     @Override
     public boolean add(T t) {
-        System.out.println("Added: "+t.toString());
+        System.out.println("Added: " + t.toString());
         int i;
-        boolean y=false;
-        for(i=0;i<this.size();i++) {
+        boolean y = false;
+        for (i = 0; i < this.size(); i++) {
             if (this.get(i).compareTo(t) < 0) {
                 y = true;
                 break;
             }
         }
-        if(y){
-            super.add(i,t);
+        if (y) {
+            super.add(i, t);
             return true;
-        }else{
+        } else {
             return super.add(t);
         }
     }

@@ -25,15 +25,15 @@ public class GregCalPlus extends GregorianCalendar {
 
     @Override
     public int get(int field) {
-        if(field != GregCalPlus.MONTH)
-             return super.get(field);
+        if (field != GregCalPlus.MONTH)
+            return super.get(field);
         else return super.get(field);
     }
 
     @Override
     public void set(int field, int value) {
-        if(field!= GregCalPlus.MONTH)
-             super.set(field, value);
+        if (field != GregCalPlus.MONTH)
+            super.set(field, value);
         else super.set(field, value);
     }
 }
