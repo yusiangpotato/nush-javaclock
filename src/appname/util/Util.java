@@ -20,6 +20,16 @@ public class Util {// Static class dear.
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
+    //NOW
+    public static int getYear(){
+        return new GregorianCalendar().get(GregorianCalendar.YEAR);
+    }
+    public static int getMonth(){
+        return new GregorianCalendar().get(GregorianCalendar.MONTH);
+    }
+    public static int getDate(){
+        return new GregorianCalendar().get(GregorianCalendar.DATE);
+    }
     public static int getHour(){
         return new GregorianCalendar().get(GregorianCalendar.HOUR);
     }
@@ -33,6 +43,16 @@ public class Util {// Static class dear.
         return new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY);
     }
 
+    //SPEC
+    public static int getYear(GregorianCalendar g){
+        return g.get(GregorianCalendar.YEAR);
+    }
+    public static int getMonth(GregorianCalendar g){
+        return g.get(GregorianCalendar.MONTH);
+    }
+    public static int getDate(GregorianCalendar g){
+        return g.get(GregorianCalendar.DATE);
+    }
     public static int getHour(GregorianCalendar g){
         return g.get(GregorianCalendar.HOUR);
     }
@@ -86,6 +106,24 @@ public class Util {// Static class dear.
         bd = bd.round(new MathContext(sf));
         return bd.doubleValue();
     }
+
+    public static int parseUInt(String s, String errorMsg) throws Exception{
+        try{
+            int x  = Integer.parseInt(s.trim());
+            if(x<0) throw new Exception();
+            return x;
+        }catch(Exception e){
+            throw new Exception(errorMsg);
+        }
+    }
+    public static double parseDouble(String s, String errorMsg) throws Exception{
+        try{
+            return Double.parseDouble(s.trim());
+        }catch(Exception e){
+            throw new Exception(errorMsg);
+        }
+    }
+
 
 
 //    public static int getHour(int i){

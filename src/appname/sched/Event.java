@@ -1,6 +1,8 @@
 package appname.sched;
 
 
+import appname.util.Util;
+
 import javax.swing.*;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
@@ -10,15 +12,17 @@ import java.util.UUID;
  * Created by yusiang on 11/4/14.
  */
 public class Event implements Comparable<Event>,Comparator<Event>{
-    GregorianCalendar start,end;
-    final UUID uuid;
-    String name;
-    Event nextEvent=null;
-    public Event(GregorianCalendar s, GregorianCalendar e,String n){
+    private GregorianCalendar start,end;
+    public final UUID uuid;
+    public String name;
+    public boolean endIsDuration;
+    public Event(GregorianCalendar s , GregorianCalendar e,String n, boolean eid){
         //if(s==null|e==null) throw new NullPointerException();
         start=s; end=e;
         uuid=UUID.randomUUID();
         name=n;
+        endIsDuration = eid;
+        System.out.println("New Event: "+this.toString());
     }
 
     public UUID getUuid() {
@@ -60,9 +64,25 @@ public class Event implements Comparable<Event>,Comparator<Event>{
         return null;
 
     }
+    public boolean hasEnded(){
+
+        return start==null?false:new GregorianCalendar().after(end);
+    }
     @Override
     public String toString(){
-        return super.toString();
+        String s="Event: "+name+'\n';
+        if(start==null) s+= "Manual Start";
+        else s+="Autostart: "+ Util.getYear(start)+"-"+Util.getMonth(start)+"-"+Util.getDate(start)+" @ "+
+                Util.getHour24(start)+":"+Util.getMinute(start)+":"+Util.getSecond(start);
+        s+='\n';
+        if(endIsDuration){
+            s+="Duration: "+Util.getYear(end)+"yr "+Util.getMonth(end)+"mth "+Util.getDate(end)+"day "+
+                    Util.getHour24(end)+"hr "+Util.getMinute(end)+"min "+Util.getSecond(end)+"sec";;
+        }else{
+            s+="End:       "+Util.getYear(end)+"-"+Util.getMonth(end)+"-"+Util.getDate(end)+" @ "+
+                    Util.getHour24(end)+":"+Util.getMinute(end)+":"+Util.getSecond(end);
+        }
+        return s;
     }
 
 }

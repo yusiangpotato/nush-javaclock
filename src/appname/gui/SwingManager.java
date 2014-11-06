@@ -35,7 +35,7 @@ public class SwingManager implements Runnable{
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                JFrame.setDefaultLookAndFeelDecorated(true);
+                JFrame.setDefaultLookAndFeelDecorated(false);
                 window = new JFrame("Go on, pull it!");
 
                 clockPane = new ClockPanel();
@@ -54,8 +54,8 @@ public class SwingManager implements Runnable{
 
 
                 //windowPane.setVisible(true);
-                window.setSize(800, 600);
-                window.setMinimumSize(new Dimension(480,320));
+                window.setSize(600,400);
+                window.setMinimumSize(new Dimension(600,400));
 
                 //windowPane.setSize(400, 400);
                 window.setVisible(true);
@@ -151,15 +151,15 @@ public class SwingManager implements Runnable{
                     return true;
                 /*
                 case "XSZ":
-                    sl.setXsz(Integer.parseInt(x[1]));
+                    sl.setXsz(Integer.parseUInt(x[1]));
                     return true;
                 case "YSZ":
-                    sl.setYsz(Integer.parseInt(x[1]));
+                    sl.setYsz(Integer.parseUInt(x[1]));
                     return true;
 
                 case "TRANS":
                 case "ALPHA":
-                    sl.setTransparent(Integer.parseInt(x[1]) % 2 == 0);
+                    sl.setTransparent(Integer.parseUInt(x[1]) % 2 == 0);
                     return true;
                 */
 
