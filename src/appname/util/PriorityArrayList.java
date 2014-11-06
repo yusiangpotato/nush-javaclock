@@ -5,10 +5,11 @@ import java.util.ArrayList;
 /**
  * Created by yusiang on 11/5/14.
  */
-public class priorityArrayList<T extends Comparable> extends ArrayList<T> {
+public class PriorityArrayList<T extends Comparable> extends ArrayList<T> {
 
     @Override
     public boolean add(T t) {
+        System.out.println("Added: "+t.toString());
         int i;
         boolean y=false;
         for(i=0;i<this.size();i++) {

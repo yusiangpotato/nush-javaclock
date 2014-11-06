@@ -1,26 +1,29 @@
 package appname.sched;
 
+import appname.util.GregCalPlus;
+import appname.util.PriorityArrayList;
 import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.GregorianCalendar;
+
 import java.util.PriorityQueue;
 
 /**
  * Created by yusiang on 11/6/14.
  */
 public class EventDialog {
-    static void makeDialog(final PriorityQueue<Event> pq, final Event[] ev){
+    static void makeDialog(final PriorityArrayList<Event> pq, final Event[] ev){
         final JFrame jf = new JFrame("Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
-        final boolean[] endIsDuration = {false};
+        final boolean[] useDuration = {false};
+        final int[] duration = {0};
         final int[] startYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
         final int[]   endYMDHMS = {Util.getYear(),Util.getMonth(),Util.getDate(),0,0,0};
-        if(ev!=null){
+        if(ev[0]!=null){
             if(ev[0].getStart()!=null){
                 startYMDHMS[0]=Util.getYear  (ev[0].getStart());
                 startYMDHMS[1]=Util.getMonth (ev[0].getStart());
@@ -45,13 +48,13 @@ public class EventDialog {
             hours[i] = ""+(i<10?"0"+i:i);
         for(int i=0;i<60;i++)
             minutes[i] = ""+(i<10?"0"+i:i);
-        jf.setSize(400,200);
+        jf.setSize(400,220);
         final JPanel pane = new JPanel(new MigLayout("fill, wrap","[15%][25%][15%][5%][15%][5%][15%][5%]",""));
         jf.setContentPane(pane);
         //Name
         JLabel nameLabel = new JLabel("Name:");
         pane.add(nameLabel, "grow 1");
-        final JTextField nameField = new JTextField(ev==null?"":ev[0].name);
+        final JTextField nameField = new JTextField(ev[0]==null?"":ev[0].name);
 
         pane.add(nameField,"span 7, grow 1");
         //Start
@@ -83,7 +86,6 @@ public class EventDialog {
                 }
             }
         });
-        //TODO Date
         startDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,7 +103,6 @@ public class EventDialog {
         pane.add(endMinutes,"span 2, grow 1");
         final JButton endDateButton = new JButton("Date...");
         pane.add(endDateButton,"span 2, grow 1");
-        //TODO Date
         endDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -161,10 +162,10 @@ public class EventDialog {
                 modeEnd[0] = true;
             }
         });
-        if(ev!=null){
+        if(ev[0]!=null){
             if(ev[0].getStart()==null)
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
-            if(ev[0].endIsDuration)
+            if(ev[0].useDuration)
                 endButton.getActionListeners()[0].actionPerformed(null); //Use duration
             else
                 durationButton.getActionListeners()[0].actionPerformed(null); //Use absolute end
@@ -186,56 +187,69 @@ public class EventDialog {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                GregorianCalendar gS = null,gE;
+                GregCalPlus gS = null,gE = null;
                 try{
                     if(nameField.getText().trim().equals("")) nameField.setText("Unnamed");//TODO Think of something witty to put here
                     if(autoStart[0]){
                         startYMDHMS[3] = Util.parseUInt((String) startHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         startYMDHMS[4] = Util.parseUInt((String) startMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
-                        gS = new GregorianCalendar(startYMDHMS[0],startYMDHMS[1],startYMDHMS[2],startYMDHMS[3],startYMDHMS[4],startYMDHMS[5]);
+                        gS = new GregCalPlus(startYMDHMS[0],startYMDHMS[1],startYMDHMS[2],startYMDHMS[3],startYMDHMS[4],startYMDHMS[5]);
                     }
                     if(modeEnd[0]){//Set absolute end cal
                         endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
-                        gE = new GregorianCalendar(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
+                        gE = new GregCalPlus(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
 
                     }else{//Using duration (relative end cal)
                         //
                         if(durationHours  .getText().trim().equals("")) durationHours  .setText("0");
                         if(durationMinutes.getText().trim().equals("")) durationMinutes.setText("0");
                         if(durationSeconds.getText().trim().equals("")) durationSeconds.setText("0");
-
-                        if(autoStart[0]){//Add to end
-                            gE = (GregorianCalendar) gS.clone();
-                            gE.add(GregorianCalendar.SECOND     ,Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!"));
-                            gE.add(GregorianCalendar.MINUTE     ,Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!"));
-                            gE.add(GregorianCalendar.HOUR_OF_DAY,Util.parseUInt(durationHours.getText(), "Invalid duration hours!"));
-                        }else{//End is duration.
-                            endYMDHMS[0]=0;
-                            endYMDHMS[1]=0;
-                            endYMDHMS[2]=0;
-                            endYMDHMS[3]=Util.parseUInt(durationHours.getText(), "Invalid duration hours!");
-                            endYMDHMS[4]=Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!");
-                            endYMDHMS[5]=Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!");
-                            gE = new GregorianCalendar(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
-                            endIsDuration[0]=true;
-                        }
+                        useDuration[0]=true;
+                        duration[0]=  Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!")+
+                                60  * Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!")+
+                                3600* Util.parseUInt(durationHours  .getText(), "Invalid duration hours!"  );
+                        if(duration[0]<=0) throw new Exception("Duration too short (or negative) !");
+//                  //NOT USING THIS BAD SYSTEM
+//                        if(autoStart[0]){//Add to end
+//                            gE = (GregCalPlus) gS.clone();
+//                            gE.add(GregCalPlus.SECOND     ,Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!"));
+//                            gE.add(GregCalPlus.MINUTE     ,Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!"));
+//                            gE.add(GregCalPlus.HOUR_OF_DAY,Util.parseUInt(durationHours.getText(), "Invalid duration hours!"));
+//                        }else{//End is duration.
+//                            endYMDHMS[0]=0;
+//                            endYMDHMS[1]=0;
+//                            endYMDHMS[2]=0;
+//                            endYMDHMS[3]=Util.parseUInt(durationHours.getText(), "Invalid duration hours!");
+//                            endYMDHMS[4]=Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!");
+//                            endYMDHMS[5]=Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!");
+//                            gE = new GregCalPlus(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
+//                        }
                     }
-                    if(gS!=null&&gE.compareTo(gS)<=0) throw new Exception("End time equal/before start!");
-                    jf.dispose();
+                    if(gS!=null&&gE!=null&&gE.compareTo(gS)<=0) throw new Exception("End time equal/before start!");
+
                     if( ev[0]==null){
-                        ev[0] = new Event(gS,gE,nameField.getText(),endIsDuration[0]);
+                        if(!useDuration[0])
+                            ev[0] = new Event(gS,gE,nameField.getText());
+                        else{
+                            ev[0] = new Event(gS,duration[0],nameField.getText());
+                        }
                         pq.add(ev[0]);
                     }else{
                         ev[0].setStart(gS);
-                        ev[0].setEnd(gE);
+                        if(!useDuration[0]) ev[0].setEnd(gE);
                         ev[0].name = nameField.getText();
-                        ev[0].endIsDuration = endIsDuration[0];
+                        if(useDuration[0]) ev[0].setDuration(duration[0]);
                     }
+                    jf.dispose();
                 }catch(Exception e){
-                    errorLabel.setText(e.getMessage());
+                    //e.printStackTrace();
+                    if(e.getMessage().trim().equals(""))
+                        errorLabel.setText("Critical Unknown Error! Please report bug.");
+                    else
+                        errorLabel.setText(e.getMessage());
                     //TODO Figure that out
                     /*
                     final int[] errorAnimCounter = {255};
@@ -297,6 +311,7 @@ public class EventDialog {
                     YMDHMS[2] = Util.parseUInt(d.getText(), "Error parsing date!");
                     if (!Util.isDateValid(YMDHMS[2] + "-" + YMDHMS[1] + "-" + YMDHMS[0]))
                         throw new Exception("Date does not exist!");
+
                     resetVisible.setVisible(true);
                     jf.dispose();
                 } catch (Exception ex) {

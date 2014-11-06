@@ -51,7 +51,7 @@ public class SwingManager implements Runnable{
 
 
                 //windowPane.setVisible(true);
-                window.setSize(600,400);
+                window.setSize(790,550);
                 window.setMinimumSize(new Dimension(600,400));
 
                 //windowPane.setSize(400, 400);
@@ -60,7 +60,7 @@ public class SwingManager implements Runnable{
             }
         });
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        setExecFreq(30);
+        setExecFreq(45);
 
     }
 
@@ -86,8 +86,10 @@ public class SwingManager implements Runnable{
 
                 windowPane.revalidate();
                 windowPane.repaint();
-                clockPane.setSize(Math.min(window.getHeight()/2-25,window.getWidth()/2-105));
+                clockPane.setSize(Math.min(window.getHeight()/2-25,window.getWidth()/2-140));
                 clockPane.repaint();
+                eManager.revalidate();
+                //eManager.refresh(); Reval does refresh
 
             }
         });
@@ -146,6 +148,17 @@ public class SwingManager implements Runnable{
                 case "RECALC":
                     clockPane.reCalc();
                     return true;
+                case "LS":
+                    eManager.lsEvents();
+                    return true;
+                case "CLR":
+                    eManager.clear();
+                    return true;
+                case "UP":
+                    eManager.updatePane();
+                    return true;
+                case "ATE":
+                    return eManager.addTestEvent(Integer.parseInt(x[1]));
                 /*
                 case "XSZ":
                     sl.setXsz(Integer.parseUInt(x[1]));

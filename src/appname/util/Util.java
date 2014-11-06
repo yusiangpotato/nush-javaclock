@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import appname.util.GregCalPlus;
 
 /**
  * Created by yusiang on 2/14/14.
@@ -24,52 +24,52 @@ public class Util {// Static class dear.
     }
     //NOW
     public static int getYear(){
-        return new GregorianCalendar().get(GregorianCalendar.YEAR);
+        return new GregCalPlus().get(GregCalPlus.YEAR);
     }
     public static int getMonth(){
-        return new GregorianCalendar().get(GregorianCalendar.MONTH);
+        return new GregCalPlus().get(GregCalPlus.MONTH);
     }
     public static int getDate(){
-        return new GregorianCalendar().get(GregorianCalendar.DATE);
+        return new GregCalPlus().get(GregCalPlus.DATE);
     }
     public static int getHour(){
-        return new GregorianCalendar().get(GregorianCalendar.HOUR);
+        return new GregCalPlus().get(GregCalPlus.HOUR);
     }
     public static int getMinute(){
-        return new GregorianCalendar().get(GregorianCalendar.MINUTE);
+        return new GregCalPlus().get(GregCalPlus.MINUTE);
     }
     public static int getSecond(){
-        return new GregorianCalendar().get(GregorianCalendar.SECOND);
+        return new GregCalPlus().get(GregCalPlus.SECOND);
     }
     public static int getHour24(){
-        return new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY);
+        return new GregCalPlus().get(GregCalPlus.HOUR_OF_DAY);
     }
 
     //SPEC
-    public static int getYear(GregorianCalendar g){
-        return g.get(GregorianCalendar.YEAR);
+    public static int getYear(GregCalPlus g){
+        return g.get(GregCalPlus.YEAR);
     }
-    public static int getMonth(GregorianCalendar g){
-        return g.get(GregorianCalendar.MONTH);
+    public static int getMonth(GregCalPlus g){
+        return g.get(GregCalPlus.MONTH);
     }
-    public static int getDate(GregorianCalendar g){
-        return g.get(GregorianCalendar.DATE);
+    public static int getDate(GregCalPlus g){
+        return g.get(GregCalPlus.DATE);
     }
-    public static int getHour(GregorianCalendar g){
-        return g.get(GregorianCalendar.HOUR);
+    public static int getHour(GregCalPlus g){
+        return g.get(GregCalPlus.HOUR);
     }
-    public static int getMinute(GregorianCalendar g){
-        return g.get(GregorianCalendar.MINUTE);
+    public static int getMinute(GregCalPlus g){
+        return g.get(GregCalPlus.MINUTE);
     }
-    public static int getSecond(GregorianCalendar g){
-        return g.get(GregorianCalendar.SECOND);
+    public static int getSecond(GregCalPlus g){
+        return g.get(GregCalPlus.SECOND);
     }
-    public static int getHour24(GregorianCalendar g){
-        return g.get(GregorianCalendar.HOUR_OF_DAY);
+    public static int getHour24(GregCalPlus g){
+        return g.get(GregCalPlus.HOUR_OF_DAY);
     }
 
-    public static String getTimeString(){return getTimeString(new GregorianCalendar());}
-    public static String getTimeString(GregorianCalendar g){
+    public static String getTimeString(){return getTimeString(new GregCalPlus());}
+    public static String getTimeString(GregCalPlus g){
         return  (Util.getHour24(g)<10?"0":"")+Util.getHour24(g)+":"/*(getSecond()%2==0?":":" ")*/+
                 (Util.getMinute(g)<10?"0":"")+Util.getMinute(g)+":"/*(getSecond()%2==0?":":" ")*/+
                 (Util.getSecond(g)<10?"0":"")+Util.getSecond(g);
@@ -85,14 +85,17 @@ public class Util {// Static class dear.
     public static int doubleToInt(double d){
         return safeLongToInt(Math.round(d));
     }
-    public static String getDeltaT(GregorianCalendar g1, GregorianCalendar g2, boolean useFuzzyMode){
+    public static long getDeltaT(GregCalPlus g1, GregCalPlus g2){
+        return (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
+    }
+    public static String getDeltaT(GregCalPlus g1, GregCalPlus g2, boolean useFuzzyMode){
         return useFuzzyMode?fuzzyDeltaT(g1,g2):exactDeltaT(g1,g2);
     }
-    private static String exactDeltaT(GregorianCalendar g1, GregorianCalendar g2){
+    private static String exactDeltaT(GregCalPlus g1, GregCalPlus g2){
         long deltaTSecs = (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
         return deltaTSecs/3600 + " h "+deltaTSecs%3600/60 + " min "+ deltaTSecs%60+ "sec";
     }
-    private static String fuzzyDeltaT(GregorianCalendar g1, GregorianCalendar g2){
+    private static String fuzzyDeltaT(GregCalPlus g1, GregCalPlus g2){
         long deltaTSecs = (g2.getTimeInMillis()-g1.getTimeInMillis())/1000;
         if(deltaTSecs>3600){ //1h+
             return toSf(deltaTSecs/3600.0, 2)+" h";
@@ -144,16 +147,16 @@ public class Util {// Static class dear.
 
 //    public static int getHour(int i){
 //
-//        return new GregorianCalendar().get(GregorianCalendar.HOUR);
+//        return new GregCalPlus().get(GregCalPlus.HOUR);
 //    }
 //    public static int getMinute(int i){
-//        return new GregorianCalendar().get(GregorianCalendar.MINUTE);
+//        return new GregCalPlus().get(GregCalPlus.MINUTE);
 //    }
 //    public static int getSecond(int i){
-//        return new GregorianCalendar().get(GregorianCalendar.SECOND);
+//        return new GregCalPlus().get(GregCalPlus.SECOND);
 //    }
 //    public static int getHour24(int i){
-//        return new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY);
+//        return new GregCalPlus().get(GregCalPlus.HOUR_OF_DAY);
 //    }
 //
 //    @Deprecated

@@ -1,10 +1,14 @@
 package appname.sched;
 
 
+import appname.util.GregCalPlus;
 import appname.util.Util;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Comparator;
+
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
@@ -12,36 +16,67 @@ import java.util.UUID;
  * Created by yusiang on 11/4/14.
  */
 public class Event implements Comparable<Event>,Comparator<Event>{
-    private GregorianCalendar start,end;
-    public final UUID uuid;
+    private GregCalPlus start,end;
+    //public final UUID uuid;
     public String name;
-    public boolean endIsDuration;
-    public Event(GregorianCalendar s , GregorianCalendar e,String n, boolean eid){
-        //if(s==null|e==null) throw new NullPointerException();
+    public boolean useDuration;
+    private int duration=0;
+    public Event(GregCalPlus s , GregCalPlus e,String n){
+        if(e==null) throw new NullPointerException();
         start=s; end=e;
-        uuid=UUID.randomUUID();
+        //uuid=UUID.randomUUID();
         name=n;
-        endIsDuration = eid;
-        System.out.println("New Event: "+this.toString());
+        useDuration=false;
+        System.out.println("Created: "+this.toString());
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public int getDuration() {
+        return duration;
     }
 
-    public GregorianCalendar getStart() {
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Event(GregCalPlus s, int durationSeconds, String n){
+        start=s; end=null;
+        duration=durationSeconds;
+        name = n;
+        useDuration=true;
+        System.out.println("Created: "+this.toString());
+
+    }
+
+//    public UUID getUuid() {
+//        return uuid;
+//    }
+
+    public GregCalPlus getStart() {
         return start;
     }
 
-    public void setStart(GregorianCalendar start) {
+    public void setStart(GregCalPlus start) {
+        //TODO?
+        //Convert to duration, then setDuration().
+
+        if(!useDuration) setDuration(Util.safeLongToInt(Util.getDeltaT(getEnd(),getStart())));
+
         this.start = start;
     }
 
-    public GregorianCalendar getEnd() {
-        return end;
+    public GregCalPlus getEnd() {
+        if(useDuration&&start==null) return null;
+        if(useDuration&&start!=null) {
+            GregCalPlus g = (GregCalPlus) start.clone();
+            g.add(GregorianCalendar.SECOND,duration);
+            return g;
+        }
+        if(!useDuration) return end;
+        return null;
     }
 
-    public void setEnd(GregorianCalendar end) {
+    public void setEnd(GregCalPlus end) {
+        useDuration=false;
         this.end = end;
     }
 
@@ -58,30 +93,67 @@ public class Event implements Comparable<Event>,Comparator<Event>{
 
         return o1.getEnd().compareTo(o2.getEnd());
     }
-
+    JLabel tmp = new JLabel();
+    JPanel pane=null;
     public JPanel toPanel(){
         //TODO
-        return null;
+        pane = new JPanel(new MigLayout("fill"));
+        pane.setBackground(new Color(4, 17, 94));
+        tmp = new JLabel();
+        tmp.setForeground(new Color(255,255,255));
+        pane.add(tmp,"grow 1");
+        return pane;
 
+    }
+    public void refresh(){
+        if(pane==null) return;
+        //TODO
+        tmp.setText(this.toHtmlString());
+
+        if(this.hasEnded()) pane.setBackground(new Color(94, 0, 13));
+        else if(this.hasStarted()) pane.setBackground(new Color(12, 75, 0));
+    }
+    public boolean hasStarted(){
+        return start==null?false:new GregCalPlus().after(getStart());
     }
     public boolean hasEnded(){
 
-        return start==null?false:new GregorianCalendar().after(end);
+        return start==null?false:new GregCalPlus().after(getEnd());
+    }
+    public boolean canRemove(){
+        if(getEnd()==null) return false;
+        GregCalPlus e = (GregCalPlus) getEnd().clone();
+        e.add(GregCalPlus.SECOND,5);
+        return start==null?false:new GregCalPlus().after(e);
     }
     @Override
     public String toString(){
         String s="Event: "+name+'\n';
         if(start==null) s+= "Manual Start";
-        else s+="Autostart: "+ Util.getYear(start)+"-"+Util.getMonth(start)+"-"+Util.getDate(start)+" @ "+
+        else s+="Autostart: "+ Util.getYear(start)+"-"+(Util.getMonth(start)+1)+"-"+Util.getDate(start)+" @ "+
                 Util.getHour24(start)+":"+Util.getMinute(start)+":"+Util.getSecond(start);
         s+='\n';
-        if(endIsDuration){
-            s+="Duration: "+Util.getYear(end)+"yr "+Util.getMonth(end)+"mth "+Util.getDate(end)+"day "+
-                    Util.getHour24(end)+"hr "+Util.getMinute(end)+"min "+Util.getSecond(end)+"sec";;
+        if(useDuration){
+            s+="Duration: "+duration+" sec";
         }else{
-            s+="End:       "+Util.getYear(end)+"-"+Util.getMonth(end)+"-"+Util.getDate(end)+" @ "+
+            s+="End:       "+Util.getYear(end)+"-"+(Util.getMonth(end)+1)+"-"+Util.getDate(end)+" @ "+
                     Util.getHour24(end)+":"+Util.getMinute(end)+":"+Util.getSecond(end);
         }
+        return s;
+    }
+    public String toHtmlString(){
+        String s="<html>Event: "+name+"<br>";
+        if(start==null) s+= "Manual Start";
+        else s+="Autostart: "+ Util.getYear(start)+"-"+(Util.getMonth(start)+1)+"-"+Util.getDate(start)+" @ "+
+                Util.getHour24(start)+":"+Util.getMinute(start)+":"+Util.getSecond(start);
+        s+="<br>";
+        if(useDuration){
+            s+="Duration: "+duration+" sec";
+        }else{
+            s+="End:       "+Util.getYear(end)+"-"+(Util.getMonth(end)+1)+"-"+Util.getDate(end)+" @ "+
+                    Util.getHour24(end)+":"+Util.getMinute(end)+":"+Util.getSecond(end);
+        }
+        s+="<br></html>";
         return s;
     }
 

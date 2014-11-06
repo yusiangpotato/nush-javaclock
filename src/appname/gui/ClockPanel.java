@@ -20,9 +20,9 @@ public class ClockPanel extends JPanel {
 	boolean nightMode = true;
 	boolean drawDigital = true;
 	boolean animate = true;
-    Quadruple<Integer,Integer,Integer,Integer> divPos[] = new Quadruple[60];
+    Quadruple<Double,Double,Double,Double> divPos[] = new Quadruple[60];
     Pair<Integer,Integer> numPos[] = new Pair[12];
-	private static float[] animateValues = {-1.0f, -0.95f, -0.85f, -0.7f, -0.5f, -0.3f, -0.1f, 0.05f, 0.10f, 0.05f, 0};
+	private static double[] animateValues = {-1.0, -0.80, -0.5, -0.3, -0.1, 0.05, 0.10, 0.05, 0.0};
 	int prevSecond = -1, animateDuration = animateValues.length - 1, animateTick = animateDuration;
 
 	public ClockPanel(){
@@ -32,6 +32,7 @@ public class ClockPanel extends JPanel {
                 new Color(223, 223, 223));
         */
         if(nightMode) setBackground(new Color(32, 32, 32));
+        this.setDoubleBuffered(true);
         //calculateDivisions();
         //calculateNumbers();
 	}
@@ -65,7 +66,7 @@ public class ClockPanel extends JPanel {
 		            g2.setPaint(i % 5 == 0?Color.WHITE:Color.LIGHT_GRAY);
 	            else
 		            g2.setPaint(i % 5 == 0?Color.DARK_GRAY:Color.LIGHT_GRAY);
-                g2.drawLine(divPos[i].first,divPos[i].second,divPos[i].third,divPos[i].fourth);
+                g2.draw(new Line2D.Double(divPos[i].first,divPos[i].second,divPos[i].third,divPos[i].fourth));
 
 
                 //Numbers
@@ -142,10 +143,10 @@ public class ClockPanel extends JPanel {
         final float minorDivision = 0.95f, majorDivison = 0.93f, divisionMargin = 0.98f;
         for(int i=0;i<60;i++){
             double theta = Util.map(i, 0, 60, 2 * Math.PI, 0);
-            int startX=Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size));
-            int startY=Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size));
-            int endX  =Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, divisionMargin * size) + size));
-            int endY  =Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, divisionMargin * size) + size));
+            double  startX=(Util.PolarToCartesianX(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size),
+                    startY=(Util.PolarToCartesianY(theta, i % 5 == 0 ? majorDivison * size : minorDivision * size) + size),
+                    endX  =(Util.PolarToCartesianX(theta, divisionMargin * size) + size),
+                    endY  =(Util.PolarToCartesianY(theta, divisionMargin * size) + size);
             divPos[i]=new Quadruple<>(startX,startY,endX,endY);
         }
     }
@@ -153,9 +154,9 @@ public class ClockPanel extends JPanel {
         final float textPosition = 0.82f;
         for(int i=0;i<12;i++){
             double theta = Util.map(i, 0, 12, 2 * Math.PI, 0);
-            int posX = Util.safeLongToInt(Math.round(Util.PolarToCartesianX(theta, textPosition * size) + -size/17 + size));
-            int posY = Util.safeLongToInt(Math.round(Util.PolarToCartesianY(theta, textPosition * size) +  size/30 + size));
-            numPos[i]=new Pair<>(posX,posY);
+            double posX = (Util.PolarToCartesianX(theta, textPosition * size) + -size/17 + size);
+            double posY = (Util.PolarToCartesianY(theta, textPosition * size) +  size/30 + size);
+            numPos[i]=new Pair<>(Util.doubleToInt(posX),Util.doubleToInt(posY));
         }
     }
 }
