@@ -113,7 +113,7 @@ public class Util {// Static class plz.
     }
 
     public static String secsToExactHMS(long deltaTSecs) { 
-        return deltaTSecs / 3600 + " h " + deltaTSecs % 3600 / 60 + " min " + deltaTSecs % 60 + "sec";
+        return deltaTSecs / 3600 + " h " + deltaTSecs % 3600 / 60 + " min " + deltaTSecs % 60 + " sec";
     }
 
     public static String secsToFuzzyHMS(long deltaTSecs) {

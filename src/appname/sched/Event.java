@@ -7,6 +7,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     JPanel pane = null;
     private GregCalPlus start, end;
     private int duration = 0;
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm a");
 
     public Event(GregCalPlus s, GregCalPlus e, String n) {
         if (e == null) throw new NullPointerException();
@@ -139,36 +141,23 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     @Override
     public String toString() {
-        String s = "Event: " + name + '\n';
-        if (start == null) s += "Manual Start";
+        StringBuilder sb = new StringBuilder();
+	    sb.append("Event: ").append(name).append('\n');
+        if (start == null) sb.append("Manual Start");
         else
-            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart())) + "-" + Util.getDate(getStart()) + " @ " +
-                    Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
-        s += '\n';
+            sb.append("Autostart: ").append(dateFormat.format(getStart().getTime()));
+        sb.append('\n');
 
         if(getEnd()!=null)
-            s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd())) + "-" + Util.getDate(getEnd()) + " @ " +
-                Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "\n";
+            sb.append("End:       ").append(dateFormat.format(getEnd().getTime())).append('\n');
 
-        s += "Duration: " + Util.secsToExactHMS(getDuration());
+	    sb.append("Duration: ").append(Util.secsToExactHMS(getDuration()));
 
-        return s;
+        return sb.toString();
     }
 
     public String toHtmlString() {
-        String s = "<html>Event: " + name + "<br>";
-        if (start == null) s += "Manual Start";
-        else
-            s += "Autostart: " + Util.getYear(getStart()) + "-" + (Util.getMonth(getStart())) + "-" + Util.getDate(getStart()) + " @ " +
-                    Util.getHour24(getStart()) + ":" + Util.getMinute(getStart()) + ":" + Util.getSecond(getStart());
-        s += "<br>";
-        if(getEnd()!=null)
-        s += "End:       " + Util.getYear(getEnd()) + "-" + (Util.getMonth(getEnd())) + "-" + Util.getDate(getEnd()) + " @ " +
-                Util.getHour24(getEnd()) + ":" + Util.getMinute(getEnd()) + ":" + Util.getSecond(getEnd()) + "<br>";
-        s += "Duration: " + Util.secsToExactHMS(getDuration());
-
-        s += "<br></html>";
-        return s;
+	    return "<html>"+toString().replaceAll("\n","<br>")+"</html>";
     }
 
 }
