@@ -165,34 +165,4 @@ public class Util {// Static class plz.
         }
     }
 
-
-//    public static int getHour(int i){
-//
-//        return new GregCalPlus().get(GregCalPlus.HOUR);
-//    }
-//    public static int getMinute(int i){
-//        return new GregCalPlus().get(GregCalPlus.MINUTE);
-//    }
-//    public static int getSecond(int i){
-//        return new GregCalPlus().get(GregCalPlus.SECOND);
-//    }
-//    public static int getHour24(int i){
-//        return new GregCalPlus().get(GregCalPlus.HOUR_OF_DAY);
-//    }
-//
-//    @Deprecated
-//    public static boolean processTimeCombobox(String s, ComboBox hr, ComboBox min){
-//        //if(s.length()<5) return false;
-//
-//        SimpleDateFormat fmt = new SimpleDateFormat("H:m");
-//        Date d =new Date();
-//        try{
-//            d= fmt.parse(s);
-//        }catch (Exception ex){
-//           return false;
-//        }
-//        hr.setValue(d.getHours());
-//        min.setValue(d.getMinutes());
-//        return false;
-//    }
 }
