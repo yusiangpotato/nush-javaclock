@@ -47,7 +47,7 @@ public class SwingManager implements Runnable {
                 windowPane.add(clockPane, "grow 0");
                 window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-                eManager = new EventManager();
+                eManager = new EventManager(window);
                 windowPane.add(eManager.getPane(), "push, grow 1");
 
 
@@ -147,7 +147,7 @@ public class SwingManager implements Runnable {
                         run();
                     return true;
                 case "RECALC":
-                    clockPane.reCalc();
+                    clockPane.reCalculate();
                     return true;
                 case "LS":
                     eManager.lsEvents();

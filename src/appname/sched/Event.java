@@ -11,12 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by yusiang on 11/4/14.
  */
 public class Event implements Comparable<Event>, Comparator<Event> {
-    public final UUID uuid;
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+	public final UUID uuid;
     public String name;
     public boolean useDuration;
     JLabel tmp = new JLabel();
@@ -32,7 +35,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         uuid=UUID.randomUUID();
         name = n;
         useDuration = false;
-        System.out.println("Created: " + this.toString());
+        logger.log(Level.FINE, "Created: " + this.toString());
     }
 
     public Event(GregCalPlus s, int durationSeconds, String n) {
@@ -42,7 +45,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         name = n;
         uuid=UUID.randomUUID();
         useDuration = true;
-        System.out.println("Created: " + this.toString());
+        logger.log(Level.FINE, "Created: " + this.toString());
 
     }
 

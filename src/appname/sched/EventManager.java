@@ -14,23 +14,23 @@ import java.util.Collections;
  * Created by yusiang on 11/4/14.
  */
 public class EventManager {
+	private JFrame parent;
     private final JPanel pane;
     private final JPanel eventsPane;
     private final PriorityArrayList<Event> eList = new PriorityArrayList<>();
     PriorityArrayList<Event> eListOld = (PriorityArrayList<Event>) eList.clone();
 
-    public EventManager() {
+    public EventManager(JFrame parent) {
+	    this.parent = parent;
         pane = new JPanel(new MigLayout("fill", "[100%]", "[pref!][push]"));
 
         {
-
-            //pane.add();
             pane.setMinimumSize(new Dimension(100, 1));
             pane.setPreferredSize(null);
             pane.setMaximumSize(null);
             pane.setBackground(new Color(62, 62, 62));
         }
-        {//Buttons: New,Delete
+        {   //  Buttons: New,Delete
             JButton nBtn = new JButton("NEW EVENT"),
                     dBtn = new JButton("OPTIONS"),
                     rBtn = new JButton("[RE]START ALL"),
@@ -48,12 +48,12 @@ public class EventManager {
                 @Override
                 public void actionPerformed(ActionEvent evx) {
                     Event[] ev = {null};
-                    EventDialog.makeDialog(eList, ev); //Add
+                    EventDialog.makeDialog(EventManager.this.parent, eList, ev); //Add
 
 
                 }
             });
-            //dBtn
+            //  dBtn
             rBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -82,7 +82,6 @@ public class EventManager {
     }
 
     public void refresh() {
-
         for (int i = 0; i < eList.size(); i++)
             eList.get(i).refresh();
         for (int i = 0; i < pane.getComponentCount(); i++) {
@@ -93,13 +92,14 @@ public class EventManager {
         pane.repaint();
     }
 
-    public void revalidate() {//Check components. Add/delete/reorder as neccessary.
-        //First go through each item and if necc delete.
+	/** Check components. Add/delete/reorder as necessary. **/
+    public void revalidate() {
+        //  First go through each item and if necc delete.
         for (int i = 0; i < eList.size(); ) {
             if (eList.get(i).canRemove()) eList.remove(i);
             else i++;
         }
-        //If we sort it and != before sort then need to update display
+        //  If we sort it and != before sort then need to update display
         Collections.sort(eList);
         if (!eList.equals(eListOld)) {//So just clear disp and re-add all.
             updatePane();
@@ -172,6 +172,6 @@ public class EventManager {
 
     public void edit(int index){
         Event[] ev = {eList.get(index)};
-        EventDialog.makeDialog(eList,ev);
+        EventDialog.makeDialog(parent, eList,ev);
     }
 }

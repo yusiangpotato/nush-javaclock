@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//
 public class Launcher {
 	private static final Logger logger = Logger.getLogger(Thread.currentThread().getClass().getName());
 

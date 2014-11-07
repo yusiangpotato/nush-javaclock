@@ -6,6 +6,7 @@ import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,8 +14,8 @@ import java.awt.event.ActionListener;
  * Created by yusiang on 11/6/14.
  */
 public class EventDialog {
-    static void makeDialog(final PriorityArrayList<Event> prioList, final Event[] ev) {
-        final JFrame jf = new JFrame("Big events always cast their shadows.");
+    static void makeDialog(final JFrame parent, final PriorityArrayList<Event> prioList, final Event[] ev) {
+        final JDialog jD = new JDialog(parent, "Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
         final boolean[] useDuration = {false};
@@ -46,9 +47,9 @@ public class EventDialog {
             hours[i] = "" + (i < 10 ? "0" + i : i);
         for (int i = 0; i < 60; i++)
             minutes[i] = "" + (i < 10 ? "0" + i : i);
-        jf.setSize(400, 220);
+        jD.setSize(400, 220);
         final JPanel pane = new JPanel(new MigLayout("fill, wrap", "[15%][25%][15%][5%][15%][5%][15%][5%]", ""));
-        jf.setContentPane(pane);
+        jD.setContentPane(pane);
         //Name
         JLabel nameLabel = new JLabel("Name:");
         pane.add(nameLabel, "grow 1");
@@ -87,7 +88,7 @@ public class EventDialog {
         startDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeDateDialog(startYMDHMS, "Change start date", jf);
+                makeDateDialog(parent, startYMDHMS, "Change start date");
             }
         });
         //End
@@ -104,7 +105,7 @@ public class EventDialog {
         endDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeDateDialog(endYMDHMS, "Change end date", jf);
+                makeDateDialog(parent, endYMDHMS, "Change end date");
             }
         });
         //Duration ** Only one of either end or duration is visible, clicking the button swaps.
@@ -247,7 +248,8 @@ public class EventDialog {
 
                     }
                     if(!prioList.contains(ev[0])) prioList.add(ev[0]);
-                    jf.dispose();
+	                parent.setEnabled(true);
+                    jD.dispose();
                 } catch (Exception e) {
                     //e.printStackTrace();
                     if (e.getMessage().trim().equals(""))
@@ -280,18 +282,22 @@ public class EventDialog {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                jf.dispose();
+	            parent.setEnabled(true);
+                jD.dispose();
             }
         });
-        jf.setVisible(true);
+	    jD.setMinimumSize(new Dimension(400, 250));
+	    jD.pack();
+	    jD.setLocationRelativeTo(parent);
+	    parent.setEnabled(false);
+        jD.setVisible(true);
 
 
     }
 
-    private static void makeDateDialog(final int[] YMDHMS, String title, final JFrame resetVisible) {
-        resetVisible.setVisible(false);
-        final JFrame jf = new JFrame(title);
-        jf.setSize(400, 120);
+    private static void makeDateDialog(final JFrame parent, final int[] YMDHMS, String title) {
+        final JDialog jD = new JDialog(parent, title);
+        jD.setSize(400, 120);
         JPanel pane = new JPanel(new MigLayout("fill, wrap", "[40%][20%][20%][20%]"));
         pane.add(new JLabel(title), "grow 1");
         final JTextField y = new JTextField("" + YMDHMS[0]),
@@ -307,31 +313,35 @@ public class EventDialog {
         pane.add(ok, "skip 1, grow 1");
         pane.add(cc, "skip 1, grow 1");
         ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                try {
-                    YMDHMS[0] = Util.parseUInt(y.getText(), "Error parsing year!");
-                    //if(YMDHMS[0]>2100) throw new Exception("Year too large!");
-                    YMDHMS[1] = Util.parseUInt(m.getText(), "Error parsing month! (Use numbers?)");
-                    YMDHMS[2] = Util.parseUInt(d.getText(), "Error parsing date!");
-                    if (!Util.isDateValid(YMDHMS[2] + "-" + YMDHMS[1] + "-" + YMDHMS[0]))
-                        throw new Exception("Date does not exist!");
+	        @Override
+	        public void actionPerformed(ActionEvent ev) {
+		        try {
+			        YMDHMS[0] = Util.parseUInt(y.getText(), "Error parsing year!");
+			        //if(YMDHMS[0]>2100) throw new Exception("Year too large!");
+			        YMDHMS[1] = Util.parseUInt(m.getText(), "Error parsing month! (Use numbers?)");
+			        YMDHMS[2] = Util.parseUInt(d.getText(), "Error parsing date!");
+			        if (!Util.isDateValid(YMDHMS[2] + "-" + YMDHMS[1] + "-" + YMDHMS[0]))
+				        throw new Exception("Date does not exist!");
 
-                    resetVisible.setVisible(true);
-                    jf.dispose();
-                } catch (Exception ex) {
-                    dbg.setText(ex.getMessage());
-                }
-            }
+			        parent.setEnabled(true);
+			        jD.dispose();
+		        } catch (Exception ex) {
+			        dbg.setText(ex.getMessage());
+		        }
+	        }
         });
         cc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetVisible.setVisible(true);
-                jf.dispose();
-            }
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+		        parent.setEnabled(true);
+		        jD.dispose();
+	        }
         });
-        jf.setContentPane(pane);
-        jf.setVisible(true);
+        jD.setContentPane(pane);
+	    jD.setMinimumSize(new Dimension(300, 150));
+	    jD.pack();
+	    jD.setLocationRelativeTo(parent);
+	    parent.setEnabled(false);
+        jD.setVisible(true);
     }
 }
