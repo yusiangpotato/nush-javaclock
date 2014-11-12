@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
  */
 public class EventDialog {
     static void makeDialog(final JFrame parent, final PriorityArrayList<Event> prioList, final Event[] ev) {
+        JDialog.setDefaultLookAndFeelDecorated(true);
         final JDialog jD = new JDialog(parent, "Big events always cast their shadows.");
         final boolean[] modeEnd = {false};
         final boolean[] autoStart = {true};
@@ -210,21 +211,6 @@ public class EventDialog {
                                 60 * Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!") +
                                 3600 * Util.parseUInt(durationHours.getText(), "Invalid duration hours!");
                         if (duration[0] <= 0) throw new Exception("Duration too short (or negative) !");
-//                  //NOT USING THIS BAD SYSTEM
-//                        if(autoStart[0]){//Add to end
-//                            gE = (GregCalPlus) gS.clone();
-//                            gE.add(GregCalPlus.SECOND     ,Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!"));
-//                            gE.add(GregCalPlus.MINUTE     ,Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!"));
-//                            gE.add(GregCalPlus.HOUR_OF_DAY,Util.parseUInt(durationHours.getText(), "Invalid duration hours!"));
-//                        }else{//End is duration.
-//                            endYMDHMS[0]=0;
-//                            endYMDHMS[1]=0;
-//                            endYMDHMS[2]=0;
-//                            endYMDHMS[3]=Util.parseUInt(durationHours.getText(), "Invalid duration hours!");
-//                            endYMDHMS[4]=Util.parseUInt(durationMinutes.getText(), "Invalid duration minutes!");
-//                            endYMDHMS[5]=Util.parseUInt(durationSeconds.getText(), "Invalid duration seconds!");
-//                            gE = new GregCalPlus(endYMDHMS[0],endYMDHMS[1],endYMDHMS[2],endYMDHMS[3],endYMDHMS[4],endYMDHMS[5]);
-//                        }
                     }
                     if (gS != null && gE != null && gE.compareTo(gS) <= 0)
                         throw new Exception("End time equal/before start!");
@@ -256,23 +242,8 @@ public class EventDialog {
                         errorLabel.setText("Critical Unknown Error! Please report bug.");
                     else
                         errorLabel.setText(e.getMessage());
-                    //TODO Figure that out
-                    /*
-                    final int[] errorAnimCounter = {255};
-                    ActionListener errorAnimAction = null;
-                    final Timer errorAnim = new Timer(1,errorAnimAction);
-                    errorAnimAction= new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            errorAnimCounter[0]--;
-                            errorLabel.setForeground(new Color(errorAnimCounter[0],0,0));
-                            if(errorAnimCounter[0]==0) errorAnim.stop();
-                        }
-                    };
-                    errorAnim.setRepeats(true);
-                    errorAnim.start();
-                    errorAnim.setLogTimers(true);
-                    */
+                    //TODO Animate: Red, then fade off to black
+
                 }
 
             }
@@ -296,13 +267,14 @@ public class EventDialog {
     }
 
     private static void makeDateDialog(final JFrame parent, final int[] YMDHMS, String title) {
+
         final JDialog jD = new JDialog(parent, title);
         jD.setSize(400, 120);
-        JPanel pane = new JPanel(new MigLayout("fill, wrap", "[40%][20%][20%][20%]"));
+        JPanel pane = new JPanel(new MigLayout("fill, wrap", "[push][pref!][pref!][pref!]"));
         pane.add(new JLabel(title), "grow 1");
-        final JTextField y = new JTextField("" + YMDHMS[0]),
-                m = new JTextField("" + YMDHMS[1]),
-                d = new JTextField("" + YMDHMS[2]);
+        final JTextField y = new JTextField("" + YMDHMS[0],5),
+                m = new JTextField("" + YMDHMS[1],3),
+                d = new JTextField("" + YMDHMS[2],3);
         pane.add(y, "grow 1");
         pane.add(m, "grow 1");
         pane.add(d, "grow 1");
@@ -311,7 +283,7 @@ public class EventDialog {
         JButton ok = new JButton("OK");
         JButton cc = new JButton("Cancel");
         pane.add(ok, "skip 1, grow 1");
-        pane.add(cc, "skip 1, grow 1");
+        pane.add(cc, "span 2, grow 1");
         ok.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent ev) {

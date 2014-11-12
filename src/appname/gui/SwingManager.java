@@ -61,7 +61,7 @@ public class SwingManager implements Runnable {
             }
         });
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        setExecFreq(45);
+        setExecFreq(30);
 
     }
 
@@ -162,6 +162,15 @@ public class SwingManager implements Runnable {
                     return eManager.addTestEvent(Integer.parseInt(x[1]));
                 case "EDIT":
                     eManager.edit(Integer.parseInt(x[1]));
+                    return true;
+                case "NIGHT":
+                    clockPane.toggleNightMode();
+                    return true;
+                case "ANIM":
+                    clockPane.toggleAnimation();
+                    return true;
+                case "DIGITAL":
+                    clockPane.toggleDigital();
                     return true;
                 /*
                 case "XSZ":
