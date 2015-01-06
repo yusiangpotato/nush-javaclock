@@ -47,7 +47,7 @@ public class ClockPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
-
+        setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
 
         {   //  Setup the clock face
 	        g2.setStroke(new BasicStroke(2));
@@ -125,6 +125,7 @@ public class ClockPanel extends JPanel {
     public void setSize(double sz) {
         size = sz;
         setPreferredSize(new Dimension(Util.doubleToInt(size * 2), Util.doubleToInt(size * 2)));
+        logger.finest("Changing size to "+sz);
     }
 
     public void reCalculate() {
@@ -132,8 +133,14 @@ public class ClockPanel extends JPanel {
         calculateDivisions();
     }
 
-    public boolean toggleNightMode(){
+    private boolean toggleNightMode(){
         return nightMode = !nightMode;
+    }
+    public boolean setNightMode(){
+        return nightMode = true;
+    }
+    public boolean clrNightMode(){
+        return nightMode = false;
     }
     public boolean toggleAnimation(){
         return animate=!animate;

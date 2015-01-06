@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //
 
 /**
@@ -57,6 +59,7 @@ public class SwingManager implements Runnable {
 
                 //windowPane.setSize(400, 400);
                 window.setVisible(true);
+                windowPane.setBackground(new Color(0, 0, 0));
 
             }
         });
@@ -73,7 +76,7 @@ public class SwingManager implements Runnable {
 
         try {
             if (stdin.ready()) {
-                s[0] += stdin.readLine();
+                s[0] = stdin.readLine();
             }
         } catch (Exception e) {
             //e.printStackTrace();
@@ -112,6 +115,7 @@ public class SwingManager implements Runnable {
 
 
     public boolean execCmd(String cmd) {
+
         try {
             if (cmd.equals("")) return false;
             cmd = cmd.toUpperCase();
@@ -163,14 +167,68 @@ public class SwingManager implements Runnable {
                 case "EDIT":
                     eManager.edit(Integer.parseInt(x[1]));
                     return true;
+                /*
                 case "NIGHT":
                     clockPane.toggleNightMode();
+                    return true;
+                */
+                case "NIGHT":
+                    if(Integer.parseInt(x[1])==0){
+                        clockPane.clrNightMode();
+                        eManager.clrNightMode();
+                    }else{
+                        clockPane.setNightMode();
+                        eManager.setNightMode();
+                    }
                     return true;
                 case "ANIM":
                     clockPane.toggleAnimation();
                     return true;
                 case "DIGITAL":
                     clockPane.toggleDigital();
+                    return true;
+                case "LOG":
+                    Logger syslog = Logger.getLogger("");
+                    switch ((x[1])){
+                        case "0":
+                        case "OFF":
+                            syslog.setLevel(Level.OFF);
+                            break;
+                        case "1":
+                        case "SEVERE":
+                            syslog.setLevel(Level.SEVERE);
+                            break;
+                        case "2":
+                        case "WARNING":
+                            syslog.setLevel(Level.WARNING);
+                            break;
+                        case "3":
+                        case "INFO":
+                            syslog.setLevel(Level.INFO);
+                            break;
+                        case "4":
+                        case "CONFIG":
+                            syslog.setLevel(Level.CONFIG);
+                            break;
+                        case "5":
+                        case "FINE":
+                            syslog.setLevel(Level.FINE);
+                            break;
+                        case "6":
+                        case "FINER":
+                            syslog.setLevel(Level.FINER);
+                            break;
+                        case "7":
+                        case "FINEST":
+                            syslog.setLevel(Level.FINEST);
+                            break;
+                        case "8":
+                        case "ALL":
+                            syslog.setLevel(Level.ALL);
+                            break;
+                        default:
+                            return false;
+                    }
                     return true;
                 /*
                 case "XSZ":

@@ -17,9 +17,10 @@ public class EventManager {
 	private JFrame parent;
     private final JPanel pane;
     private final JPanel eventsPane;
+    private final JPanel buttonPane;
     private final PriorityArrayList<Event> eList = new PriorityArrayList<>();
     PriorityArrayList<Event> eListOld = (PriorityArrayList<Event>) eList.clone();
-
+    boolean nightMode = true;
     public EventManager(JFrame parent) {
 	    this.parent = parent;
         pane = new JPanel(new MigLayout("fill", "[100%]", "[pref!][push]"));
@@ -36,7 +37,7 @@ public class EventManager {
                     rBtn = new JButton("[RE]START ALL"),
                     cBtn = new JButton("CLEAR");
 
-            JPanel p = new JPanel(new MigLayout("fill", "[50%][50%]"));
+            buttonPane = new JPanel(new MigLayout("fill", "[50%][50%]"));
 
             /*
             nBtn.setMinimumSize(new Dimension(100,25));
@@ -66,12 +67,12 @@ public class EventManager {
                     clear();
                 }
             });
-            p.add(nBtn, "grow 1");
-            p.add(dBtn, "grow 1, wrap");
-            p.add(rBtn, "grow 1");
-            p.add(cBtn, "grow 1");
+            buttonPane.add(nBtn, "grow 1");
+            buttonPane.add(dBtn, "grow 1, wrap");
+            buttonPane.add(rBtn, "grow 1");
+            buttonPane.add(cBtn, "grow 1");
 
-            pane.add(p, "north, wrap");
+            pane.add(buttonPane, "north, wrap");
         }
 
         //pane.add(new JPanel(),"push");
@@ -88,8 +89,12 @@ public class EventManager {
             pane.getComponent(i).revalidate();
             pane.getComponent(i).repaint();
         }
+        buttonPane.setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
+        eventsPane.setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
+        pane      .setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
         pane.revalidate();
         pane.repaint();
+
     }
 
 	/** Check components. Add/delete/reorder as necessary. **/
@@ -173,5 +178,11 @@ public class EventManager {
     public void edit(int index){
         Event[] ev = {eList.get(index)};
         EventDialog.makeDialog(parent, eList,ev);
+    }
+    public boolean setNightMode(){
+        return nightMode = true;
+    }
+    public boolean clrNightMode(){
+        return nightMode = false;
     }
 }
