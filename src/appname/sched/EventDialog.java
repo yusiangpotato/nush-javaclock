@@ -16,10 +16,11 @@ import java.awt.event.ActionListener;
 public class EventDialog {
     static void makeDialog(final JFrame parent, final PriorityArrayList<Event> prioList, final Event[] ev) {
         JDialog.setDefaultLookAndFeelDecorated(true);
-        final JDialog jD = new JDialog(parent, "Big events always cast their shadows.");
+        final JDialog jD = new JDialog(parent, "New Event");
         final boolean[] modeEnd = {false};
-        final boolean[] autoStart = {true};
         final boolean[] useDuration = {false};
+        final boolean[] autoStart = {true};
+        final int[] startMode = {0};
         final int[] duration = {0};
         final int[] startYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
         final int[] endYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
@@ -58,7 +59,7 @@ public class EventDialog {
 
         pane.add(nameField, "span 7, grow 1");
         //Start
-        final JButton startButton = new JButton("Autostart at:");
+        final JButton startButton = new JButton("");
         pane.add(startButton, "span 2, grow 1");
         final JComboBox<String> startHour = new JComboBox<>(hours);
         startHour.setSelectedIndex(startYMDHMS[3]);
@@ -71,21 +72,30 @@ public class EventDialog {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (autoStart[0]) {
-                    autoStart[0] = false;
-                    startButton.setText("Manual Start");
-                    startHour.setEnabled(false);
-                    startMinutes.setEnabled(false);
-                    startDateButton.setEnabled(false);
-                } else {
-                    autoStart[0] = true;
+
+                if (startMode[0]==0){
+                    startMode[0]=1;
                     startButton.setText("Autostart at:");
                     startHour.setEnabled(true);
                     startMinutes.setEnabled(true);
                     startDateButton.setEnabled(true);
+                }else if (startMode[0]==1) {
+                    startMode[0]=2;
+                    startButton.setText("Manual Start");
+                    startHour.setEnabled(false);
+                    startMinutes.setEnabled(false);
+                    startDateButton.setEnabled(false);
+                }else if(startMode[0]==2){
+                    startMode[0]=0;
+                    startButton.setText("Start now...");
+                    startHour.setEnabled(false);
+                    startMinutes.setEnabled(false);
+                    startDateButton.setEnabled(false);
                 }
             }
         });
+        startMode[0]=2;
+        startButton.getActionListeners()[0].actionPerformed(null);
         startDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,34 +137,34 @@ public class EventDialog {
         pane.add(durationSecondsLabel, "");
 
 
-        endButton.addActionListener(new ActionListener() {
+        durationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                durationButton.setEnabled(true);
+                //durationButton.setEnabled(true);
                 durationHours.setEnabled(true);
                 durationMinutes.setEnabled(true);
                 durationSeconds.setEnabled(true);
                 durationHoursLabel.setEnabled(true);
                 durationMinutesLabel.setEnabled(true);
                 durationSecondsLabel.setEnabled(true);
-                endButton.setEnabled(false);
+                //endButton.setEnabled(false);
                 endDateButton.setEnabled(false);
                 endHour.setEnabled(false);
                 endMinutes.setEnabled(false);
                 modeEnd[0] = false;
             }
         });
-        durationButton.addActionListener(new ActionListener() {
+        endButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                durationButton.setEnabled(false);
+                //durationButton.setEnabled(false);
                 durationHours.setEnabled(false);
                 durationMinutes.setEnabled(false);
                 durationSeconds.setEnabled(false);
                 durationHoursLabel.setEnabled(false);
                 durationMinutesLabel.setEnabled(false);
                 durationSecondsLabel.setEnabled(false);
-                endButton.setEnabled(true);
+                //endButton.setEnabled(true);
                 endDateButton.setEnabled(true);
                 endHour.setEnabled(true);
                 endMinutes.setEnabled(true);
@@ -162,15 +172,17 @@ public class EventDialog {
             }
         });
         if (ev[0] != null) {
-            if (ev[0].getStart() == null)
+            if (ev[0].getStart() == null){
+                startMode[0]=1;
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
+            }
             if (ev[0].useDuration)
                 endButton.getActionListeners()[0].actionPerformed(null); //Use duration
             else
                 durationButton.getActionListeners()[0].actionPerformed(null); //Use absolute end
 
         } else {
-            endButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
+            durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
         }
         //JLabel ErrorMsg
         final JLabel errorLabel = new JLabel("~");
@@ -189,12 +201,17 @@ public class EventDialog {
                 try {
                     if (nameField.getText().trim().equals(""))
                         nameField.setText("Unnamed");//TODO Think of something witty to put here
-                    if (autoStart[0]) {
+
+                    if(startMode[0]==0){
+                        gS=new GregCalPlus();
+                    }
+                    if (startMode[0]==1) {
                         startYMDHMS[3] = Util.parseUInt((String) startHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         startYMDHMS[4] = Util.parseUInt((String) startMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
                         gS = new GregCalPlus(startYMDHMS[0], startYMDHMS[1], startYMDHMS[2], startYMDHMS[3], startYMDHMS[4], startYMDHMS[5]);
                     }
+
                     if (modeEnd[0]) {//Set absolute end cal
                         endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min

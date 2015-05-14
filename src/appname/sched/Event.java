@@ -26,7 +26,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     JPanel pane = null;
     private GregCalPlus start, end;
     private int duration = 0;
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm a");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm:s a");
 
     public Event(GregCalPlus s, GregCalPlus e, String n) {
         if (e == null) throw new NullPointerException();
@@ -63,6 +63,13 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         useDuration = true;
         end = null;
         this.duration = duration;
+    }
+
+    public int getElapsed(){
+        if(getStart()==null || getEnd()==null || !hasStarted() || hasEnded()){
+            return -1;
+        }
+        return Util.safeLongToInt(Util.getDeltaT(start, new GregCalPlus()));
     }
 
     public GregCalPlus getStart() {
@@ -106,7 +113,6 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public JPanel toPanel() {
-        //TODO
         pane = new JPanel(new MigLayout("fill"));
         pane.setBackground(new Color(4, 17, 94));
         tmp = new JLabel();
@@ -118,7 +124,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public void refresh() {
         if (pane == null) return;
-        //TODO
+        //TODO Proper Event Listing, not using toHtmlString()...
         tmp.setText(this.toHtmlString());
 
         if (this.hasEnded()) pane.setBackground(new Color(94, 0, 13));
@@ -154,7 +160,8 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         if(getEnd()!=null)
             sb.append("End:       ").append(dateFormat.format(getEnd().getTime())).append('\n');
 
-	    sb.append("Duration: ").append(Util.secsToExactHMS(getDuration()));
+	    sb.append("Duration: ").append(Util.secsToExactHMS(getDuration())).append('\n');
+        sb.append("Elapsed: ").append(Util.secsToExactHMS(getElapsed()));
 
         return sb.toString();
     }

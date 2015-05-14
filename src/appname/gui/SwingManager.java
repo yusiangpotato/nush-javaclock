@@ -36,7 +36,7 @@ public class SwingManager implements Runnable {
 
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("A washed pot never boils.");
+                window = new JFrame("JavaClock ALPHA");
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
@@ -90,9 +90,10 @@ public class SwingManager implements Runnable {
 
                 windowPane.revalidate();
                 windowPane.repaint();
+                eManager.revalidate();
                 clockPane.setSize(Math.min(window.getHeight() / 2 - 25, window.getWidth() / 2 - 140));
                 clockPane.repaint();
-                eManager.revalidate();
+
                 //eManager.refresh(); Reval does refresh
 
             }
@@ -100,7 +101,7 @@ public class SwingManager implements Runnable {
     }
 
     public void setExecFreq(double freq) throws IllegalArgumentException {
-        if (freq > 10000 || freq < 0) throw new IllegalArgumentException("And what do you think you are doing, hmm?");
+        if (freq > 300 || freq < 0) throw new IllegalArgumentException("And what do you think you are doing, hmm?");
 
         shutdown();
         ExecService = Executors.newSingleThreadScheduledExecutor();
