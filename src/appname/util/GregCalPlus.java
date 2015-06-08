@@ -8,19 +8,17 @@ import java.util.GregorianCalendar;
 public class GregCalPlus extends GregorianCalendar {
     public GregCalPlus() {
         super();
+        this.set(MILLISECOND,0);
         //TODO NTP like if using network sync?
     }
 
-    public GregCalPlus(int year, int month, int dayOfMonth) {
-        super(year, month, dayOfMonth);
-    }
-
     public GregCalPlus(int year, int month, int dayOfMonth, int hourOfDay, int minute) {
-        super(year, month, dayOfMonth, hourOfDay, minute);
+        this(year, month, dayOfMonth, hourOfDay, minute, 0);
     }
 
     public GregCalPlus(int year, int month, int dayOfMonth, int hourOfDay, int minute, int second) {
         super(year, month, dayOfMonth, hourOfDay, minute, second);
+        this.set(MILLISECOND,0);
     }
 
     @Override

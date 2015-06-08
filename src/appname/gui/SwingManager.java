@@ -36,7 +36,7 @@ public class SwingManager implements Runnable {
 
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA");
+                window = new JFrame("JavaClock ALPHA@2015-06-09");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
