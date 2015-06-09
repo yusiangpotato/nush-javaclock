@@ -112,6 +112,14 @@ public class Util {// Static class plz.
         return useFuzzyMode ? secsToFuzzyHMS(getDeltaT(g1,g2)) : secsToExactHMS(getDeltaT(g1, g2));
     }
 
+    public static int[] secondsToHMS(int deltaTSecs){
+        int[] sf = {0,0,0};
+        sf[0]= deltaTSecs / 3600;
+        sf[1]= deltaTSecs % 3600 / 60;
+        sf[2]= deltaTSecs % 60;
+        return sf;
+    }
+
     public static String secsToExactHMS(long deltaTSecs) { 
         return deltaTSecs / 3600 + " h " + deltaTSecs % 3600 / 60 + " min " + deltaTSecs % 60 + " sec";
     }

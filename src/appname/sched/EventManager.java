@@ -177,6 +177,7 @@ public class EventManager {
 
     public void edit(int index){
         Event[] ev = {eList.get(index)};
+        eList.remove(index);
         EventDialog.makeDialog(parent, eList,ev);
     }
     public boolean setNightMode(){

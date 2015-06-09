@@ -33,6 +33,7 @@ public class EventDialog {
                 startYMDHMS[4] = Util.getMinute(ev[0].getStart());
                 startYMDHMS[5] = Util.getSecond(ev[0].getStart());
             }
+            /*
             if (ev[0].getEnd() != null) {
                 endYMDHMS[0] = Util.getYear(ev[0].getEnd());
                 endYMDHMS[1] = Util.getMonth(ev[0].getEnd());
@@ -40,6 +41,13 @@ public class EventDialog {
                 endYMDHMS[3] = Util.getHour24(ev[0].getEnd());
                 endYMDHMS[4] = Util.getMinute(ev[0].getEnd());
                 endYMDHMS[5] = Util.getSecond(ev[0].getEnd());
+            }
+            */
+            {
+                int[] durHMS = Util.secondsToHMS(ev[0].getDuration());
+                endYMDHMS[3] = durHMS[0];
+                endYMDHMS[4] = durHMS[1];
+                endYMDHMS[5] = durHMS[2];
             }
         }
         String[] hours = new String[24];
@@ -176,14 +184,8 @@ public class EventDialog {
                 startMode[0]=1;
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
             }
-            if (ev[0].useDuration)
-                endButton.getActionListeners()[0].actionPerformed(null); //Use duration
-            else
-                durationButton.getActionListeners()[0].actionPerformed(null); //Use absolute end
-
-        } else {
-            durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
         }
+        durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
         //JLabel ErrorMsg
         final JLabel errorLabel = new JLabel("~");
         pane.add(errorLabel, "span 8, grow 1, wrap");
@@ -232,7 +234,7 @@ public class EventDialog {
                     if (gS != null && gE != null && gE.compareTo(gS) <= 0)
                         throw new Exception("End time equal/before start!");
 
-                    if (ev[0] == null) {
+                    if (true){//ev[0] == null) {
                         if (!useDuration[0])
                             ev[0] = new Event(gS, gE, nameField.getText());
                         else {
@@ -241,20 +243,12 @@ public class EventDialog {
                         if(ev[0].getDuration()<0) throw new Exception("End is before start!");
                         else if(ev[0].hasEnded()) throw new Exception("Event has already ended!");
 
-                    } else {
-                        ev[0].setStart(gS);
-                        if (!useDuration[0]) ev[0].setEnd(gE);
-                        ev[0].name = nameField.getText();
-                        if (useDuration[0]) ev[0].setDuration(duration[0]);
-                        if(ev[0].getDuration()<0) throw new Exception("End is before start!");
-                        else if(ev[0].hasEnded()) throw new Exception("Event has already ended!");
-
                     }
-                    if(!prioList.contains(ev[0])) prioList.add(ev[0]);
+                    prioList.add(ev[0]);
 	                parent.setEnabled(true);
                     jD.dispose();
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                     if (e.getMessage().trim().equals(""))
                         errorLabel.setText("Critical Unknown Error! Please report bug.");
                     else

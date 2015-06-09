@@ -21,30 +21,26 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 	public final UUID uuid;
     public String name;
-    public boolean useDuration;
     JLabel tmp = new JLabel();
     JPanel pane = null;
-    private GregCalPlus start, end;
+    private GregCalPlus start;
     private int duration = 0;
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm:s a");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm:ss a");
 
     public Event(GregCalPlus s, GregCalPlus e, String n) {
         if (e == null) throw new NullPointerException();
         start = s;
-        end = e;
         uuid=UUID.randomUUID();
         name = n;
-        useDuration = false;
         logger.log(Level.FINE, "Created: " + this.toString());
+        setEnd(e);
     }
 
     public Event(GregCalPlus s, int durationSeconds, String n) {
         start = s;
-        end = null;
         duration = durationSeconds;
         name = n;
         uuid=UUID.randomUUID();
-        useDuration = true;
         logger.log(Level.FINE, "Created: " + this.toString());
 
     }
@@ -54,14 +50,10 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 //    }
 
     public int getDuration() {
-        if (useDuration) return duration;
-        else if (start!=null) return Util.safeLongToInt(Util.getDeltaT(start, end));
-        else return 0;
+        return duration;
     }
 
     public void setDuration(int duration) {
-        useDuration = true;
-        end = null;
         this.duration = duration;
     }
 
@@ -78,24 +70,22 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public void setStart(GregCalPlus start) {
         //Convert to duration, then setDuration().
-        if (!useDuration) setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), getEnd())));
+        setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), getEnd())));
         this.start = start;
     }
 
     public GregCalPlus getEnd() {
-        if (useDuration && start == null) return null;
-        if (useDuration && start != null) {
+        if (start == null) return null;
+        if (start != null) {
             GregCalPlus g = (GregCalPlus) start.clone();
             g.add(GregorianCalendar.SECOND, duration);
             return g;
         }
-        if (!useDuration) return end;
         return null;
     }
 
     public void setEnd(GregCalPlus end) {
-        useDuration = false;
-        this.end = end;
+        setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), end)));
     }
 
     @Override //Comparable
@@ -152,16 +142,19 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 	    sb.append("Event: ").append(name).append('\n');
-        if (start == null) sb.append("Manual Start");
+        if (start == null) sb.append("Waiting to start");
         else
-            sb.append("Autostart: ").append(dateFormat.format(getStart().getTime()));
+            sb.append("Start: ").append(dateFormat.format(getStart().getTime()));
         sb.append('\n');
 
         if(getEnd()!=null)
             sb.append("End:       ").append(dateFormat.format(getEnd().getTime())).append('\n');
 
 	    sb.append("Duration: ").append(Util.secsToExactHMS(getDuration())).append('\n');
-        sb.append("Elapsed: ").append(Util.secsToExactHMS(getElapsed()));
+        sb.append("Elapsed: ");
+        if(hasStarted()) sb.append(Util.secsToExactHMS(getElapsed()));
+        else if(hasEnded()) sb.append("Ended");
+        else sb.append("Not started yet");
 
         return sb.toString();
     }
