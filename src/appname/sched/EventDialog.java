@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 public class EventDialog {
     static void makeDialog(final JFrame parent, final PriorityArrayList<Event> prioList, final Event[] ev) {
         JDialog.setDefaultLookAndFeelDecorated(true);
+
         final JDialog jD = new JDialog(parent, "New Event");
         final boolean[] modeEnd = {false};
         final boolean[] useDuration = {false};
@@ -57,7 +58,6 @@ public class EventDialog {
             hours[i] = "" + (i < 10 ? "0" + i : i);
         for (int i = 0; i < 60; i++)
             minutes[i] = "" + (i < 10 ? "0" + i : i);
-        jD.setSize(400, 220);
         final JPanel pane = new JPanel(new MigLayout("fill, wrap", "[15%][25%][15%][5%][15%][5%][15%][5%]", ""));
         jD.setContentPane(pane);
         //Name
@@ -111,6 +111,7 @@ public class EventDialog {
             }
         });
         //End
+        /*
         final JButton endButton = new JButton("End:");
         pane.add(endButton, "span 2, grow 1");
         final JComboBox<String> endHour = new JComboBox<>(hours);
@@ -127,6 +128,7 @@ public class EventDialog {
                 makeDateDialog(parent, endYMDHMS, "Change end date");
             }
         });
+        */
         //Duration ** Only one of either end or duration is visible, clicking the button swaps.
         //Default is duration.
         final JButton durationButton = new JButton("Duration:");
@@ -156,12 +158,13 @@ public class EventDialog {
                 durationMinutesLabel.setEnabled(true);
                 durationSecondsLabel.setEnabled(true);
                 //endButton.setEnabled(false);
-                endDateButton.setEnabled(false);
-                endHour.setEnabled(false);
-                endMinutes.setEnabled(false);
+                //ENDR//endDateButton.setEnabled(false);
+                //ENDR//endHour.setEnabled(false);
+                //ENDR//endMinutes.setEnabled(false);
                 modeEnd[0] = false;
             }
         });
+        /*//ENDR//
         endButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -173,12 +176,13 @@ public class EventDialog {
                 durationMinutesLabel.setEnabled(false);
                 durationSecondsLabel.setEnabled(false);
                 //endButton.setEnabled(true);
-                endDateButton.setEnabled(true);
-                endHour.setEnabled(true);
-                endMinutes.setEnabled(true);
+                //ENDR//endDateButton.setEnabled(true);
+                //ENDR//endHour.setEnabled(true);
+                //ENDR//endMinutes.setEnabled(true);
                 modeEnd[0] = true;
             }
         });
+        *///ENDR//
         if (ev[0] != null) {
             if (ev[0].getStart() == null){
                 startMode[0]=1;
@@ -215,8 +219,8 @@ public class EventDialog {
                     }
 
                     if (modeEnd[0]) {//Set absolute end cal
-                        endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
-                        endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min
+                        //ENDR//endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
+                        //ENDR//endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
                         gE = new GregCalPlus(endYMDHMS[0], endYMDHMS[1], endYMDHMS[2], endYMDHMS[3], endYMDHMS[4], endYMDHMS[5]);
 
@@ -268,10 +272,9 @@ public class EventDialog {
                 jD.dispose();
             }
         });
-	    jD.setMinimumSize(new Dimension(400, 250));
+        jD.setPreferredSize(new Dimension(400, 200));
 	    jD.pack();
 	    jD.setLocationRelativeTo(parent);
-	    parent.setEnabled(false);
         jD.setVisible(true);
 
 
@@ -280,7 +283,6 @@ public class EventDialog {
     private static void makeDateDialog(final JFrame parent, final int[] YMDHMS, String title) {
 
         final JDialog jD = new JDialog(parent, title);
-        jD.setSize(400, 120);
         JPanel pane = new JPanel(new MigLayout("fill, wrap", "[push][pref!][pref!][pref!]"));
         pane.add(new JLabel(title), "grow 1");
         final JTextField y = new JTextField("" + YMDHMS[0],5),
@@ -306,7 +308,6 @@ public class EventDialog {
 			        if (!Util.isDateValid(YMDHMS[2] + "-" + YMDHMS[1] + "-" + YMDHMS[0]))
 				        throw new Exception("Date does not exist!");
 
-			        parent.setEnabled(true);
 			        jD.dispose();
 		        } catch (Exception ex) {
 			        dbg.setText(ex.getMessage());
@@ -316,15 +317,13 @@ public class EventDialog {
         cc.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-		        parent.setEnabled(true);
 		        jD.dispose();
 	        }
         });
         jD.setContentPane(pane);
-	    jD.setMinimumSize(new Dimension(300, 150));
+	    jD.setSize(600, 100);
 	    jD.pack();
 	    jD.setLocationRelativeTo(parent);
-	    parent.setEnabled(false);
         jD.setVisible(true);
     }
 }

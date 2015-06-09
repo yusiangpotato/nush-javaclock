@@ -70,7 +70,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public void setStart(GregCalPlus start) {
         //Convert to duration, then setDuration().
-        setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), getEnd())));
+        //setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), getEnd())));
         this.start = start;
     }
 
