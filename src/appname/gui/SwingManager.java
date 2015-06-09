@@ -10,14 +10,14 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 //
 
 /**
  * Created by yusiang on 11/4/14.
  */
 public class SwingManager implements Runnable {
+    Logger syslog = Logger.getLogger("");
     int every = 1;
     String execs = "";
     final int cnt[] = {1};
@@ -30,7 +30,6 @@ public class SwingManager implements Runnable {
     EventManager eManager;
 
     public SwingManager() {
-
         stdin = new BufferedReader(new InputStreamReader(System.in));
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -54,7 +53,7 @@ public class SwingManager implements Runnable {
 
 
                 //windowPane.setVisible(true);
-                window.setSize(790, 550);
+                window.setSize(800, 500);
                 window.setMinimumSize(new Dimension(600, 400));
 
                 //windowPane.setSize(400, 400);
@@ -189,7 +188,7 @@ public class SwingManager implements Runnable {
                     clockPane.toggleDigital();
                     return true;
                 case "LOG":
-                    Logger syslog = Logger.getLogger("");
+
                     switch ((x[1])){
                         case "0":
                         case "OFF":

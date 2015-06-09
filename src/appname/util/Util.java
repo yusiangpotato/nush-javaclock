@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
  */
 public class Util {// Static class plz.
 
-    private Util() {}//This supposedly prevents instantiation? Whatever.
+    private Util() {;}//This supposedly prevents instantiation? Whatever.
 
     public static double PolarToCartesianX(double theta, double length) { //Theta=0 means Straight up.
         return -1 * length * Math.sin(theta);

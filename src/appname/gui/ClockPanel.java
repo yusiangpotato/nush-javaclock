@@ -20,6 +20,7 @@ public class ClockPanel extends JPanel {
     static final double minuteHandLength = 0.75;
     static final double hourHandLength = 0.55;
     static final int handsAlpha = 192;
+    static final boolean evalMode = false;
     boolean nightMode = true;
     boolean drawDigital = true;
     boolean animate = true;
@@ -73,6 +74,7 @@ public class ClockPanel extends JPanel {
                     g2.drawString(s, numPos[i / 5].first, numPos[i / 5].second);
 
                 }
+
             }
             //Circle outline
             final double lineMargin = 0.017;
@@ -115,6 +117,23 @@ public class ClockPanel extends JPanel {
                 g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
                 int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
                 g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f));
+
+            }
+            if (evalMode) {
+                {
+                    String s = "FOR INTERNAL EVALUATION ONLY";
+                    g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 15)), 150/*MAX*/), 10/*MIN*/)));
+                    g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+                    int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
+                    g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f + 25));
+                }
+                {
+                    String s = "DO NOT USE FOR EXAMS";
+                    g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 15)), 150/*MAX*/), 10/*MIN*/)));
+                    g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+                    int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
+                    g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f + 50));
+                }
 
             }
         }

@@ -7,6 +7,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
@@ -18,10 +20,10 @@ import java.util.logging.Logger;
  * Created by yusiang on 11/4/14.
  */
 public class Event implements Comparable<Event>, Comparator<Event> {
-	private final Logger logger = Logger.getLogger(this.getClass().getName());
+	private final Logger log = Logger.getAnonymousLogger();
 	public final UUID uuid;
     public String name;
-    JLabel tmp = new JLabel();
+    JLabel desc = new JLabel();
     JPanel pane = null;
     private GregCalPlus start;
     private int duration = 0;
@@ -32,7 +34,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         start = s;
         uuid=UUID.randomUUID();
         name = n;
-        logger.log(Level.FINE, "Created: " + this.toString());
+        log.log(Level.INFO, "Created: " + n + " Begins: " + s + " Ends: " + e + " UUID=" + uuid);
         setEnd(e);
     }
 
@@ -41,7 +43,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         duration = durationSeconds;
         name = n;
         uuid=UUID.randomUUID();
-        logger.log(Level.FINE, "Created: " + this.toString());
+        log.log(Level.INFO, "Created: " + n + " Begins: " + s + " Duration: " + durationSeconds + " sec UUID=" + uuid);
 
     }
 
@@ -103,11 +105,36 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public JPanel toPanel() {
-        pane = new JPanel(new MigLayout("fill"));
+        pane = new JPanel(new MigLayout("fill","[33%|33%|33%]"));
         pane.setBackground(new Color(4, 17, 94));
-        tmp = new JLabel();
-        tmp.setForeground(new Color(255, 255, 255));
-        pane.add(tmp, "grow 1");
+        desc = new JLabel();
+        desc.setForeground(new Color(255, 255, 255));
+        pane.add(desc, "grow 1, span");
+        JButton startBtn, editBtn, removeBtn;
+        startBtn = new JButton("(RE)Start");
+        startBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setStart(new GregCalPlus());
+            }
+        });
+        editBtn = new JButton("Edit");
+        editBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventManager.getEventManager().edit(uuid);
+            }
+        });
+        removeBtn = new JButton("Remove");
+        removeBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventManager.getEventManager().remove(uuid);
+            }
+        });
+        pane.add(startBtn,"grow 1");
+        pane.add(editBtn,"grow 1");
+        pane.add(removeBtn,"grow 1");
         return pane;
 
     }
@@ -115,7 +142,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     public void refresh() {
         if (pane == null) return;
         //TODO Proper Event Listing, not using toHtmlString()...
-        tmp.setText(this.toHtmlString());
+        desc.setText(this.toHtmlString());
 
         if (this.hasEnded()) pane.setBackground(new Color(94, 0, 13));
         else if (this.hasStarted()) pane.setBackground(new Color(12, 75, 0));
@@ -123,12 +150,12 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public boolean hasStarted() {
-        return start == null ? false : new GregCalPlus().after(getStart());
+        return start == null ? false : new GregCalPlus().afterOrEquals(getStart());
     }
 
     public boolean hasEnded() {
 
-        return start == null ? false : new GregCalPlus().after(getEnd());
+        return start == null ? false : new GregCalPlus().afterOrEquals(getEnd());
     }
 
     public boolean canRemove() {
@@ -152,8 +179,8 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
 	    sb.append("Duration: ").append(Util.secsToExactHMS(getDuration())).append('\n');
         sb.append("Elapsed: ");
-        if(hasStarted()) sb.append(Util.secsToExactHMS(getElapsed()));
-        else if(hasEnded()) sb.append("Ended");
+        if(hasEnded()) sb.append("Ended");
+        else if(hasStarted()) sb.append(Util.secsToExactHMS(getElapsed()));
         else sb.append("Not started yet");
 
         return sb.toString();
@@ -163,4 +190,8 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 	    return "<html>"+toString().replaceAll("\n","<br>")+"</html>";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this.uuid==((Event)obj).uuid;
+    }
 }

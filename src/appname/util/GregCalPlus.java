@@ -34,4 +34,21 @@ public class GregCalPlus extends GregorianCalendar {
             super.set(field, value);
         else super.set(field, value-1);
     }
+
+    @Override
+    public String toString(){
+        int[] YMDHMS = {
+                get(YEAR),
+                get(MONTH),
+                get(DAY_OF_MONTH),
+                get(HOUR_OF_DAY),
+                get(MINUTE),
+                get(SECOND)
+        };
+        return String.format("%d-%d-%dT%d:%d:%d",YMDHMS[0],YMDHMS[1],YMDHMS[2],YMDHMS[3],YMDHMS[4],YMDHMS[5]);
+    }
+
+    public boolean afterOrEquals (GregCalPlus g){
+        return after(g) || toString().equals(g.toString());
+    }
 }

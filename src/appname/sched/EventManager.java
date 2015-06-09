@@ -9,11 +9,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by yusiang on 11/4/14.
  */
 public class EventManager {
+    private static EventManager eventManager = null;
+    private final Logger syslog = Logger.getLogger("");
 	private JFrame parent;
     private final JPanel pane;
     private final JPanel eventsPane;
@@ -79,7 +83,7 @@ public class EventManager {
 
         eventsPane = new JPanel(new MigLayout("fill, wrap 1"));
         pane.add(eventsPane, "grow 1");
-
+        eventManager = this;
     }
 
     public void refresh() {
@@ -180,10 +184,35 @@ public class EventManager {
         eList.remove(index);
         EventDialog.makeDialog(parent, eList,ev);
     }
+    public void edit(UUID uuid){
+        int index= -1;
+        for(int i=0;i<eList.size();i++){
+            if(eList.get(i).uuid == uuid)
+                index=i;
+        }
+        if(index==-1) syslog.warning("Tried to edit non-existent event! - "+uuid);
+        else edit(index);
+    }
+    public void remove(int index){
+        eList.remove(index);
+    }
+    public void remove(UUID uuid){
+        int index= -1;
+        for(int i=0;i<eList.size();i++){
+            if(eList.get(i).uuid == uuid)
+                index=i;
+        }
+        if(index==-1) syslog.warning("Tried to remove non-existent event! - "+uuid);
+        else remove(index);
+    }
     public boolean setNightMode(){
         return nightMode = true;
     }
     public boolean clrNightMode(){
         return nightMode = false;
+    }
+
+    public static EventManager getEventManager() {
+        return eventManager;
     }
 }
