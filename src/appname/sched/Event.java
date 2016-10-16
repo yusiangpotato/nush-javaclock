@@ -28,21 +28,28 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     private GregCalPlus start;
     private int duration = 0;
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd '@' h:mm:ss a");
-
+    private boolean waitForReady, ready=false;
+    private JButton startBtn, editBtn, removeBtn;
+    /*
     public Event(GregCalPlus s, GregCalPlus e, String n) {
-        if (e == null) throw new NullPointerException();
+        if (s==null || e == null) throw new NullPointerException();
         start = s;
         uuid=UUID.randomUUID();
         name = n;
         log.log(Level.INFO, "Created: " + n + " Begins: " + s + " Ends: " + e + " UUID=" + uuid);
         setEnd(e);
+    }*/
+
+    public Event(GregCalPlus s, int durationSeconds, String n) { //For backward compatability
+        this(s,durationSeconds,n,false);
     }
 
-    public Event(GregCalPlus s, int durationSeconds, String n) {
+    public Event(GregCalPlus s, int durationSeconds, String n, boolean waitForReady) {
         start = s;
         duration = durationSeconds;
         name = n;
         uuid=UUID.randomUUID();
+        this.waitForReady=waitForReady;
         log.log(Level.INFO, "Created: " + n + " Begins: " + s + " Duration: " + durationSeconds + " sec UUID=" + uuid);
 
     }
@@ -60,7 +67,7 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public int getElapsed(){
-        if(getStart()==null || getEnd()==null || !hasStarted() || hasEnded()){
+        if(getStart()==null || getEnd()==null || !hasActuallyStarted() || hasEnded()){
             return -1;
         }
         return Util.safeLongToInt(Util.getDeltaT(start, new GregCalPlus()));
@@ -90,6 +97,10 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         setDuration(Util.safeLongToInt(Util.getDeltaT(getStart(), end)));
     }
 
+    public boolean isWaitForReady(){
+        return waitForReady;
+    }
+
     @Override //Comparable
     public int compareTo(Event o) {
         return compare(this, o);
@@ -110,12 +121,34 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         desc = new JLabel();
         desc.setForeground(new Color(255, 255, 255));
         pane.add(desc, "grow 1, span");
-        JButton startBtn, editBtn, removeBtn;
-        startBtn = new JButton("(RE)Start");
+
+        startBtn = new JButton("");
         startBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setStart(new GregCalPlus());
+
+
+                if(waitForReady&&!ready&&!hasStarted()) {
+                    //sb.append("Waiting for ready.\n");
+                    //startBtn.setText("Ready?");
+                    ready=true;
+                }
+                else if(waitForReady&&!ready&&hasStarted()) {
+                    //sb.append("Running late!\n");
+                    //startBtn.setText("Begin!");
+                    ready=true;
+                    setStart(new GregCalPlus());
+                }
+                else if(waitForReady&&ready&&!hasStarted()) {
+                    //sb.append("Ready, waiting for scheduled start.\n");
+                    //startBtn.setText("Waiting.");
+                    setStart(new GregCalPlus());
+                }
+                else{
+                    //sb.append("Waiting to start.\n");
+                    //startBtn.setText("Start");
+                    setStart(new GregCalPlus());
+                }
             }
         });
         editBtn = new JButton("Edit");
@@ -144,9 +177,34 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         //TODO Proper Event Listing, not using toHtmlString()...
         desc.setText(this.toHtmlString());
 
-        if (this.hasEnded()) pane.setBackground(new Color(94, 0, 13));
-        else if (this.hasStarted()) pane.setBackground(new Color(12, 75, 0));
-        else pane.setBackground(new Color(4, 17, 94));
+        if (this.hasEnded()) pane.setBackground(new Color(168, 0, 27));
+        else if (this.hasActuallyStarted()) pane.setBackground(new Color(0, 116, 6));
+        else if (waitForReady&&!ready&&hasStarted()) pane.setBackground(new Color(175, 121, 0));
+        else pane.setBackground(new Color(4, 0, 134));
+
+        if(waitForReady&&!ready&&!hasStarted()) {
+            //sb.append("Waiting for ready.\n");
+            startBtn.setText("Ready?");
+        }
+        else if(waitForReady&&!ready&&hasStarted()) {
+            //sb.append("Running late!\n");
+            startBtn.setText("Begin!");
+        }
+        else if(waitForReady&&ready&&!hasStarted()) {
+            //sb.append("Ready, waiting for scheduled start.\n");
+            startBtn.setText("Force start.");
+        }
+        else if (start == null) {
+            //sb.append("Waiting to start.\n");
+            startBtn.setText("Start Now");
+        }else{
+            startBtn.setText("Restart");
+        }
+    }
+
+    public boolean hasActuallyStarted() {
+        if(waitForReady&&!ready) return false;
+        else return hasStarted();
     }
 
     public boolean hasStarted() {
@@ -154,14 +212,15 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public boolean hasEnded() {
-
+        if(!hasActuallyStarted()) return false;
         return start == null ? false : new GregCalPlus().afterOrEquals(getEnd());
     }
 
     public boolean canRemove() {
         if (getEnd() == null) return false;
+        if(!hasActuallyStarted()) return false;
         GregCalPlus e = (GregCalPlus) getEnd().clone();
-        e.add(GregCalPlus.SECOND, 5);
+        e.add(GregCalPlus.SECOND, 10);
         return start == null ? false : new GregCalPlus().after(e);
     }
 
@@ -169,10 +228,26 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 	    sb.append("Event: ").append(name).append('\n');
-        if (start == null) sb.append("Waiting to start");
-        else
-            sb.append("Start: ").append(dateFormat.format(getStart().getTime()));
-        sb.append('\n');
+        if(waitForReady&&!ready&&!hasStarted()) {
+            sb.append("Waiting for ready.\n");
+
+        }
+        else if(waitForReady&&!ready&&hasStarted()) {
+            sb.append("Running late!\n");
+        }
+        else if(waitForReady&&ready&&!hasStarted()) {
+            sb.append("Ready, waiting for scheduled start.\n");
+        }
+        else if (start == null) {
+            sb.append("Waiting to start.\n");
+        }else if(!hasEnded()){
+            sb.append("Event is running.\n");
+        }else{
+            sb.append("Event has ended.\n");
+        }
+
+        if(start!=null)
+            sb.append("Start: ").append(dateFormat.format(getStart().getTime())).append('\n');
 
         if(getEnd()!=null)
             sb.append("End:       ").append(dateFormat.format(getEnd().getTime())).append('\n');

@@ -35,7 +35,7 @@ public class SwingManager implements Runnable {
 
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA@2015-06-09");//
+                window = new JFrame("JavaClock ALPHA@2016-07-10");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
@@ -90,7 +90,7 @@ public class SwingManager implements Runnable {
                 windowPane.revalidate();
                 windowPane.repaint();
                 eManager.revalidate();
-                clockPane.setSize(Math.min(window.getHeight() / 2 - 25, window.getWidth() / 2 - 140));
+                clockPane.setSize(Math.min(window.getHeight() / 2 - 25, window.getWidth() / 2 - 170));
                 clockPane.repaint();
 
                 //eManager.refresh(); Reval does refresh

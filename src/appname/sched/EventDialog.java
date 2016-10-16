@@ -23,7 +23,7 @@ public class EventDialog {
         final boolean[] autoStart = {true};
         final int[] startMode = {0};
         final int[] duration = {0};
-        final int[] startYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
+        final int[] startYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), Util.getHour24(), Util.getMinute()+1, 0};
         final int[] endYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
         if (ev[0] != null) {
             if (ev[0].getStart() != null) {
@@ -77,33 +77,7 @@ public class EventDialog {
         pane.add(startMinutes, "span 2, grow 1");
         final JButton startDateButton = new JButton("Date...");
         pane.add(startDateButton, "span 2, grow 1");
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                if (startMode[0]==0){
-                    startMode[0]=1;
-                    startButton.setText("Autostart at:");
-                    startHour.setEnabled(true);
-                    startMinutes.setEnabled(true);
-                    startDateButton.setEnabled(true);
-                }else if (startMode[0]==1) {
-                    startMode[0]=2;
-                    startButton.setText("Manual Start");
-                    startHour.setEnabled(false);
-                    startMinutes.setEnabled(false);
-                    startDateButton.setEnabled(false);
-                }else if(startMode[0]==2){
-                    startMode[0]=0;
-                    startButton.setText("Start now...");
-                    startHour.setEnabled(false);
-                    startMinutes.setEnabled(false);
-                    startDateButton.setEnabled(false);
-                }
-            }
-        });
-        startMode[0]=2;
-        startButton.getActionListeners()[0].actionPerformed(null);
         startDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -183,13 +157,57 @@ public class EventDialog {
             }
         });
         *///ENDR//
-        if (ev[0] != null) {
+
+        durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
+        //JCheckbox Wait For ready before starting
+        final JCheckBox waitCheckBox = new JCheckBox("Wait for ready");
+        waitCheckBox.setSelected(true);
+        waitCheckBox.setEnabled(false);
+        pane.add(waitCheckBox,"span 8, grow 1, wrap");
+        //StartBtn Actionlistener
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (startMode[0]==0){
+                    startMode[0]=1;
+                    startButton.setText("Autostart at:");
+                    startHour.setEnabled(true);
+                    startMinutes.setEnabled(true);
+                    startDateButton.setEnabled(true);
+                }else if (startMode[0]==1) {
+                    startMode[0]=2;
+                    startButton.setText("Manual Start");
+                    startHour.setEnabled(false);
+                    startMinutes.setEnabled(false);
+                    startDateButton.setEnabled(false);
+                }else if(startMode[0]==2){
+                    startMode[0]=0;
+                    startButton.setText("Start now...");
+                    startHour.setEnabled(false);
+                    startMinutes.setEnabled(false);
+                    startDateButton.setEnabled(false);
+                }
+                if(startMode[0]==1) waitCheckBox.setEnabled(true);
+                else waitCheckBox.setEnabled(false);
+            }
+        });
+
+        startMode[0]=2;
+        startButton.getActionListeners()[0].actionPerformed(null);
+
+        if(ev[0]!=null){
+            waitCheckBox.setSelected(ev[0].isWaitForReady());
             if (ev[0].getStart() == null){
                 startMode[0]=1;
                 startButton.getActionListeners()[0].actionPerformed(null); //Set to manual start
+            }else{
+                startMode[0]=0;
+                startButton.getActionListeners()[0].actionPerformed(null); //Set to auto start
             }
         }
-        durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
+
+
+
         //JLabel ErrorMsg
         final JLabel errorLabel = new JLabel("~");
         pane.add(errorLabel, "span 8, grow 1, wrap");
@@ -222,7 +240,8 @@ public class EventDialog {
                         //ENDR//endYMDHMS[3] = Util.parseUInt((String) endHour.getSelectedItem(), "Error parsing start hour!");//Hour
                         //ENDR//endYMDHMS[4] = Util.parseUInt((String) endMinutes.getSelectedItem(), "Error parsing start minute!");//Min
                         //startYMDHMS[5] = Util.parseUInt((String)startSec.getSelectedItem(),"Error parsing start second!");//Sec
-                        gE = new GregCalPlus(endYMDHMS[0], endYMDHMS[1], endYMDHMS[2], endYMDHMS[3], endYMDHMS[4], endYMDHMS[5]);
+                        //gE = new GregCalPlus(endYMDHMS[0], endYMDHMS[1], endYMDHMS[2], endYMDHMS[3], endYMDHMS[4], endYMDHMS[5]);
+                        throw new Exception("Not allowed");
 
                     } else {//Using duration (relative end cal)
                         //
@@ -240,9 +259,9 @@ public class EventDialog {
 
                     if (true){//ev[0] == null) {
                         if (!useDuration[0])
-                            ev[0] = new Event(gS, gE, nameField.getText());
+                            throw new Exception("Not allowed");//ev[0] = new Event(gS, gE, nameField.getText());
                         else {
-                            ev[0] = new Event(gS, duration[0], nameField.getText());
+                            ev[0] = new Event(gS, duration[0], nameField.getText(), waitCheckBox.isSelected());
                         }
                         if(ev[0].getDuration()<0) throw new Exception("End is before start!");
                         else if(ev[0].hasEnded()) throw new Exception("Event has already ended!");

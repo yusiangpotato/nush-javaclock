@@ -26,4 +26,5 @@ public class PriorityArrayList<T extends Comparable> extends ArrayList<T> {
     public void add(int index, T element) {
         add(element);
     }
+
 }

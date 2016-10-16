@@ -83,6 +83,26 @@ public class EventManager {
 
         eventsPane = new JPanel(new MigLayout("fill, wrap 1"));
         pane.add(eventsPane, "grow 1");
+        ImageIcon toiletIcon = new ImageIcon("images/toilet.png");
+        toiletIcon = new ImageIcon(toiletIcon.getImage().getScaledInstance(50,50,Image.SCALE_SMOOTH));
+        final JButton toiletButton = new JButton("ALL IN",toiletIcon);
+        toiletButton.setBackground(new Color(134, 255, 136));
+        toiletButton.setFont(new Font("Sans",Font.PLAIN,40));
+
+        toiletButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(toiletButton.getText().equals("ALL IN")){
+                    toiletButton.setBackground(new Color(255, 134, 137));
+                    toiletButton.setText("ONE OUT");
+                }else{
+                    toiletButton.setBackground(new Color(134, 255, 136));
+                    toiletButton.setText("ALL IN");
+                }
+            }
+        });
+
+        pane.add(toiletButton,"south,grow 1");
         eventManager = this;
     }
 
@@ -152,6 +172,7 @@ public class EventManager {
                 eList.add(new Event(g, 5, "TEST3"));
                 return true;
             }
+            /* //Removed after constructor deactivated
             case 4: {
                 GregCalPlus g = new GregCalPlus();
                 g.add(GregCalPlus.SECOND, 5);
@@ -165,7 +186,7 @@ public class EventManager {
                 g2.add(GregCalPlus.SECOND, 10);
                 eList.add(new Event(g1, g2, "TEST5"));
                 return true;
-            }
+            }*/
         }
         return false;
     }
