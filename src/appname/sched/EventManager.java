@@ -1,5 +1,6 @@
 package appname.sched;
 
+import appname.remote.RemoteManager;
 import appname.util.GregCalPlus;
 import appname.util.PriorityArrayList;
 import net.miginfocom.swing.MigLayout;
@@ -23,6 +24,7 @@ public class EventManager {
     private final JPanel eventsPane;
     private final JPanel buttonPane;
     private final PriorityArrayList<Event> eList = new PriorityArrayList<>();
+    private final RemoteManager remoteManager;
     PriorityArrayList<Event> eListOld = (PriorityArrayList<Event>) eList.clone();
     boolean nightMode = true;
     public EventManager(JFrame parent) {
@@ -84,23 +86,9 @@ public class EventManager {
         eventsPane = new JPanel(new MigLayout("fill, wrap 1"));
         pane.add(eventsPane, "grow 1");
         ImageIcon toiletIcon = new ImageIcon("images/toilet.png");
-        toiletIcon = new ImageIcon(toiletIcon.getImage().getScaledInstance(50,50,Image.SCALE_SMOOTH));
-        final JButton toiletButton = new JButton("ALL IN",toiletIcon);
-        toiletButton.setBackground(new Color(134, 255, 136));
-        toiletButton.setFont(new Font("Sans",Font.PLAIN,40));
-
-        toiletButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(toiletButton.getText().equals("ALL IN")){
-                    toiletButton.setBackground(new Color(255, 134, 137));
-                    toiletButton.setText("ONE OUT");
-                }else{
-                    toiletButton.setBackground(new Color(134, 255, 136));
-                    toiletButton.setText("ALL IN");
-                }
-            }
-        });
+        toiletIcon = new ImageIcon(toiletIcon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH));
+        final JButton toiletButton = new JButton("-",toiletIcon);
+        remoteManager = new RemoteManager(toiletButton);
 
         pane.add(toiletButton,"south,grow 1");
         eventManager = this;

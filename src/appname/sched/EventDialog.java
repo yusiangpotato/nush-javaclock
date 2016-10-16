@@ -187,8 +187,14 @@ public class EventDialog {
                     startMinutes.setEnabled(false);
                     startDateButton.setEnabled(false);
                 }
-                if(startMode[0]==1) waitCheckBox.setEnabled(true);
-                else waitCheckBox.setEnabled(false);
+                if(startMode[0]==1) {
+                    waitCheckBox.setEnabled(true);
+                    waitCheckBox.setSelected(true);
+                }
+                else {
+                    waitCheckBox.setEnabled(false);
+                    waitCheckBox.setSelected(false);
+                }
             }
         });
 
