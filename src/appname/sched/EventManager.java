@@ -224,4 +224,9 @@ public class EventManager {
     public static EventManager getEventManager() {
         return eventManager;
     }
+
+    @Deprecated
+    public void setRemoteState (final int state){
+        remoteManager.setState(state);
+    }
 }

@@ -35,7 +35,7 @@ public class SwingManager implements Runnable {
 
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA@2016-07-10");//
+                window = new JFrame("JavaClock ALPHA@2016-10-17");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
@@ -102,17 +102,12 @@ public class SwingManager implements Runnable {
     public void setExecFreq(double freq) throws IllegalArgumentException {
         if (freq > 300 || freq < 0) throw new IllegalArgumentException("And what do you think you are doing, hmm?");
 
-        shutdown();
+        ExecService.shutdown();
         ExecService = Executors.newSingleThreadScheduledExecutor();
         if (freq == 0) return;
         ExecService.scheduleWithFixedDelay(this, 0, Math.round(1E6 / freq), TimeUnit.MICROSECONDS);
 
     }
-
-    public void shutdown() {
-        ExecService.shutdown();
-    }
-
 
     public boolean execCmd(String cmd) {
 
@@ -186,6 +181,9 @@ public class SwingManager implements Runnable {
                     return true;
                 case "DIGITAL":
                     clockPane.toggleDigital();
+                    return true;
+                case "RSTATE":
+                    eManager.setRemoteState(Integer.parseInt(x[1]));
                     return true;
                 case "LOG":
 

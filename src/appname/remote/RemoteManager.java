@@ -21,6 +21,7 @@ public class RemoteManager implements Runnable {
     final JButton toiletButton;
     int state = 0b00000100; //0b0000DCBA D=UDPfail C=Uninit B=Local A=1out
     int oldState = 0xFF;
+    String remoteID = "";
 
     int missedCounter=0;
     final int missedThresh = 20;//~1secs
@@ -91,7 +92,7 @@ public class RemoteManager implements Runnable {
             String[] strs = str.trim().split("-");
             if(strs.length<5) return; //Not ours
             if(!strs[0].equals("JavaClockRemote")) return;//Hmm
-            if(!strs[1].equals("v001")) return;//Hmm
+            if(!strs[1].equals("v001")) return;//Forward compatability? Meh.
             if((state&0b00000010)!=0) return; //Manual mode. No touchie!
             if(Integer.parseInt(strs[4])!=0) state |= 1;
             else state &= 0xFE;
@@ -105,8 +106,7 @@ public class RemoteManager implements Runnable {
                 state |= 0b00000100;
             }
         }
-        if((state&0b00000010)!=0) return; //Manual mode. No touchie!
-        else updateButton(); //We update button
+        updateButton();
     }
 
     private void updateButton(){
@@ -118,31 +118,42 @@ public class RemoteManager implements Runnable {
             public void run() {
                 if((state&0b00001000)!=0 && (state&0b00000010)==0){ //Fail & auto
                     toiletButton.setBackground(new Color(255, 47, 252));
-                    toiletButton.setText("<html><p>Failure</p><p style=\"font-size: 16\">Restart program</p></html>");
+                    toiletButton.setText("<html><p style=\"font-size: 16\">" +
+                            "Failure binding port 2302<br>" +
+                            "Remote control unavailable<br>" +
+                            "Left click for local control</p></html>");
                 }
                 else if((state&0b00000100)!=0){
                     toiletButton.setBackground(new Color(154, 154, 154));
                     toiletButton.setText("<html><p>Waiting</p><p style=\"font-size: 16\">Remote control</p></html>");
                 }
                 else {
-                    String s;
+                    String s = "<html><p>";
                     if ((state & 0b00000001) != 0) {
                         toiletButton.setBackground(new Color(255, 134, 137));
-                        s="<html><p>ONE OUT</p>";
+                        s+="ONE OUT";
                     } else {
                         toiletButton.setBackground(new Color(134, 255, 136));
-                        s="<html><p>ALL IN</p>";
+                        s+="ALL IN";
                     }
+                    s+="</p><p style=\"font-size: 16\">";
                     if((state&0b00000010) != 0 ){
-                        s+="<p style=\"font-size: 16\">Local control</p></html>";
+                        s+="Local control";
                     }else{
-                        s+="<p style=\"font-size: 16\">Remote control</p></html>";
+                        s+="Remote control";
                     }
+                    s+=remoteID+"</p></html>";
                     toiletButton.setText(s);
                 }
 
             }
         });
+    }
+
+    @Deprecated
+    public void setState(final int state){
+        this.state = state;
+        updateButton();
     }
 
     public void shutdown() {
