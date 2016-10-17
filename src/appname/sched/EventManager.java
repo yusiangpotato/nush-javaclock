@@ -85,7 +85,7 @@ public class EventManager {
 
         eventsPane = new JPanel(new MigLayout("fill, wrap 1"));
         pane.add(eventsPane, "grow 1");
-        ImageIcon toiletIcon = new ImageIcon("images/toilet.png");
+        ImageIcon toiletIcon = new ImageIcon(getClass().getResource("/images/toilet.png"));
         toiletIcon = new ImageIcon(toiletIcon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH));
         final JButton toiletButton = new JButton("-",toiletIcon);
         remoteManager = new RemoteManager(toiletButton);
