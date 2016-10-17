@@ -268,7 +268,9 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
         sb.append("<html><p style=\"font-size: 30\">").append(name).append("</p>");
         if(getStart()!=null&&getEnd()!=null) { //Predefined start/end
-            sb.append("<p style=\"font-size: 26\">").append(Util.getTimeString(getStart())).append("-").append(Util.getTimeString(getEnd())).append("</p>");
+            sb.append("<p style=\"font-size: 26\">")
+                    .append(Util.getTimeStringContextSecs(getStart())).append("-")
+                    .append(Util.getTimeStringContextSecs(getEnd())).append("</p>");
         }else{
             sb.append("<p style=\"font-size: 22\">").append(Util.secsToExactHMS(getDuration())).append("</p>");
         }

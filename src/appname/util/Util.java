@@ -92,6 +92,12 @@ public class Util {// Static class plz.
                 (Util.getSecond(g) < 10 ? "0" : "") + Util.getSecond(g);
     }
 
+    public static String getTimeStringContextSecs(GregCalPlus g){
+        return (Util.getHour24(g) < 10 ? "0" : "") + Util.getHour24(g) + ":"+
+                (Util.getMinute(g) < 10 ? "0" : "") + Util.getMinute(g) +
+                (Util.getSecond(g)==0?"":(Util.getSecond(g) < 10 ? ":0" : ":") + Util.getSecond(g));
+    }
+
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
             throw new IllegalArgumentException
