@@ -18,13 +18,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class RemoteManager implements Runnable {
     ScheduledExecutorService ExecService;
-    final JButton toiletButton;
-    int state = 0b00000100; //0b0000DCBA D=UDPfail C=Uninit B=Local A=1out
-    int oldState = 0xFF;
-    String remoteID = "";
+    private final JButton toiletButton;
+    private int state = 0b00000100; //0b0000DCBA D=UDPfail C=Uninit B=Local A=1out
+    private int oldState = 0xFF;
+    private String remoteID = "";
 
     int missedCounter=0;
-    final int missedThresh = 20;//~1secs
+    final int missedThresh = 40;//~2secs
+    final int cycleTime = 50; //Millis
 
     final int UDPport=2302;
     DatagramSocket socket=null;
@@ -33,7 +34,7 @@ public class RemoteManager implements Runnable {
         this.toiletButton =button;
         try{
             socket = new DatagramSocket(UDPport);
-            socket.setSoTimeout(45);
+            socket.setSoTimeout(cycleTime);
         }catch(Exception e){
             state |= 0b00001000;//UDP failure
             System.out.println("Unable to bind port 2302, no remote control function available.");
@@ -77,7 +78,7 @@ public class RemoteManager implements Runnable {
             }
         });
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        ExecService.scheduleWithFixedDelay(this, 0, 50, TimeUnit.MILLISECONDS);
+        ExecService.scheduleWithFixedDelay(this, 0, cycleTime, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class RemoteManager implements Runnable {
                             "Remote control unavailable<br>" +
                             "Left click for local control</p></html>");
                 }
-                else if((state&0b00000100)!=0){
+                else if((state&0b00000100)!=0 && (state&0b00000010) == 0 ){ //Not init & remote ctl
                     toiletButton.setBackground(new Color(154, 154, 154));
                     toiletButton.setText("<html><p>Waiting</p><p style=\"font-size: 16\">Remote control</p></html>");
                 }

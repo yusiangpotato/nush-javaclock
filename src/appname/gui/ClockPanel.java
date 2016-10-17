@@ -99,7 +99,7 @@ public class ClockPanel extends JPanel {
                 double minuteAngle = Util.map(60 * Util.getMinute() + Util.getSecond(), 0, 60 * 60, 2 * Math.PI, 0);
                 double minuteX = size + Util.PolarToCartesianX(minuteAngle, size * minuteHandLength);
                 double minuteY = size + Util.PolarToCartesianY(minuteAngle, size * minuteHandLength);
-                g2.setStroke(new BasicStroke(3));
+                g2.setStroke(new BasicStroke(4));
                 g2.setPaint(nightMode ? new Color(57, 255, 57, handsAlpha) : new Color(0, 223, 0, handsAlpha));
                 g2.draw(new Line2D.Double(size, size, minuteX, minuteY));
             }
@@ -107,7 +107,7 @@ public class ClockPanel extends JPanel {
                 double hourAngle = Util.map(60 * 60 * Util.getHour() + 60 * Util.getMinute() + Util.getSecond(), 0, 12 * 60 * 60, 2 * Math.PI, 0);
                 double hourX = size + Util.PolarToCartesianX(hourAngle, size * hourHandLength);
                 double hourY = size + Util.PolarToCartesianY(hourAngle, size * hourHandLength);
-                g2.setStroke(new BasicStroke(6));
+                g2.setStroke(new BasicStroke(12));
                 g2.setPaint(nightMode ? new Color(64, 64, 192, handsAlpha) : new Color(0, 0, 255, handsAlpha));
                 g2.draw(new Line2D.Double(size, size, hourX, hourY));
             }

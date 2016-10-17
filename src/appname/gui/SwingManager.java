@@ -53,7 +53,7 @@ public class SwingManager implements Runnable {
 
 
                 //windowPane.setVisible(true);
-                window.setSize(800, 500);
+                window.setSize(1024, 768);
                 window.setMinimumSize(new Dimension(600, 400));
 
                 //windowPane.setSize(400, 400);

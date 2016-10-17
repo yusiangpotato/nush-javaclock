@@ -190,9 +190,9 @@ public class Event implements Comparable<Event>, Comparator<Event> {
             //sb.append("Running late!\n");
             startBtn.setText("Begin!");
         }
-        else if(waitForReady&&ready&&!hasStarted()) {
+        else if((!waitForReady||(waitForReady&&ready))&&!hasStarted()) {
             //sb.append("Ready, waiting for scheduled start.\n");
-            startBtn.setText("Force start.");
+            startBtn.setText("Force start");
         }
         else if (start == null) {
             //sb.append("Waiting to start.\n");
@@ -262,7 +262,41 @@ public class Event implements Comparable<Event>, Comparator<Event> {
     }
 
     public String toHtmlString() {
-	    return "<html>"+toString().replaceAll("\n","<br>")+"</html>";
+
+        //return "<html>"+toString().replaceAll("\n","<br>")+"</html>";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<html><p style=\"font-size: 30\">").append(name).append("</p>");
+        if(getStart()!=null&&getEnd()!=null) { //Predefined start/end
+            sb.append("<p style=\"font-size: 26\">").append(Util.getTimeString(getStart())).append("-").append(Util.getTimeString(getEnd())).append("</p>");
+        }else{
+            sb.append("<p style=\"font-size: 22\">").append(Util.secsToExactHMS(getDuration())).append("</p>");
+        }
+
+        {
+            sb.append("<p>");
+            if(waitForReady&&!ready&&!hasStarted()) {
+                sb.append("Waiting for ready.");
+
+            }
+            else if(waitForReady&&!ready&&hasStarted()) {
+                sb.append("Running late!");
+            }
+            else if((!waitForReady||(waitForReady&&ready))&&!hasStarted()) {
+                sb.append("Ready, waiting for scheduled start.");
+            }
+            else if (start == null) {
+                sb.append("Waiting to start.");
+            }else if(!hasEnded()){
+                sb.append("Event is running.");
+            }else{
+                sb.append("Event has ended.");
+            }
+            sb.append("</p>");
+        }
+
+        return sb.toString();
+
     }
 
     @Override

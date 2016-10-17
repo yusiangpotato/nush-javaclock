@@ -105,8 +105,8 @@ public class EventDialog {
         */
         //Duration ** Only one of either end or duration is visible, clicking the button swaps.
         //Default is duration.
-        final JButton durationButton = new JButton("Duration:");
-        pane.add(durationButton, "span 2, grow 1");
+        final JLabel durationLabel = new JLabel("Duration:");
+        pane.add(durationLabel, "span 2, grow 1");
         final JTextField durationHours = new JTextField(endYMDHMS[3] == 0 ? "" : "" + endYMDHMS[3]);
         pane.add(durationHours, "grow 1");
         final JLabel durationHoursLabel = new JLabel("h");
@@ -119,46 +119,7 @@ public class EventDialog {
         pane.add(durationSeconds, "grow 1");
         final JLabel durationSecondsLabel = new JLabel("s");
         pane.add(durationSecondsLabel, "");
-
-
-        durationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //durationButton.setEnabled(true);
-                durationHours.setEnabled(true);
-                durationMinutes.setEnabled(true);
-                durationSeconds.setEnabled(true);
-                durationHoursLabel.setEnabled(true);
-                durationMinutesLabel.setEnabled(true);
-                durationSecondsLabel.setEnabled(true);
-                //endButton.setEnabled(false);
-                //ENDR//endDateButton.setEnabled(false);
-                //ENDR//endHour.setEnabled(false);
-                //ENDR//endMinutes.setEnabled(false);
-                modeEnd[0] = false;
-            }
-        });
-        /*//ENDR//
-        endButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //durationButton.setEnabled(false);
-                durationHours.setEnabled(false);
-                durationMinutes.setEnabled(false);
-                durationSeconds.setEnabled(false);
-                durationHoursLabel.setEnabled(false);
-                durationMinutesLabel.setEnabled(false);
-                durationSecondsLabel.setEnabled(false);
-                //endButton.setEnabled(true);
-                //ENDR//endDateButton.setEnabled(true);
-                //ENDR//endHour.setEnabled(true);
-                //ENDR//endMinutes.setEnabled(true);
-                modeEnd[0] = true;
-            }
-        });
-        *///ENDR//
-
-        durationButton.getActionListeners()[0].actionPerformed(null); //Use duration fields
+        
         //JCheckbox Wait For ready before starting
         final JCheckBox waitCheckBox = new JCheckBox("Wait for ready");
         waitCheckBox.setSelected(true);
