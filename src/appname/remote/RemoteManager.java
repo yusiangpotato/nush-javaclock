@@ -24,7 +24,7 @@ public class RemoteManager implements Runnable {
     private String remoteID = "";
 
     int missedCounter=0;
-    final int missedThresh = 40;//~2secs
+    final int missedThresh = 100;//~5secs
     final int cycleTime = 50; //Millis
 
     final int UDPport=2302;
