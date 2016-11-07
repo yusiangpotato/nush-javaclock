@@ -24,7 +24,7 @@ public class RemoteManager implements Runnable {
     private String remoteID = "";
 
     int missedCounter=0;
-    final int missedThresh = 100;//~5secs
+    final int missedThresh = 40;//~2secs
     final int cycleTime = 50; //Millis
 
     final int UDPport=2302;
@@ -32,13 +32,7 @@ public class RemoteManager implements Runnable {
 
     public RemoteManager(JButton button) {
         this.toiletButton =button;
-        try{
-            socket = new DatagramSocket(UDPport);
-            socket.setSoTimeout(cycleTime);
-        }catch(Exception e){
-            state |= 0b00001000;//UDP failure
-            System.out.println("Unable to bind port 2302, no remote control function available.");
-        }
+
         SwingUtilities.invokeLater(new Runnable() { //Do we really need this? Invokation is guaranteed from swing.
             public void run() {
                 toiletButton.setBackground(new Color(154, 154, 154));
@@ -74,9 +68,19 @@ public class RemoteManager implements Runnable {
                     @Override
                     public void mouseExited(MouseEvent e) {}
                 });
+                updateButton();
 
             }
         });
+
+        try{
+            socket = new DatagramSocket(UDPport);
+            socket.setSoTimeout(cycleTime);
+        }catch(Exception e){
+            state |= 0b00001000;//UDP failure
+            System.out.println("Unable to bind port 2302, no remote control function available.");
+            updateButton();
+        }
         ExecService = Executors.newSingleThreadScheduledExecutor();
         ExecService.scheduleWithFixedDelay(this, 0, cycleTime, TimeUnit.MILLISECONDS);
     }
@@ -114,40 +118,37 @@ public class RemoteManager implements Runnable {
         if(state==oldState) return;
         oldState=state;
         //System.out.println("St"+ state);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                if((state&0b00001000)!=0 && (state&0b00000010)==0){ //Fail & auto
-                    toiletButton.setBackground(new Color(255, 47, 252));
-                    toiletButton.setText("<html><p style=\"font-size: 16\">" +
-                            "Failure binding port 2302<br>" +
-                            "Remote control unavailable<br>" +
-                            "Left click for local control</p></html>");
-                }
-                else if((state&0b00000100)!=0 && (state&0b00000010) == 0 ){ //Not init & remote ctl
-                    toiletButton.setBackground(new Color(154, 154, 154));
-                    toiletButton.setText("<html><p>Waiting</p><p style=\"font-size: 16\">Remote control</p></html>");
-                }
-                else {
-                    String s = "<html><p>";
-                    if ((state & 0b00000001) != 0) {
-                        toiletButton.setBackground(new Color(255, 134, 137));
-                        s+="ONE OUT";
-                    } else {
-                        toiletButton.setBackground(new Color(134, 255, 136));
-                        s+="ALL IN";
-                    }
-                    s+="</p><p style=\"font-size: 16\">";
-                    if((state&0b00000010) != 0 ){
-                        s+="Local control";
-                    }else{
-                        s+="Remote control";
-                    }
-                    s+=remoteID+"</p></html>";
-                    toiletButton.setText(s);
-                }
-
+        SwingUtilities.invokeLater(() -> {
+            if((state&0b00001000)!=0 && (state&0b00000010)==0){ //Fail & auto
+                toiletButton.setBackground(new Color(255, 47, 252));
+                toiletButton.setText("<html><p style=\"font-size: 16\">" +
+                        "Failure binding port 2302<br>" +
+                        "Remote control unavailable<br>" +
+                        "Left click for local control</p></html>");
             }
+            else if((state&0b00000100)!=0 && (state&0b00000010) == 0 ){ //Not init & remote ctl
+                toiletButton.setBackground(new Color(154, 154, 154));
+                toiletButton.setText("<html><p>Waiting</p><p style=\"font-size: 16\">Remote control</p></html>");
+            }
+            else {
+                String s = "<html><p>";
+                if ((state & 0b00000001) != 0) {
+                    toiletButton.setBackground(new Color(255, 134, 137));
+                    s+="ONE OUT";
+                } else {
+                    toiletButton.setBackground(new Color(134, 255, 136));
+                    s+="ALL IN";
+                }
+                s+="</p><p style=\"font-size: 16\">";
+                if((state&0b00000010) != 0 ){
+                    s+="Local control";
+                }else{
+                    s+="Remote control";
+                }
+                s+=remoteID+"</p></html>";
+                toiletButton.setText(s);
+            }
+
         });
     }
 

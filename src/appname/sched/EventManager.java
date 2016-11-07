@@ -87,7 +87,7 @@ public class EventManager {
         pane.add(eventsPane, "grow 1");
         ImageIcon toiletIcon = new ImageIcon(getClass().getResource("/images/toilet.png"));
         toiletIcon = new ImageIcon(toiletIcon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH));
-        final JButton toiletButton = new JButton("-",toiletIcon);
+        final JButton toiletButton = new JButton("Right Click Me",toiletIcon);
         remoteManager = new RemoteManager(toiletButton);
 
         pane.add(toiletButton,"south,grow 1");
