@@ -32,7 +32,7 @@ public class EventManager {
         pane = new JPanel(new MigLayout("fill", "[100%]", "[pref!][push]"));
 
         {
-            pane.setMinimumSize(new Dimension(100, 1));
+            pane.setMinimumSize(new Dimension(130, 1));
             pane.setPreferredSize(null);
             pane.setMaximumSize(null);
             pane.setBackground(new Color(62, 62, 62));

@@ -22,11 +22,11 @@ public class ClockPanel extends JPanel {
     static final int handsAlpha = 192;
     static final boolean evalMode = false;
     boolean nightMode = true;
-    boolean drawDigital = true;
+    boolean drawDigital = false;
     boolean animate = true;
     Quadruple<Double, Double, Double, Double>[] divPos = new Quadruple[60];
     Pair<Integer, Integer> numPos[] = new Pair[12];
-    private static double[] animateValues = {-1.0, -0.80, -0.5, -0.3, -0.1, 0.05, 0.10, 0.05, 0.0};
+    private static double[] animateValues = {-0.8, -0.5, -0.3, -0.1, 0.02, 0.05, 0.02, 0.0};
     int prevSecond = -1, animateDuration = animateValues.length - 1, animateTick = animateDuration;
 
     public ClockPanel() {
@@ -152,9 +152,6 @@ public class ClockPanel extends JPanel {
         calculateDivisions();
     }
 
-    private boolean toggleNightMode(){
-        return nightMode = !nightMode;
-    }
     public boolean setNightMode(){
         return nightMode = true;
     }
@@ -164,8 +161,8 @@ public class ClockPanel extends JPanel {
     public boolean toggleAnimation(){
         return animate=!animate;
     }
-    public boolean toggleDigital(){
-        return drawDigital=!drawDigital;
+    public void setDigitalMode(int i){
+        drawDigital = (i&0b10) != 0;
     }
 
     private void calculateDivisions() {

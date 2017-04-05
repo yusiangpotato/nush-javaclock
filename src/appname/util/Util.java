@@ -179,4 +179,8 @@ public class Util {// Static class plz.
         }
     }
 
+    public static int s2int(String s){
+        return Integer.parseInt(s);
+    }
+
 }

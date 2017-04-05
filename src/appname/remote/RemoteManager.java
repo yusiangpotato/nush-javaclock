@@ -36,9 +36,10 @@ public class RemoteManager implements Runnable {
         SwingUtilities.invokeLater(new Runnable() { //Do we really need this? Invokation is guaranteed from swing.
             public void run() {
                 toiletButton.setBackground(new Color(154, 154, 154));
-                toiletButton.setFont(new Font("Sans",Font.PLAIN,40));
+                toiletButton.setFont(new Font("Sans",Font.PLAIN,38));
                 toiletButton.setHorizontalAlignment(SwingConstants.LEFT);
                 toiletButton.setFocusPainted(false);
+                toiletButton.setPreferredSize(new Dimension(130,1));
                 toiletButton.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {

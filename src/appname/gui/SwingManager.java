@@ -26,6 +26,7 @@ public class SwingManager implements Runnable {
     ScheduledExecutorService ExecService;
     JPanel windowPane;
     ClockPanel clockPane;
+    DigitalPanel digitalPane;
     JFrame window;
     EventManager eManager;
 
@@ -34,22 +35,38 @@ public class SwingManager implements Runnable {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                JFrame.setDefaultLookAndFeelDecorated(true);
+
+                try {
+                    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                        if ("Nimbus".equals(info.getName())) {
+                            UIManager.setLookAndFeel(info.getClassName());
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    // If Nimbus is not available, you can set the GUI to another look and feel.
+                }
+                //JFrame.setDefaultLookAndFeelDecorated(true);
                 window = new JFrame("JavaClock ALPHA@2016-10-18");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
-                windowPane = new JPanel(new MigLayout("", "[pref!][push,fill]", "[100%]"));
+                windowPane = new JPanel(new MigLayout("", "5px[pref!,shrink]5px[push,fill]5px", "5px[pref!,shrink]5px[push,fill]5px"));
 
 
                 window.setContentPane(windowPane);
                 //windowPane.setBackground(Color.black);
 
-                windowPane.add(clockPane, "grow 0");
-                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                digitalPane = new DigitalPanel();
+                windowPane.add(digitalPane,"push, grow 2");
 
                 eManager = new EventManager(window);
-                windowPane.add(eManager.getPane(), "push, grow 1");
+                windowPane.add(eManager.getPane(), "push, grow 1, sy 2, wrap");
+
+                windowPane.add(clockPane, "grow 1");
+                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+
 
 
                 //windowPane.setVisible(true);
@@ -89,10 +106,13 @@ public class SwingManager implements Runnable {
 
                 windowPane.revalidate();
                 windowPane.repaint();
+                digitalPane.setSize(Math.min(window.getHeight() / 2, window.getWidth() / 2 ));
+                digitalPane.revalidate();
+                digitalPane.repaint();
                 eManager.revalidate();
-                clockPane.setSize(Math.min(window.getHeight() / 2 - 25, window.getWidth() / 2 - 170));
+                clockPane.setSize(Math.min(window.getHeight() / 2  - digitalPane.getHeight()/1.87 -18, window.getWidth() / 2 -15));
                 clockPane.repaint();
-
+                //window.pack();
                 //eManager.refresh(); Reval does refresh
 
             }
@@ -171,16 +191,20 @@ public class SwingManager implements Runnable {
                     if(Integer.parseInt(x[1])==0){
                         clockPane.clrNightMode();
                         eManager.clrNightMode();
+                        digitalPane.clrNightmode();
                     }else{
                         clockPane.setNightMode();
                         eManager.setNightMode();
+                        digitalPane.setNightMode();
                     }
                     return true;
                 case "ANIM":
                     clockPane.toggleAnimation();
                     return true;
                 case "DIGITAL":
-                    clockPane.toggleDigital();
+                    //clockPane.toggleDigital();
+                    clockPane.setDigitalMode(Integer.parseInt(x[1]));
+                    digitalPane.setDigitalMode(Integer.parseInt(x[1]));
                     return true;
                 case "RSTATE":
                     eManager.setRemoteState(Integer.parseInt(x[1]));
@@ -227,6 +251,9 @@ public class SwingManager implements Runnable {
                         default:
                             return false;
                     }
+                    return true;
+                case "SIZE":
+                    window.setSize(Integer.parseInt(x[1]),Integer.parseInt(x[2]));
                     return true;
                 /*
                 case "XSZ":

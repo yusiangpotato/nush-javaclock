@@ -21,9 +21,11 @@ public class EventDialog {
         final boolean[] modeEnd = {false};
         final boolean[] useDuration = {false};
         final boolean[] autoStart = {true};
+        final boolean[] waitReady = {true};
         final int[] startMode = {0};
         final int[] duration = {0};
-        final int[] startYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), Util.getHour24(), Util.getMinute()+1, 0};
+        final GregCalPlus nowPlus1 = new GregCalPlus(Util.getYear(), Util.getMonth(), Util.getDate(), Util.getHour24(), Util.getMinute()+1, 0);
+        final int[] startYMDHMS = {Util.getYear(nowPlus1), Util.getMonth(nowPlus1), Util.getDate(nowPlus1), Util.getHour24(nowPlus1), Util.getMinute(nowPlus1), 0};
         final int[] endYMDHMS = {Util.getYear(), Util.getMonth(), Util.getDate(), 0, 0, 0};
         if (ev[0] != null) {
             if (ev[0].getStart() != null) {
@@ -33,6 +35,7 @@ public class EventDialog {
                 startYMDHMS[3] = Util.getHour24(ev[0].getStart());
                 startYMDHMS[4] = Util.getMinute(ev[0].getStart());
                 startYMDHMS[5] = Util.getSecond(ev[0].getStart());
+                waitReady[0] = ev[0].isWaitForReady();
             }
             /*
             if (ev[0].getEnd() != null) {
@@ -58,7 +61,7 @@ public class EventDialog {
             hours[i] = "" + (i < 10 ? "0" + i : i);
         for (int i = 0; i < 60; i++)
             minutes[i] = "" + (i < 10 ? "0" + i : i);
-        final JPanel pane = new JPanel(new MigLayout("fill, wrap", "[15%][25%][15%][5%][15%][5%][15%][5%]", ""));
+        final JPanel pane = new JPanel(new MigLayout("fill, wrap, gap 3px", "[15%][25%][15%][5%][15%][5%][15%][5%]", ""));
         jD.setContentPane(pane);
         //Name
         JLabel nameLabel = new JLabel("Name:");
@@ -122,7 +125,6 @@ public class EventDialog {
         
         //JCheckbox Wait For ready before starting
         final JCheckBox waitCheckBox = new JCheckBox("Wait for ready");
-        waitCheckBox.setSelected(true);
         waitCheckBox.setEnabled(false);
         pane.add(waitCheckBox,"span 8, grow 1, wrap");
         //StartBtn Actionlistener
@@ -150,7 +152,7 @@ public class EventDialog {
                 }
                 if(startMode[0]==1) {
                     waitCheckBox.setEnabled(true);
-                    waitCheckBox.setSelected(true);
+                    //waitCheckBox.setSelected(true);
                 }
                 else {
                     waitCheckBox.setEnabled(false);
