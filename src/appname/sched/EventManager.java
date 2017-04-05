@@ -3,6 +3,7 @@ package appname.sched;
 import appname.remote.RemoteManager;
 import appname.util.GregCalPlus;
 import appname.util.PriorityArrayList;
+import appname.util.Settings;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -26,7 +27,6 @@ public class EventManager {
     private final PriorityArrayList<Event> eList = new PriorityArrayList<>();
     private final RemoteManager remoteManager;
     PriorityArrayList<Event> eListOld = (PriorityArrayList<Event>) eList.clone();
-    boolean nightMode = true;
     public EventManager(JFrame parent) {
 	    this.parent = parent;
         pane = new JPanel(new MigLayout("fill", "[100%]", "[pref!][push]"));
@@ -101,9 +101,9 @@ public class EventManager {
             pane.getComponent(i).revalidate();
             pane.getComponent(i).repaint();
         }
-        buttonPane.setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
-        eventsPane.setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
-        pane      .setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
+        buttonPane.setBackground(Settings.getColor(0));
+        eventsPane.setBackground(Settings.getColor(0));
+        pane      .setBackground(Settings.getColor(0));
         pane.revalidate();
         pane.repaint();
 
@@ -213,12 +213,6 @@ public class EventManager {
         }
         if(index==-1) syslog.warning("Tried to remove non-existent event! - "+uuid);
         else remove(index);
-    }
-    public boolean setNightMode(){
-        return nightMode = true;
-    }
-    public boolean clrNightMode(){
-        return nightMode = false;
     }
 
     public static EventManager getEventManager() {

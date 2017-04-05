@@ -1,5 +1,8 @@
 package appname.util;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -13,79 +16,107 @@ import java.util.Scanner;
 public class Settings {
     private Settings(){}//Static class, no constructor
 
-    static Map<String,Boolean> booleanMap= new HashMap<>();
+    static Map<String,Boolean> booMap = new HashMap<>();
     static Map<String,Integer> intMap= new HashMap<>();
-    static Map<String,Double> floatMap = new HashMap<>();
-    static Map<String,String> stringMap= new HashMap<>();
+    static Map<String,Double> fltMap = new HashMap<>();
+    static Map<String,String> strMap = new HashMap<>();
 
-    public static boolean getBoolSetting(String key) throws Exception{
-        if(booleanMap.containsKey(key)) return booleanMap.get(key);
-        else throw new Exception("Bool:KeyNotFound:"+key);
+    public static boolean getBoolSetting(String key) {
+        if(booMap.containsKey(key)) return booMap.get(key);
+        else return false;
     }
     public static void setBoolSetting(String key,boolean val){
-        booleanMap.put(key,val);
+        booMap.put(key,val);
         saveToFile();
     }
 
-    public static int getIntSetting(String key) throws Exception{
+    public static int getIntSetting(String key){
         if(intMap.containsKey(key)) return intMap.get(key);
-        else throw new Exception("Int:KeyNotFound:"+key);
+        else return 0;
     }
     public static void setIntSetting(String key,int val){
         intMap.put(key,val);
         saveToFile();
     }
 
-    public static double getFloatSetting(String key) throws Exception{
-        if(floatMap.containsKey(key)) return floatMap.get(key);
-        else throw new Exception("Float:KeyNotFound:"+key);
+    public static double getFloatSetting(String key){
+        if(fltMap.containsKey(key)) return fltMap.get(key);
+        else return 0;
     }
     public static void setFloatSetting(String key, double val){
-        floatMap.put(key,val);
+        fltMap.put(key,val);
         saveToFile();
     }
 
-    public static String getStringSetting(String key)throws Exception{
-        if(stringMap.containsKey(key)) return stringMap.get(key);
-        else throw new Exception("String:KeyNotFound:"+key);
+    public static String getStringSetting(String key){
+        if(strMap.containsKey(key)) return strMap.get(key);
+        else return null;
     }
     public static void setStringSetting(String key,String val){
         val.replaceAll("\t"," ");
-        stringMap.put(key,val);
+        strMap.put(key,val);
         saveToFile();
     }
 
     public static void clearSettings(){
-        booleanMap.clear();
+        booMap.clear();
         intMap.clear();
-        floatMap.clear();
-        stringMap.clear();
+        fltMap.clear();
+        strMap.clear();
     }
 
-    public static boolean openFromFile(){
+    public static void loadDefaultValues(){
+        strMap.put("colourMode","Night");//One of: Night,Day,HiContrast,Custom
+        intMap.put("custHHandColR",255);
+        intMap.put("custHHandColG",255);
+        intMap.put("custHHandColB",255);
+        intMap.put("custMHandColR",255);
+        intMap.put("custMHandColG",255);
+        intMap.put("custMHandColB",255);
+        intMap.put("custSHandColR",255);
+        intMap.put("custSHandColG",255);
+        intMap.put("custSHandColB",255);
+        intMap.put("custHandsAlpha",1);
+        strMap.put("custBgColScheme","HiContrast");//One of Night,Day,HiContrast
+
+        intMap.put("evTitleFontSz",40);
+        intMap.put("evTimeFontSz",34);
+        intMap.put("evStatusFontSz",30);
+
+        //booMap.put("toiletUseLocal",false);
+
+    }
+
+    public static boolean loadFromFile(){
         try{
-            Scanner sc = new Scanner("settings.txt");
+            Scanner sc = new Scanner(new File("settings.txt"));
+
             while(sc.hasNextLine()){
                 String s[] = sc.nextLine().split("\t");
                 if(s.length!=3||s[0].length()!=1) continue;
                 switch(s[0].toLowerCase()){
                     case "b":
-                        booleanMap.put(s[1],Boolean.parseBoolean(s[2]));
+                        booMap.put(s[1],Boolean.parseBoolean(s[2]));
                         break;
                     case "i":
                         intMap.put(s[1],Integer.parseInt(s[2]));
                         break;
                     case "f":
-                        floatMap.put(s[1],Double.parseDouble(s[2]));
+                        fltMap.put(s[1],Double.parseDouble(s[2]));
                         break;
                     case "s":
-                        stringMap.put(s[1],s[2]);
+                        strMap.put(s[1],s[2]);
                         break;
                 }
 
             }
+            System.out.println("Loaded settings from file.");
 
-        }catch (Exception ex){
+        }catch (FileNotFoundException ex){
+            System.out.println("No settings file found.");
+            return false;
+        }
+        catch (Exception ex){
             ex.printStackTrace();
             return false;
         }
@@ -95,21 +126,21 @@ public class Settings {
         try{
             PrintWriter pw = new PrintWriter("settings.txt");
             ArrayList<String> ls;
-            ls = new ArrayList<String>(booleanMap.keySet());
+            ls = new ArrayList<String>(booMap.keySet());
             for(String s:ls){
-                pw.println("b\t"+s+"\t"+(booleanMap.get(s)?'1':'0'));
+                pw.println("b\t"+s+"\t"+(booMap.get(s)?"true":"false"));
             }
             ls = new ArrayList<String>(intMap.keySet());
             for(String s:ls){
                 pw.println("i\t"+s+"\t"+intMap.get(s));
             }
-            ls = new ArrayList<String>(floatMap.keySet());
+            ls = new ArrayList<String>(fltMap.keySet());
             for(String s:ls){
-                pw.println("f\t"+s+"\t"+ floatMap.get(s));
+                pw.println("f\t"+s+"\t"+ fltMap.get(s));
             }
-            ls = new ArrayList<String>(stringMap.keySet());
+            ls = new ArrayList<String>(strMap.keySet());
             for(String s:ls){
-                pw.println("s\t"+s+"\t"+stringMap.get(s));
+                pw.println("s\t"+s+"\t"+ strMap.get(s));
             }
             pw.flush();
             pw.close();
@@ -124,21 +155,21 @@ public class Settings {
         try{
             PrintStream ps = System.out;
             ArrayList<String> ls;
-            ls = new ArrayList<String>(booleanMap.keySet());
+            ls = new ArrayList<String>(booMap.keySet());
             for(String s:ls){
-                ps.println("b\t"+s+"\t"+(booleanMap.get(s)?'1':'0'));
+                ps.println("b\t"+s+"\t"+(booMap.get(s)?"true":"false"));
             }
             ls = new ArrayList<String>(intMap.keySet());
             for(String s:ls){
                 ps.println("i\t"+s+"\t"+intMap.get(s));
             }
-            ls = new ArrayList<String>(floatMap.keySet());
+            ls = new ArrayList<String>(fltMap.keySet());
             for(String s:ls){
-                ps.println("f\t"+s+"\t"+ floatMap.get(s));
+                ps.println("f\t"+s+"\t"+ fltMap.get(s));
             }
-            ls = new ArrayList<String>(stringMap.keySet());
+            ls = new ArrayList<String>(strMap.keySet());
             for(String s:ls){
-                ps.println("s\t"+s+"\t"+stringMap.get(s));
+                ps.println("s\t"+s+"\t"+ strMap.get(s));
             }
             ps.flush();
         }catch (Exception e){
@@ -148,4 +179,41 @@ public class Settings {
         return true;
     }
 
+    static final int handsAlpha = 192;
+    final static public Color[][] colorPalette =
+
+            {
+                    //BG,clock face,lgDiv,smDiv,numbers,circleOutline,
+                    // hHand,mHand,sHand,digitalText
+                    {},//0=custom
+                    //Night
+                    {new Color(64, 64, 64), new Color(32, 32, 32), new Color(255,255,255), new Color(192, 192, 192), Color.WHITE, new Color(127, 127, 127),
+                            new Color(255,0,0, handsAlpha), new Color(57,255,57, handsAlpha), new Color(64,64,192, handsAlpha), Color.WHITE
+                    },
+                    //Day
+                    {new Color(192,192,192),new Color(223,223,223),new Color(63,63,63),   new Color(127,127,127),    Color.BLACK, new Color(32,32,32),
+                            new Color(255,0,0,handsAlpha),new Color(0,223,0,handsAlpha),new Color(0,0,255, handsAlpha),Color.BLACK
+                    },
+                    //HiContrast
+                    {new Color(0,0,0), new Color(0,0,0),           new Color(255,255,255), new Color(192, 192, 192), Color.WHITE, new Color(127, 127, 127),
+                            new Color(255,255,255,1), new Color(255,255,255,1), new Color(255,255,255,1), Color.WHITE
+                    }
+
+            };
+
+    public static Color getColor(int num){
+
+        if(getStringSetting("colourMode").equals("Night")) return colorPalette[1][num];
+        if(getStringSetting("colourMode").equals("Day")) return colorPalette[2][num];
+        if(getStringSetting("colourMode").equals("HiContrast")) return colorPalette[3][num];
+        if(getStringSetting("colourMode").equals("Custom")){
+            if(num==6) return new Color(getIntSetting("custHHandColR"), getIntSetting("custHHandColG"), getIntSetting("custHHandColB"), getIntSetting("custHandsAlpha"));
+            if(num==7) return new Color(getIntSetting("custMHandColR"), getIntSetting("custMHandColG"), getIntSetting("custMHandColB"), getIntSetting("custHandsAlpha"));
+            if(num==8) return new Color(getIntSetting("custSHandColR"), getIntSetting("custSHandColG"), getIntSetting("custSHandColB"), getIntSetting("custHandsAlpha"));
+            if(getStringSetting("custBgColScheme").equals("Night")) return colorPalette[1][num];
+            if(getStringSetting("custBgColScheme").equals("Day")) return colorPalette[2][num];
+            if(getStringSetting("custBgColScheme").equals("HiContrast")) return colorPalette[3][num];
+        };
+        return null;
+    }
 }

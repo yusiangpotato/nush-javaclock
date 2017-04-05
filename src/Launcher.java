@@ -1,4 +1,5 @@
 import appname.gui.SwingManager;
+import appname.util.Settings;
 
 import javax.swing.*;
 import java.util.logging.Level;
@@ -19,6 +20,8 @@ public class Launcher {
 	    }
 	    */
 
+        Settings.loadDefaultValues();
+        Settings.loadFromFile(); //These will override the defaults if set.
 
         new SwingManager();
 

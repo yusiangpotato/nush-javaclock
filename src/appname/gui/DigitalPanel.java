@@ -1,5 +1,6 @@
 package appname.gui;
 
+import appname.util.Settings;
 import appname.util.Util;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
@@ -12,7 +13,6 @@ import java.awt.*;
  */
 public class DigitalPanel extends JPanel {
     JLabel l;
-    boolean nightMode = true;
     double size=250;
     boolean drawDigital = true;
     public DigitalPanel(){
@@ -28,7 +28,6 @@ public class DigitalPanel extends JPanel {
             }
         };
         add(l,new CC().alignX("center").spanX());
-        setNightMode();
     }
 
     @Override
@@ -40,14 +39,12 @@ public class DigitalPanel extends JPanel {
 
             l.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 6)), 150/*MAX*/), 20/*MIN*/)));
             l.setText(Util.getTimeString());
-            l.setForeground(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+            l.setForeground(Settings.getColor(9));
         }
-        setBackground(nightMode ? new Color(64, 64, 64) : new Color(192, 192, 192));
+        setBackground(Settings.getColor(0));
         super.paintComponent(g);
     }
 
-    public void setNightMode(){nightMode=true;}
-    public void clrNightmode(){nightMode=false;}
     public void setSize(double sz){size=sz;}
     public void setDigitalMode(int i){
         drawDigital = (i&0b1) != 0;

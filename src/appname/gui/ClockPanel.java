@@ -2,6 +2,7 @@ package appname.gui;
 
 import appname.util.Pair;
 import appname.util.Quadruple;
+import appname.util.Settings;
 import appname.util.Util;
 
 import javax.swing.*;
@@ -14,14 +15,14 @@ import java.util.logging.Logger;
  * Created by yusiang on 11/4/14.
  */
 public class ClockPanel extends JPanel {
-	private static final Logger logger = Logger.getLogger(Thread.currentThread().getClass().getName());
+    private static final Logger logger = Logger.getLogger(Thread.currentThread().getClass().getName());
     double size = 250f, prevSize = 0;
     static final double secondHandLength = 0.875;
     static final double minuteHandLength = 0.75;
     static final double hourHandLength = 0.55;
-    static final int handsAlpha = 192;
+
     static final boolean evalMode = false;
-    boolean nightMode = true;
+    //boolean nightMode = true;
     boolean drawDigital = false;
     boolean animate = true;
     Quadruple<Double, Double, Double, Double>[] divPos = new Quadruple[60];
@@ -34,7 +35,9 @@ public class ClockPanel extends JPanel {
         this.setDoubleBuffered(true);
     }
 
-	/** Repaints at 30Hz **/
+    /**
+     * Repaints at 30Hz
+     **/
     @Override
     public void paintComponent(Graphics g) {
         //If size has changed, recalculate positions
@@ -48,26 +51,23 @@ public class ClockPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
-        setBackground(nightMode?new Color(64,64,64):new Color(192,192,192));
+        setBackground(Settings.getColor(0));
 
         {   //  Setup the clock face
-	        g2.setStroke(new BasicStroke(2));
+            g2.setStroke(new BasicStroke(2));
             //Circle fill
-            g2.setPaint(nightMode ? new Color(32, 32, 32) : new Color(223, 223, 223));
+            g2.setPaint(Settings.getColor(1));
             final double fillMargin = 0.015;
             g2.fillOval(Util.doubleToInt(size * fillMargin), Util.doubleToInt(size * fillMargin), Util.doubleToInt(size * (2 - 2 * fillMargin)), Util.doubleToInt(size * (2 - 2 * fillMargin)));
 
 
             for (int i = 0; i < 60; i++) {
                 //Divisions
-                if (nightMode)
-                    g2.setPaint(i % 5 == 0 ? new Color(255, 255, 255) : new Color(192, 192, 192));
-                else
-                    g2.setPaint(i % 5 == 0 ? new Color(63, 63, 63) : new Color(127, 127, 127));
+                g2.setPaint(i % 5 == 0 ? Settings.getColor(2) : Settings.getColor(3));
                 g2.draw(new Line2D.Double(divPos[i].first, divPos[i].second, divPos[i].third, divPos[i].fourth));
 
                 //Numbers
-                g2.setPaint(nightMode ? Color.WHITE : Color.BLACK);
+                g2.setPaint(Settings.getColor(4));
                 if (i % 5 == 0) {
                     String s = "" + (i == 0 ? 12 + "" : (i / 5 < 10 ? " " + i / 5 : i / 5));
                     g2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 10)), 75/*MAX*/), 8/*MIN*/)));
@@ -78,8 +78,8 @@ public class ClockPanel extends JPanel {
             }
             //Circle outline
             final double lineMargin = 0.017;
-            g2.setStroke(new BasicStroke(nightMode?5:3));
-            g2.setPaint(nightMode ? new Color(127, 127, 127) : new Color(32, 32, 32));
+            g2.setStroke(new BasicStroke(5));
+            g2.setPaint(Settings.getColor(5));
             g2.drawOval(Util.doubleToInt(size * lineMargin), Util.doubleToInt(size * lineMargin), Util.doubleToInt(size * (2 - 2 * lineMargin)), Util.doubleToInt(size * (2 - 2 * lineMargin)));
 
             {   //  Second hand
@@ -92,7 +92,7 @@ public class ClockPanel extends JPanel {
                 double secondX = size + Util.PolarToCartesianX(secondAngle, size * secondHandLength);
                 double secondY = size + Util.PolarToCartesianY(secondAngle, size * secondHandLength);
                 g2.setStroke(new BasicStroke(2));
-                g2.setPaint(nightMode ? new Color(255, 0, 0, handsAlpha) : new Color(255, 0, 0, handsAlpha));
+                g2.setPaint(Settings.getColor(6));
                 g2.draw(new Line2D.Double(size, size, secondX, secondY));
             }
             {   //  Minute hand
@@ -100,7 +100,7 @@ public class ClockPanel extends JPanel {
                 double minuteX = size + Util.PolarToCartesianX(minuteAngle, size * minuteHandLength);
                 double minuteY = size + Util.PolarToCartesianY(minuteAngle, size * minuteHandLength);
                 g2.setStroke(new BasicStroke(4));
-                g2.setPaint(nightMode ? new Color(57, 255, 57, handsAlpha) : new Color(0, 223, 0, handsAlpha));
+                g2.setPaint(Settings.getColor(7));
                 g2.draw(new Line2D.Double(size, size, minuteX, minuteY));
             }
             {   //  Hour hand
@@ -108,13 +108,13 @@ public class ClockPanel extends JPanel {
                 double hourX = size + Util.PolarToCartesianX(hourAngle, size * hourHandLength);
                 double hourY = size + Util.PolarToCartesianY(hourAngle, size * hourHandLength);
                 g2.setStroke(new BasicStroke(12));
-                g2.setPaint(nightMode ? new Color(64, 64, 192, handsAlpha) : new Color(0, 0, 255, handsAlpha));
+                g2.setPaint(Settings.getColor(8));
                 g2.draw(new Line2D.Double(size, size, hourX, hourY));
             }
             if (drawDigital) {
                 String s = Util.getTimeString();
                 g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 5)), 150/*MAX*/), 20/*MIN*/)));
-                g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+                g2.setPaint(Settings.getColor(9));
                 int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
                 g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f));
 
@@ -123,14 +123,14 @@ public class ClockPanel extends JPanel {
                 {
                     String s = "FOR INTERNAL EVALUATION ONLY";
                     g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 15)), 150/*MAX*/), 10/*MIN*/)));
-                    g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+                    g2.setPaint(Settings.getColor(9));
                     int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
                     g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f + 25));
                 }
                 {
                     String s = "DO NOT USE FOR EXAMS";
                     g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(Math.min(Util.safeLongToInt(Math.round(size / 15)), 150/*MAX*/), 10/*MIN*/)));
-                    g2.setPaint(nightMode ? new Color(255,255,255) : new Color(0,0,0));
+                    g2.setPaint(Settings.getColor(9));
                     int stringLen = (int) g2.getFontMetrics().getStringBounds(s, g2).getWidth();
                     g2.drawString(s, Util.doubleToInt(size - stringLen / 2f), Util.doubleToInt(size * 0.95f + 50));
                 }
@@ -144,7 +144,7 @@ public class ClockPanel extends JPanel {
     public void setSize(double sz) {
         size = sz;
         setPreferredSize(new Dimension(Util.doubleToInt(size * 2), Util.doubleToInt(size * 2)));
-        logger.finest("Changing size to "+sz);
+        logger.finest("Changing size to " + sz);
     }
 
     public void reCalculate() {
@@ -152,17 +152,13 @@ public class ClockPanel extends JPanel {
         calculateDivisions();
     }
 
-    public boolean setNightMode(){
-        return nightMode = true;
+
+    public boolean toggleAnimation() {
+        return animate = !animate;
     }
-    public boolean clrNightMode(){
-        return nightMode = false;
-    }
-    public boolean toggleAnimation(){
-        return animate=!animate;
-    }
-    public void setDigitalMode(int i){
-        drawDigital = (i&0b10) != 0;
+
+    public void setDigitalMode(int i) {
+        drawDigital = (i & 0b10) != 0;
     }
 
     private void calculateDivisions() {
@@ -186,4 +182,6 @@ public class ClockPanel extends JPanel {
             numPos[i] = new Pair<>(Util.doubleToInt(posX), Util.doubleToInt(posY));
         }
     }
+
+
 }

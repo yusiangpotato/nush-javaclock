@@ -1,6 +1,7 @@
 package appname.gui;
 
 import appname.sched.EventManager;
+import appname.util.Settings;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -47,7 +48,7 @@ public class SwingManager implements Runnable {
                     // If Nimbus is not available, you can set the GUI to another look and feel.
                 }
                 //JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA@2016-10-18");//
+                window = new JFrame("JavaClock ALPHA@2017-04-04");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
@@ -189,13 +190,10 @@ public class SwingManager implements Runnable {
                 */
                 case "NIGHT":
                     if(Integer.parseInt(x[1])==0){
-                        clockPane.clrNightMode();
-                        eManager.clrNightMode();
-                        digitalPane.clrNightmode();
+                        //clockPane.clrNightMode();
+                        Settings.setStringSetting("colourMode","Day");
                     }else{
-                        clockPane.setNightMode();
-                        eManager.setNightMode();
-                        digitalPane.setNightMode();
+                        Settings.setStringSetting("colourMode","Night");
                     }
                     return true;
                 case "ANIM":
@@ -254,6 +252,16 @@ public class SwingManager implements Runnable {
                     return true;
                 case "SIZE":
                     window.setSize(Integer.parseInt(x[1]),Integer.parseInt(x[2]));
+                    return true;
+                case "SHOWSETTINGS":
+                case "SETTINGS":
+                    Settings.printSettings();
+                    return true;
+                case "SAVESETTINGS":
+                    Settings.saveToFile();
+                    return true;
+                case "LOADSETTINGS":
+                    Settings.loadFromFile();
                     return true;
                 /*
                 case "XSZ":

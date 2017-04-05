@@ -2,6 +2,7 @@ package appname.sched;
 
 
 import appname.util.GregCalPlus;
+import appname.util.Settings;
 import appname.util.Util;
 import net.miginfocom.swing.MigLayout;
 
@@ -266,13 +267,13 @@ public class Event implements Comparable<Event>, Comparator<Event> {
         //return "<html>"+toString().replaceAll("\n","<br>")+"</html>";
         StringBuilder sb = new StringBuilder();
 
-        sb.append("<html><p style=\"font-size: 30\">").append(name).append("</p>");
+        sb.append("<html><p style=\"font-size: "+ Settings.getIntSetting("evTitleFontSz")+"\">").append(name).append("</p>");
         if(getStart()!=null&&getEnd()!=null) { //Predefined start/end
-            sb.append("<p style=\"font-size: 26\">")
+            sb.append("<p style=\"font-size: "+ Settings.getIntSetting("evTimeFontSz")+"\">")
                     .append(Util.getTimeStringContextSecs(getStart())).append("-")
                     .append(Util.getTimeStringContextSecs(getEnd())).append("</p>");
         }else{
-            sb.append("<p style=\"font-size: 22\">").append(Util.secsToExactHMS(getDuration())).append("</p>");
+            sb.append("<p style=\"font-size: "+ Settings.getIntSetting("evStatusFontSz")+"\">").append(Util.secsToExactHMS(getDuration())).append("</p>");
         }
 
         {
