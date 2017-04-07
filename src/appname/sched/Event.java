@@ -213,11 +213,13 @@ public class Event implements Comparable<Event>, Comparator<Event> {
 
     public boolean canRemove() {
         return false;
+        /* //Disabled automatic event removal after ended.
         if (getEnd() == null) return false;
         if (!hasActuallyStarted()) return false;
         GregCalPlus e = (GregCalPlus) getEnd().clone();
         e.add(GregCalPlus.SECOND, 10);
         return start == null ? false : new GregCalPlus().after(e);
+        */
     }
 
     @Override
