@@ -48,7 +48,7 @@ public class SwingManager implements Runnable {
                     // If Nimbus is not available, you can set the GUI to another look and feel.
                 }
                 //JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA@2017-04-04");//
+                window = new JFrame("JavaClock ALPHA@2017-04-07");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;
