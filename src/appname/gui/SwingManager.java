@@ -263,6 +263,12 @@ public class SwingManager implements Runnable {
                 case "LOADSETTINGS":
                     Settings.loadFromFile();
                     return true;
+                case "CLEARSETTINGS":
+                    Settings.clearSettings();
+                    return true;
+                case "DEFAULTSETTINGS":
+                    Settings.loadDefaultValues();
+                    return true;
                 /*
                 case "XSZ":
                     sl.setXsz(Integer.parseUInt(x[1]));

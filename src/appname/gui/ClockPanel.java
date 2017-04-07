@@ -92,7 +92,7 @@ public class ClockPanel extends JPanel {
                 double secondX = size + Util.PolarToCartesianX(secondAngle, size * secondHandLength);
                 double secondY = size + Util.PolarToCartesianY(secondAngle, size * secondHandLength);
                 g2.setStroke(new BasicStroke(2));
-                g2.setPaint(Settings.getColor(6));
+                g2.setPaint(Settings.getColor(8));
                 g2.draw(new Line2D.Double(size, size, secondX, secondY));
             }
             {   //  Minute hand
@@ -108,7 +108,7 @@ public class ClockPanel extends JPanel {
                 double hourX = size + Util.PolarToCartesianX(hourAngle, size * hourHandLength);
                 double hourY = size + Util.PolarToCartesianY(hourAngle, size * hourHandLength);
                 g2.setStroke(new BasicStroke(12));
-                g2.setPaint(Settings.getColor(8));
+                g2.setPaint(Settings.getColor(6));
                 g2.draw(new Line2D.Double(size, size, hourX, hourY));
             }
             if (drawDigital) {

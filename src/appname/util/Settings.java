@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by yusiang on 5/4/17.
@@ -23,7 +20,8 @@ public class Settings {
 
     public static boolean getBoolSetting(String key) {
         if(booMap.containsKey(key)) return booMap.get(key);
-        else return false;
+        new NullPointerException("No such key: "+key+" in booleanMap").printStackTrace();
+        return false;
     }
     public static void setBoolSetting(String key,boolean val){
         booMap.put(key,val);
@@ -32,7 +30,8 @@ public class Settings {
 
     public static int getIntSetting(String key){
         if(intMap.containsKey(key)) return intMap.get(key);
-        else return 0;
+        new NullPointerException("No such key: "+key+" in intMap").printStackTrace();
+        return 0;
     }
     public static void setIntSetting(String key,int val){
         intMap.put(key,val);
@@ -41,7 +40,8 @@ public class Settings {
 
     public static double getFloatSetting(String key){
         if(fltMap.containsKey(key)) return fltMap.get(key);
-        else return 0;
+        new NullPointerException("No such key: "+key+" in floatMap").printStackTrace();
+        return 0;
     }
     public static void setFloatSetting(String key, double val){
         fltMap.put(key,val);
@@ -50,7 +50,8 @@ public class Settings {
 
     public static String getStringSetting(String key){
         if(strMap.containsKey(key)) return strMap.get(key);
-        else return null;
+        new NullPointerException("No such key: "+key+" in stringMap").printStackTrace();
+        return null;
     }
     public static void setStringSetting(String key,String val){
         val.replaceAll("\t"," ");
@@ -66,7 +67,7 @@ public class Settings {
     }
 
     public static void loadDefaultValues(){
-        strMap.put("colourMode","Night");//One of: Night,Day,HiContrast,Custom
+        strMap.put("colourMode","Dark");//One of: Dark,Light,HiContrast,Custom
         intMap.put("custHHandColR",255);
         intMap.put("custHHandColG",255);
         intMap.put("custHHandColB",255);
@@ -76,12 +77,12 @@ public class Settings {
         intMap.put("custSHandColR",255);
         intMap.put("custSHandColG",255);
         intMap.put("custSHandColB",255);
-        intMap.put("custHandsAlpha",1);
-        strMap.put("custBgColScheme","HiContrast");//One of Night,Day,HiContrast
+        intMap.put("custHandsAlpha",255);
+        strMap.put("custBgColScheme","HiContrast");//One of Dark,Light,HiContrast
 
         intMap.put("evTitleFontSz",40);
-        intMap.put("evTimeFontSz",34);
-        intMap.put("evStatusFontSz",30);
+        intMap.put("evTimeFontSz",35);
+        intMap.put("evStatusFontSz",20);
 
         //booMap.put("toiletUseLocal",false);
 
@@ -156,18 +157,22 @@ public class Settings {
             PrintStream ps = System.out;
             ArrayList<String> ls;
             ls = new ArrayList<String>(booMap.keySet());
+            Collections.sort(ls);
             for(String s:ls){
                 ps.println("b\t"+s+"\t"+(booMap.get(s)?"true":"false"));
             }
             ls = new ArrayList<String>(intMap.keySet());
+            Collections.sort(ls);
             for(String s:ls){
                 ps.println("i\t"+s+"\t"+intMap.get(s));
             }
             ls = new ArrayList<String>(fltMap.keySet());
+            Collections.sort(ls);
             for(String s:ls){
                 ps.println("f\t"+s+"\t"+ fltMap.get(s));
             }
             ls = new ArrayList<String>(strMap.keySet());
+            Collections.sort(ls);
             for(String s:ls){
                 ps.println("s\t"+s+"\t"+ strMap.get(s));
             }
@@ -186,32 +191,32 @@ public class Settings {
                     //BG,clock face,lgDiv,smDiv,numbers,circleOutline,
                     // hHand,mHand,sHand,digitalText
                     {},//0=custom
-                    //Night
+                    //Dark
                     {new Color(64, 64, 64), new Color(32, 32, 32), new Color(255,255,255), new Color(192, 192, 192), Color.WHITE, new Color(127, 127, 127),
-                            new Color(255,0,0, handsAlpha), new Color(57,255,57, handsAlpha), new Color(64,64,192, handsAlpha), Color.WHITE
+                            new Color(64,64,255, handsAlpha), new Color(57,255,57, handsAlpha), new Color(255,0,0, handsAlpha), Color.WHITE
                     },
-                    //Day
+                    //Light
                     {new Color(192,192,192),new Color(223,223,223),new Color(63,63,63),   new Color(127,127,127),    Color.BLACK, new Color(32,32,32),
-                            new Color(255,0,0,handsAlpha),new Color(0,223,0,handsAlpha),new Color(0,0,255, handsAlpha),Color.BLACK
+                            new Color(0,0,255,handsAlpha),new Color(0,223,0,handsAlpha),new Color(255,0,0, handsAlpha),Color.BLACK
                     },
                     //HiContrast
                     {new Color(0,0,0), new Color(0,0,0),           new Color(255,255,255), new Color(192, 192, 192), Color.WHITE, new Color(127, 127, 127),
-                            new Color(255,255,255,1), new Color(255,255,255,1), new Color(255,255,255,1), Color.WHITE
+                            new Color(255,255,0,255), new Color(0,255,255,255), new Color(255,0,255,255), Color.WHITE
                     }
 
             };
 
     public static Color getColor(int num){
 
-        if(getStringSetting("colourMode").equals("Night")) return colorPalette[1][num];
-        if(getStringSetting("colourMode").equals("Day")) return colorPalette[2][num];
+        if(getStringSetting("colourMode").equals("Dark")) return colorPalette[1][num];
+        if(getStringSetting("colourMode").equals("Light")) return colorPalette[2][num];
         if(getStringSetting("colourMode").equals("HiContrast")) return colorPalette[3][num];
         if(getStringSetting("colourMode").equals("Custom")){
             if(num==6) return new Color(getIntSetting("custHHandColR"), getIntSetting("custHHandColG"), getIntSetting("custHHandColB"), getIntSetting("custHandsAlpha"));
             if(num==7) return new Color(getIntSetting("custMHandColR"), getIntSetting("custMHandColG"), getIntSetting("custMHandColB"), getIntSetting("custHandsAlpha"));
             if(num==8) return new Color(getIntSetting("custSHandColR"), getIntSetting("custSHandColG"), getIntSetting("custSHandColB"), getIntSetting("custHandsAlpha"));
-            if(getStringSetting("custBgColScheme").equals("Night")) return colorPalette[1][num];
-            if(getStringSetting("custBgColScheme").equals("Day")) return colorPalette[2][num];
+            if(getStringSetting("custBgColScheme").equals("Dark")) return colorPalette[1][num];
+            if(getStringSetting("custBgColScheme").equals("Light")) return colorPalette[2][num];
             if(getStringSetting("custBgColScheme").equals("HiContrast")) return colorPalette[3][num];
         };
         return null;

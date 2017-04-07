@@ -1,5 +1,6 @@
 package appname.sched;
 
+import appname.gui.SettingsDialog;
 import appname.remote.RemoteManager;
 import appname.util.GregCalPlus;
 import appname.util.PriorityArrayList;
@@ -55,7 +56,7 @@ public class EventManager {
                 @Override
                 public void actionPerformed(ActionEvent evx) {
                     Event[] ev = {null};
-                    EventDialog.makeDialog(EventManager.this.parent, eList, ev); //Add
+                    EventDialog.makeDialog(parent, eList, ev); //Add
 
 
                 }
@@ -72,6 +73,9 @@ public class EventManager {
                 public void actionPerformed(ActionEvent e) {
                     clear();
                 }
+            });
+            dBtn.addActionListener(e -> {
+                SettingsDialog.makeSettingsDialog(parent,"Settings");
             });
             buttonPane.add(nBtn, "grow 1");
             buttonPane.add(dBtn, "grow 1, wrap");
