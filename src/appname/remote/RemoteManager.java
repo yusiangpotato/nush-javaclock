@@ -24,8 +24,8 @@ public class RemoteManager implements Runnable {
     private String remoteID = "";
 
     int missedCounter = 0;
-    final int missedThresh = 40;//~2secs
-    final int cycleTime = 50; //Millis
+    final int missedThresh = 20;//~2secs
+    final int cycleTime = 100; //Millis
 
     final int UDPport = 2302;
     DatagramSocket socket = null;
@@ -91,7 +91,7 @@ public class RemoteManager implements Runnable {
             updateButton();
         }
         ExecService = Executors.newSingleThreadScheduledExecutor();
-        ExecService.scheduleWithFixedDelay(this, 0, cycleTime, TimeUnit.MILLISECONDS);
+        ExecService.scheduleWithFixedDelay(this, 100, 1, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -167,6 +167,7 @@ public class RemoteManager implements Runnable {
 
     public void shutdown() {
         ExecService.shutdown();
+		socket.close();
     }
 
 }
