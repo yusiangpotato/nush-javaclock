@@ -1,15 +1,10 @@
-package appname.gui;
+package javaclock.gui;
 
-import appname.util.Settings;
-import appname.util.Util;
+import javaclock.util.Settings;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by yusiang on 5/4/17.

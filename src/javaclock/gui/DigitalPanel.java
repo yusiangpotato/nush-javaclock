@@ -1,7 +1,7 @@
-package appname.gui;
+package javaclock.gui;
 
-import appname.util.Settings;
-import appname.util.Util;
+import javaclock.util.Settings;
+import javaclock.util.Util;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 

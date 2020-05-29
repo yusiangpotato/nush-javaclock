@@ -1,9 +1,9 @@
-package appname.gui;
+package javaclock.gui;
 
-import appname.util.Pair;
-import appname.util.Quadruple;
-import appname.util.Settings;
-import appname.util.Util;
+import javaclock.util.Pair;
+import javaclock.util.Quadruple;
+import javaclock.util.Settings;
+import javaclock.util.Util;
 
 import javax.swing.*;
 import java.awt.*;

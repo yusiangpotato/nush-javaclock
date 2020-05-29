@@ -1,4 +1,4 @@
-package appname.util;
+package javaclock.util;
 
 import java.awt.*;
 import java.io.File;

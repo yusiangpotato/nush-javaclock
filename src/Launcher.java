@@ -1,7 +1,6 @@
-import appname.gui.SwingManager;
-import appname.util.Settings;
+import javaclock.gui.SwingManager;
+import javaclock.util.Settings;
 
-import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

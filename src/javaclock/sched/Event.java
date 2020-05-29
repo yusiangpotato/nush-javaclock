@@ -1,9 +1,9 @@
-package appname.sched;
+package javaclock.sched;
 
 
-import appname.util.GregCalPlus;
-import appname.util.Settings;
-import appname.util.Util;
+import javaclock.util.GregCalPlus;
+import javaclock.util.Settings;
+import javaclock.util.Util;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

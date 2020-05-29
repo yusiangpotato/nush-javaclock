@@ -1,4 +1,4 @@
-package appname.util;
+package javaclock.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ public class PriorityArrayList<T extends Comparable> extends ArrayList<T> {
     public boolean add(T t) {
         for(int i=0;i<size();i++){
             if(t.equals(get(i))) {
-                Logger.getLogger("").warning("Tried to add events with same UUID as existing!");
+                Logger.getLogger("").severe("Tried to add events with same UUID as existing!");
                 return false;
             }
         }

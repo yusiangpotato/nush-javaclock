@@ -1,4 +1,4 @@
-package appname.util;
+package javaclock.util;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

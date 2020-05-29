@@ -1,4 +1,4 @@
-package appname.util;
+package javaclock.util;
 
 /**
  * Created by yusiang on 11/5/14.

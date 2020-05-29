@@ -1,7 +1,7 @@
-package appname.gui;
+package javaclock.gui;
 
-import appname.sched.EventManager;
-import appname.util.Settings;
+import javaclock.sched.EventManager;
+import javaclock.util.Settings;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public class SwingManager implements Runnable {
                     // If Nimbus is not available, you can set the GUI to another look and feel.
                 }
                 //JFrame.setDefaultLookAndFeelDecorated(true);
-                window = new JFrame("JavaClock ALPHA@2017-04-07");//
+                window = new JFrame("JavaClock for NUS High School");//
 
                 clockPane = new ClockPanel();
                 //windowPane = clockPane;

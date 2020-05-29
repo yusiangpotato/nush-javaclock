@@ -1,6 +1,4 @@
-package appname.remote;
-
-import appname.util.Settings;
+package javaclock.remote;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +24,7 @@ public class RemoteManager implements Runnable {
     int missedCounter = 0;
     final int missedThresh = 20;//~2secs
     final int cycleTime = 100; //Millis
+    final int cycleTimeExtend = 50;
 
     final int UDPport = 2302;
     DatagramSocket socket = null;
@@ -84,7 +83,7 @@ public class RemoteManager implements Runnable {
 
         try {
             socket = new DatagramSocket(UDPport);
-            socket.setSoTimeout(cycleTime);
+            socket.setSoTimeout(cycleTime+cycleTimeExtend); //The remote should send every cycleTime, we add a Extended to cope with lag
         } catch (Exception e) {
             state |= 0b00001000;//UDP failure
             System.out.println("Unable to bind port 2302, no remote control function available.");

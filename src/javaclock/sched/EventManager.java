@@ -1,10 +1,10 @@
-package appname.sched;
+package javaclock.sched;
 
-import appname.gui.SettingsDialog;
-import appname.remote.RemoteManager;
-import appname.util.GregCalPlus;
-import appname.util.PriorityArrayList;
-import appname.util.Settings;
+import javaclock.gui.SettingsDialog;
+import javaclock.remote.RemoteManager;
+import javaclock.util.GregCalPlus;
+import javaclock.util.PriorityArrayList;
+import javaclock.util.Settings;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
